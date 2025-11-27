@@ -1,73 +1,115 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { UserCircle, ArrowRight, LogIn, Map, Users } from 'lucide-react';
+import { UserCircle, ArrowRight, LogIn, Map, Users, Star, Compass } from 'lucide-react';
 
 const RegisterPanel = () => {
   return (
-    // Mobilde tam ekranı kaplaması için h-full ve w-full
-    // padding değerlerini p-6 yerine p-4 yaparak kenarlardan yer kazandık
-    <div className="w-full h-full bg-[#10b981] text-emerald-50 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-br from-[#1E3A3A] via-[#2D554F] to-[#3E6B65] text-emerald-50 flex flex-col justify-center items-center p-4 relative overflow-hidden select-none">
       
-      {/* 1. ARKA PLAN EFEKTLERİ */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] pointer-events-none"></div>
+      {/* ARKA PLAN EFEKTLERİ */}
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none select-none"></div>
       
-      {/* Dekoratif Glow - Mobilde biraz daha küçük ve subtle */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-[#064e3b]/10 rounded-full blur-[60px] pointer-events-none"></div>
+      {/* Dekoratif Elementler */}
+      <div className="absolute top-10 left-5 w-24 h-24 bg-emerald-500/10 rounded-full blur-[40px] pointer-events-none select-none"></div>
+      <div className="absolute bottom-10 right-5 w-32 h-32 bg-amber-400/10 rounded-full blur-[50px] pointer-events-none select-none"></div>
       
-      {/* Dev Arka Plan İkonu - Mobilde çok yer kaplamasın diye opacity azalttık ve boyutunu küçülttük */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] pointer-events-none">
-        <UserCircle size={280} />
+      {/* Yüzen İkonlar */}
+      <div className="absolute top-1/4 left-1/6 opacity-[0.08] pointer-events-none animate-float select-none">
+        <Compass size={40} />
+      </div>
+      <div className="absolute bottom-1/3 right-1/5 opacity-[0.06] pointer-events-none animate-float-delayed select-none">
+        <Star size={32} />
       </div>
 
-      {/* 2. İÇERİK KATMANI */}
-      {/* max-w-sm yerine w-full diyerek mobile yayılmasını sağladık */}
-      <div className="w-full max-w-[340px] relative z-10 flex flex-col items-center text-center">
+      {/* ANA İÇERİK */}
+      <div className="w-full max-w-[320px] relative z-10 flex flex-col items-center text-center select-none">
         
-        {/* İkon Kutusu - Boyutları mobilde biraz küçülttük (w-16 h-16) */}
-        <div className="w-16 h-16 bg-gradient-to-br from-[#10b981] to-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-[#064e3b]/10">
-          <LogIn className="w-8 h-8 text-white" />
+        {/* Logo/İkon Alanı */}
+        <div className="relative mb-6 select-none">
+          <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-amber-400 rounded-2xl flex items-center justify-center shadow-lg shadow-black/30 rotate-12 select-none">
+            <LogIn className="w-10 h-10 text-white select-none" />
+          </div>
+          <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-400 rounded-full flex items-center justify-center select-none">
+            <Star className="w-3 h-3 text-white fill-current select-none" />
+          </div>
         </div>
 
-        {/* Başlık - Font boyutunu dengeledik */}
-        <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
-          Aramıza Katıl
-        </h2>
-        
-        {/* Açıklama - Daha kısa satır yüksekliği ve margin */}
-        <p className="text-emerald-100/80 text-sm mb-6 leading-relaxed px-2">
-          Sadece izleyici olma. Kendi rotanı çiz ve TraceAtlas topluluğunun bir parçası ol.
-        </p>
+        {/* Başlık ve Açıklama */}
+        <div className="mb-6 select-none">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent mb-3 select-none">
+            Yolculuğa Sen de Katıl
+          </h2>
+          <p className="text-emerald-100/80 text-sm leading-relaxed px-2 select-none">
+            Sadece hayal etme, harekete geç! Binlerce gezginle birlikte keşfetmeye başla.
+          </p>
+        </div>
 
-        {/* İSTATİSTİKLER - Gap azaltıldı */}
-        <div className="grid grid-cols-2 gap-3 w-full mb-6">
-          <div className="p-3 rounded-xl bg-[#022c22]/10 border border-white/10 backdrop-blur-sm flex flex-col items-center">
-            <Map className="w-5 h-5 text-emerald-900 mb-1" />
-            <div className="text-xl font-bold text-white">1.2K+</div>
-            <div className="text-[10px] text-emerald-900/80 uppercase tracking-wider font-bold">Rota</div>
+        {/* ÖNE ÇIKAN ÖZELLİKLER */}
+        <div className="grid grid-cols-2 gap-3 w-full mb-6 select-none">
+          <div className="p-3 rounded-xl bg-white/8 border border-white/15 backdrop-blur-sm flex flex-col items-center transform hover:scale-[1.02] transition-all duration-200 select-none">
+            <div className="relative select-none">
+              <Map className="w-6 h-6 text-amber-400 mb-2 select-none" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full select-none"></div>
+            </div>
+            <div className="text-lg font-bold text-white select-none">1.2K+</div>
+            <div className="text-[10px] text-emerald-200/70 uppercase tracking-wider font-semibold select-none">Özel Rota</div>
           </div>
           
-          <div className="p-3 rounded-xl bg-[#022c22]/10 border border-white/10 backdrop-blur-sm flex flex-col items-center">
-            <Users className="w-5 h-5 text-emerald-900 mb-1" />
-            <div className="text-xl font-bold text-white">50K+</div>
-            <div className="text-[10px] text-emerald-900/80 uppercase tracking-wider font-bold">Gezgin</div>
+          <div className="p-3 rounded-xl bg-white/8 border border-white/15 backdrop-blur-sm flex flex-col items-center transform hover:scale-[1.02] transition-all duration-200 select-none">
+            <div className="relative select-none">
+              <Users className="w-6 h-6 text-emerald-400 mb-2 select-none" />
+              <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full select-none"></div>
+            </div>
+            <div className="text-lg font-bold text-white select-none">50K+</div>
+            <div className="text-[10px] text-emerald-200/70 uppercase tracking-wider font-semibold select-none">Gezgin</div>
           </div>
         </div>
 
-        {/* CTA BUTONU - Dokunma alanı (Touch Target) geniş tutuldu */}
-        <Link to="/auth" className="w-full">
-          <button 
-            className="w-full bg-white text-[#022c22] font-bold py-3.5 rounded-xl shadow-lg active:scale-[0.98] transition-transform flex items-center justify-center gap-2"
-          >
-            Hemen Başla
-            <ArrowRight className="w-4 h-4 text-[#10b981]" />
+        {/* CTA BUTONU */}
+        <Link to="/auth" className="w-full mb-3 select-none">
+          <button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-[#1A2F33] font-bold py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group select-none">
+            <span className="select-none">Keşfetmeye Başla</span>
+            <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform select-none" />
           </button>
         </Link>
 
-        <p className="mt-4 text-[10px] text-emerald-900/40 font-semibold">
-          Ücretsiz üyelik ve sınırsız keşif.
-        </p>
+        {/* ALT BİLGİ */}
+        <div className="text-center select-none">
+          <p className="text-xs text-white/60 font-medium mb-1 select-none">
+            📍 7/24 erişim • 🌍 Offline haritalar
+          </p>
+          <p className="text-[10px] text-white/40 font-semibold select-none">
+            Üyelik tamamen ücretsiz
+          </p>
+        </div>
 
       </div>
+
+      {/* MOBİL OPTİMİZASYONU */}
+      <style jsx>{`
+        @keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        @keyframes float-delayed {
+          0%, 100% { transform: translateY(-5px) rotate(0deg); }
+          50% { transform: translateY(5px) rotate(-5deg); }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+          animation: float-delayed 8s ease-in-out infinite;
+        }
+        
+        /* Tüm elementler için seçilemezlik */
+        * {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+      `}</style>
     </div>
   );
 };

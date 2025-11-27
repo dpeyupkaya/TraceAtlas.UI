@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@import url('https://unpkg.com/leaflet/dist/leaflet.css');
+
+
+
 
 
 @keyframes marquee {
@@ -15,4 +19,41 @@
   animation: marquee 15s linear infinite;
 }
 
+/* Bunu CSS dosyana eklemeyi unutma */
+.trace-atlas-wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  /* KUZEY ORMANLARI GEÇİŞİ BURADA */
+  background: linear-gradient(90deg, #1A2F33 0%, #2C4A50 50%, #3E6B65 100%);
+}
 
+
+/* globals.css */
+@keyframes slideUpFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slideUpFromBottom {
+  animation: slideUpFromBottom 0.3s ease-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out;
+}

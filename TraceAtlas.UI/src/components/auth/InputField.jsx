@@ -12,15 +12,14 @@ const InputField = ({ icon: Icon, ...props }) => {
             text-slate-400 
             transition-all duration-300 ease-out
             
-            /* Focus olunca İkon Parlasın ve Rengi Değişsin */
-            group-focus-within:text-cyan-400 
-            group-focus-within:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]
+            /* Focus olunca İkon Emerald Rengi ve Parlama */
+            group-focus-within:text-[#10b981]
+            group-focus-within:drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]
             group-focus-within:scale-110
           " 
         />
       </div>
 
-      {/* 2. INPUT ALANI */}
       <input 
         {...props} // type, placeholder, value, onChange vb. hepsini kapsar
         className="
@@ -41,16 +40,16 @@ const InputField = ({ icon: Icon, ...props }) => {
           hover:bg-slate-800/50
           hover:border-white/20
           
-          /* Focus Durumu (Border rengini kaldırdık çünkü alttan çizgi gelecek) */
+          /* Focus Durumu */
           focus:bg-slate-900/80
           focus:border-white/10
         "
       />
 
-    
+      {/* ALT ÇİZGİ - EMERALD GRADIENT */}
       <div className="
         absolute bottom-0 left-0 h-[2px] w-full 
-        bg-gradient-to-r from-transparent via-cyan-400 to-transparent 
+        bg-gradient-to-r from-transparent via-[#10b981] to-transparent 
         opacity-0 scale-x-0 
         transition-all duration-500 ease-out 
         origin-center
@@ -58,6 +57,18 @@ const InputField = ({ icon: Icon, ...props }) => {
         /* Input focus olunca tetiklenir */
         peer-focus:opacity-100 
         peer-focus:scale-x-100
+      "></div>
+
+      {/* EK GLOW EFEKTİ (Opsiyonel) */}
+      <div className="
+        absolute inset-0 rounded-xl 
+        bg-[#10b981]/0 
+        transition-all duration-500 ease-out
+        pointer-events-none
+        
+        /* Focus durumunda hafif glow */
+        peer-focus:bg-[#10b981]/5
+        peer-focus:shadow-[0_0_20px_rgba(16,185,129,0.1)]
       "></div>
       
     </div>

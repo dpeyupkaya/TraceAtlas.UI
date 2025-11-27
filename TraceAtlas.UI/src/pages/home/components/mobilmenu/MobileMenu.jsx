@@ -5,7 +5,7 @@ const MobileMenu = ({ items }) => {
   return (
     // DÜZELTME: 'fixed' ve 'h-[100dvh]' yerine 'w-full h-full' yapıyoruz.
     // Böylece WelcomePanel ne kadarsa bu da o kadar yer kaplar.
-    <div className="w-full h-full flex flex-col bg-[#022c22]">
+    <div className="w-full h-full flex flex-col bg-[#3E6B65]">
       {items.map((item, index) => (
         <a 
           key={index} 
