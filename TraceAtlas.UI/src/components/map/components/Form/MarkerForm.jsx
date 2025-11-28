@@ -11,89 +11,50 @@ const MarkerForm = ({ onSubmit, loading }) => {
   });
 
   const fileRef = useRef(null);
-  const [imagePreview, setImagePreview] = useState("");
+  const [preview, setPreview] = useState("");
 
-  const setValue = (f, v) => setForm((p) => ({ ...p, [f]: v }));
+  const update = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
-      title: form.title,
-      description: form.description,
-      tags: form.tags,
-      imageBase64: form.imageBase64,
-      isShared: form.isShared,
-    });
+    onSubmit(form);
   };
 
-  const handleFileChange = (e) => {
+  const handleFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    setImagePreview(URL.createObjectURL(file));
-
+    setPreview(URL.createObjectURL(file));
     const reader = new FileReader();
-    reader.onloadend = () => setValue("imageBase64", reader.result);
+    reader.onloadend = () => update("imageBase64", reader.result);
     reader.readAsDataURL(file);
   };
 
-  const removeImage = () => {
-    setImagePreview("");
-    setValue("imageBase64", "");
+  const removeFile = () => {
+    setPreview("");
+    update("imageBase64", "");
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  const addTag = () => {
-    const t = form.tagInput.trim();
-    if (t && !form.tags.includes(t)) {
-      setValue("tags", [...form.tags, t]);
-    }
-    setValue("tagInput", "");
-  };
-
-  const handleTagKey = (e) => {
-    if (e.key === "Enter" || e.key === ",") {
+  const addTag = (e) => {
+    if ((e.key === "Enter" || e.key === ",") && form.tagInput.trim()) {
       e.preventDefault();
-      addTag();
+      const t = form.tagInput.trim();
+      if (!form.tags.includes(t)) update("tags", [...form.tags, t]);
+      update("tagInput", "");
     }
   };
 
   return (
-    <form
-      id="marker-form"
-      onSubmit={handleSubmit}
-      className="flex flex-col gap-6"
-    >
+    <form id="marker-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
       <div className="flex items-center gap-3">
         <input
           className="flex-1 bg-white/5 border border-white/15 text-white text-sm px-4 py-3 rounded-xl focus:bg-white/10 focus:border-emerald-400/50 outline-none transition-all"
           placeholder="Konum Başlığı"
           value={form.title}
-          onChange={(e) => setValue("title", e.target.value)}
+          onChange={(e) => update("title", e.target.value)}
           required
         />
-
-        <button
-          type="button"
-          onClick={() => setValue("isShared", !form.isShared)}
-          className={`w-12 h-12 flex items-center justify-center rounded-xl border transition-all ${
-            form.isShared
-              ? "border-emerald-500 bg-emerald-500/20 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.35)]"
-              : "border-white/10 text-white/40 bg-white/5 hover:bg-white/10"
-          }`}
-        >
-          {form.isShared ? (
-            <svg width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-              <polyline points="16 6 12 2 8 6" />
-              <line x1="12" y1="2" x2="12" y2="15" />
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-            </svg>
-          ) : (
-            <svg width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-            </svg>
-          )}
-        </button>
+      
       </div>
 
       <textarea
@@ -101,7 +62,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
         placeholder="Kısa açıklama"
         rows={2}
         value={form.description}
-        onChange={(e) => setValue("description", e.target.value)}
+        onChange={(e) => update("description", e.target.value)}
         required
       />
 
@@ -110,27 +71,18 @@ const MarkerForm = ({ onSubmit, loading }) => {
           className="bg-white/5 border border-white/15 rounded-xl text-white text-sm px-4 py-3 focus:bg-white/10 focus:border-emerald-400/50 outline-none transition-all"
           placeholder="Etiket ekle (Enter)"
           value={form.tagInput}
-          onChange={(e) => setValue("tagInput", e.target.value)}
-          onKeyDown={handleTagKey}
+          onChange={(e) => update("tagInput", e.target.value)}
+          onKeyDown={addTag}
         />
-
         {form.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {form.tags.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 text-xs text-emerald-300 border border-emerald-400/40 rounded-full bg-emerald-500/10 flex items-center gap-1"
-              >
+              <span key={i} className="px-3 py-1 text-xs text-emerald-300 border border-emerald-400/40 rounded-full bg-emerald-500/10 flex items-center gap-1">
                 #{tag}
                 <button
                   type="button"
-                  onClick={() =>
-                    setValue(
-                      "tags",
-                      form.tags.filter((x) => x !== tag)
-                    )
-                  }
-                  className="hover:text-white"
+                  onClick={() => update("tags", form.tags.filter((t) => t !== tag))}
+                  className="hover:text-white ml-1"
                 >
                   ✕
                 </button>
@@ -140,26 +92,17 @@ const MarkerForm = ({ onSubmit, loading }) => {
         )}
       </div>
 
-      {!imagePreview ? (
+      {!preview ? (
         <label className="border border-dashed border-white/20 rounded-xl py-4 text-white/50 text-sm cursor-pointer bg-white/5 hover:bg-white/10 transition-all text-center">
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
+          <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
           Fotoğraf ekle
         </label>
       ) : (
         <div className="relative h-28 rounded-xl overflow-hidden border border-emerald-500/30 group">
-          <img
-            src={imagePreview}
-            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all"
-          />
+          <img src={preview} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all" alt="Preview" />
           <button
             type="button"
-            onClick={removeImage}
+            onClick={removeFile}
             className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-all"
           >
             Sil
@@ -167,9 +110,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
         </div>
       )}
 
-      <button type="submit" disabled={loading} className="hidden">
-        Kaydet
-      </button>
+      <button type="submit" disabled={loading} className="hidden">Kaydet</button>
     </form>
   );
 };

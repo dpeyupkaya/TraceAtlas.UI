@@ -5,7 +5,7 @@ import AuthButton from './AuthButton';
 
 const LoginForm = () => {
   return (
-    <form className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 select-none">
+    <form className="space-y-6 animate-in  fade-in slide-in-from-bottom-4 duration-500 select-none">
       
       {/* EMAIL INPUT */}
       <InputField 

@@ -5,7 +5,7 @@ const InputField = ({ icon: Icon, ...props }) => {
     <div className="relative group w-full">
       
       {/* 1. İKON ALANI */}
-      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10 ">
         <Icon 
           className="
             h-5 w-5 
@@ -23,6 +23,7 @@ const InputField = ({ icon: Icon, ...props }) => {
       <input 
         {...props} // type, placeholder, value, onChange vb. hepsini kapsar
         className="
+        
           peer
           w-full pl-11 pr-4 py-4 
           rounded-xl 

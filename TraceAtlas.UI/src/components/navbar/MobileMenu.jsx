@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
+// İkonları dışarıda tanımlayarak gereksiz re-render'ı önledik
 const icons = {
   Home: (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -18,10 +19,10 @@ const icons = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
     </svg>
   ),
-  Settings: (
+  // Default ikon
+  Default: (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+       <circle cx="12" cy="12" r="10" />
     </svg>
   )
 };
@@ -36,6 +37,7 @@ const MobileMenu = ({ isOpen, items, onClose }) => {
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscape);
+      // Sayfanın arkada kaymasını engelle
       document.body.style.overflow = 'hidden';
     }
 
@@ -45,6 +47,7 @@ const MobileMenu = ({ isOpen, items, onClose }) => {
     };
   }, [isOpen, onClose]);
 
+  // Arka plan overlay tıklaması
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
@@ -53,27 +56,34 @@ const MobileMenu = ({ isOpen, items, onClose }) => {
 
   return (
     <>
+      {/* Koyu Arka Plan Overlay (Blur efektli) */}
       <div 
-        className="fixed inset-0 bg-stone-900/30 backdrop-blur-md z-[9998] animate-fadeIn transition-opacity duration-300"
+        className="fixed inset-0 bg-stone-900/40 backdrop-blur-md z-[9998] animate-fadeIn transition-opacity duration-300"
         onClick={handleOverlayClick}
       />
-      <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-24 animate-slideDown pointer-events-none px-4">
+
+      {/* Menü Konteyner */}
+      <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-20 animate-slideDown pointer-events-none px-4">
         <div className="w-full max-w-md pointer-events-auto">
-          <div className="bg-white/80 backdrop-blur-2xl border border-white/60 shadow-[0_8px_32px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden ring-1 ring-black/5">
+          
+          {/* Glassmorphism Kart */}
+          <div className="bg-white/90 backdrop-blur-3xl border border-white/50 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] rounded-3xl overflow-hidden ring-1 ring-black/5">
             
-            <div className="flex items-center justify-between p-5 border-b border-stone-200/50 bg-white/40">
-              <h3 className="text-lg font-semibold text-stone-800 tracking-tight">Menü</h3>
+            {/* Header: Başlık ve Kapat Butonu */}
+            <div className="flex items-center justify-between p-5 border-b border-stone-200/50 bg-white/50">
+              <h3 className="text-lg font-bold text-[#1E3A3A] tracking-tight">Menü</h3>
               <button
                 onClick={onClose}
                 className="p-2 hover:bg-red-50 hover:text-red-500 rounded-full transition-all active:scale-90 text-stone-400"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <div className="p-3 space-y-1.5">
+            {/* Menü Öğeleri Listesi */}
+            <div className="p-3 space-y-2">
               {items.map((item, index) => {
                 const isActive = location.pathname === item.href;
                 
@@ -82,42 +92,53 @@ const MobileMenu = ({ isOpen, items, onClose }) => {
                     key={index}
                     to={item.href}
                     onClick={onClose}
-                    className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group ${
-                      isActive 
-                        ? 'bg-emerald-50/80 text-emerald-800 shadow-sm ring-1 ring-emerald-100' 
-                        : 'text-stone-600 hover:bg-stone-100/80 hover:text-stone-900 hover:shadow-sm'
-                    }`}
+                    className={`
+                      relative overflow-hidden flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
+                      ${isActive 
+                        ? 'text-white shadow-[0_4px_15px_-3px_rgba(45,85,79,0.4)] ring-1 ring-[#4ade80]/30' 
+                        : 'text-stone-600 hover:bg-stone-100/80 hover:text-[#1E3A3A]'
+                      }
+                    `}
+                    style={{
+                      // Aktifse senin koyu yeşil gradyanın, değilse şeffaf
+                      background: isActive 
+                        ? 'linear-gradient(110deg, #1E3A3A 0%, #2D554F 100%)' 
+                        : 'transparent'
+                    }}
                   >
+                    {/* Ikon Kutusu */}
                     <div className={`p-2 rounded-xl transition-all duration-300 ${
                       isActive 
-                        ? 'bg-emerald-500 text-white shadow-emerald-200 shadow-md scale-105' 
-                        : 'bg-stone-100 text-stone-500 group-hover:bg-white group-hover:text-emerald-600 group-hover:shadow-sm'
+                        ? 'bg-white/10 text-emerald-300' 
+                        : 'bg-stone-100 text-stone-500 group-hover:bg-white group-hover:text-[#2D554F] group-hover:shadow-sm'
                     }`}>
-                      {icons[item.label] || (
-                        <span className={`w-2 h-2 rounded-full block ${
-                          isActive ? 'bg-white' : 'bg-stone-400'
-                        }`}></span>
-                      )}
+                      {icons[item.label] || icons.Default}
                     </div>
                     
-                    <span className={`font-medium flex-1 text-base ${
-                      isActive ? 'text-emerald-900' : 'text-stone-600'
+                    {/* Label */}
+                    <span className={`font-semibold flex-1 text-base tracking-wide ${
+                        isActive ? 'text-white' : ''
                     }`}>
                       {item.label}
                     </span>
 
+                    {/* Aktif Durum Göstergeleri (Nokta ve Ok) */}
                     {isActive && (
-                      <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_rgba(16,185,129,0.6)]"></div>
+                      <div className="flex items-center gap-2">
+                         {/* Yanıp Sönen Yeşil Nokta */}
+                        <div className="w-2 h-2 bg-[#4ade80] rounded-full shadow-[0_0_8px_#4ade80] animate-pulse"></div>
+                      </div>
                     )}
                     
+                    {/* Sağ Ok */}
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 20 20" 
                       fill="currentColor" 
                       className={`w-5 h-5 transition-transform duration-300 ${
                         isActive 
-                            ? 'text-emerald-400 translate-x-1' 
-                            : 'text-stone-300 group-hover:text-emerald-400 group-hover:translate-x-1'
+                            ? 'text-emerald-300 translate-x-0' 
+                            : 'text-stone-300 -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-[#2D554F]'
                       }`}
                     >
                       <path fillRule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clipRule="evenodd" />

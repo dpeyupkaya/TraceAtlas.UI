@@ -4,7 +4,7 @@ import { MapPin, Mail, Github, Twitter, Instagram } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="fixed bottom-0 left-0 z-50 w-full bg-[#022c22] border-t border-[#10b981]/20 select-none">
+    <footer className="w-full bg-gradient-to-br from-[#1E3A3A] via-[#2D554F] to-[#3E6B65] border-t border-[#10b981]/20 select-none">
       
       <div className="container mx-auto px-6 py-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -64,26 +64,15 @@ const Footer = () => {
                 <Instagram className="w-4 h-4 text-emerald-100/70 hover:text-[#10b981]" />
               </a>
             </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div className="border-t border-[#10b981]/10 bg-[#022c22]">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-emerald-100/50 text-sm text-center md:text-left">
+             <div className="text-emerald-100/50 text-sm text-center md:text-left">
               © 2025 TraceAtlas. Tüm hakları saklıdır.
             </div>
-            <div className="flex items-center gap-6 text-xs text-emerald-100/40">
-              <span>🚀 Keşfetmeye Devam Et</span>
-              <span>🌍 Doğaya Saygı</span>
-              <span>🔒 Güvenli Platform</span>
-            </div>
           </div>
+
         </div>
       </div>
 
+    
       <div className="w-full h-[2px] bg-[#10b981]/20"></div>
     </footer>
   );

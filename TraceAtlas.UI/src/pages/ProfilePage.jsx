@@ -1,10 +1,10 @@
-import React from 'react'
+import React from 'react';
 import BaseProfil from '../components/profile/BaseProfil';
 
-export const ProfilePage = () => {
+const ProfilePage = () => {
   return (
-    <div><BaseProfil />
-    </div>
-  )
-}
+    <BaseProfil />
+  );
+};
+
 export default ProfilePage;

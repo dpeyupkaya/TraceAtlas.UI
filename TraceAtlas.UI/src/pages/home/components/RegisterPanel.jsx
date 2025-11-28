@@ -66,7 +66,7 @@ const RegisterPanel = () => {
         </div>
 
         {/* CTA BUTONU */}
-        <Link to="/auth" className="w-full mb-3 select-none">
+        <Link to="/map" className="w-full mb-3 select-none">
           <button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-[#1A2F33] font-bold py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group select-none">
             <span className="select-none">Keşfetmeye Başla</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform select-none" />

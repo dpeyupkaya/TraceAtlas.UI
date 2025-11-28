@@ -8,9 +8,8 @@ const AuthPanel = () => {
   const [isLoginView, setIsLoginView] = useState(true);
 
   return (
-    // MOBİL AYARI 1: 'min-h-screen' yerine 'min-h-[100dvh]' kullandık.
-    // Bu, mobildeki adres çubuğu (URL bar) açılıp kapanınca ekranın zıplamasını önler.
-    <div className="w-full min-h-[100dvh] flex flex-col justify-center items-center p-4 md:p-6 relative bg-slate-950 overflow-hidden">
+    
+    <div className="w-full min-h-[100dvh] flex flex-col justify-center items-center p-4 md:p-6 relative bg-gradient-to-br from-[#1E3A3A] via-[#2D554F] to-[#3E6B65] overflow-hidden">
       
       {/* ARKA PLAN (Aynı kalıyor, mobilde de çok şık durur) */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-emerald-900/20 to-transparent pointer-events-none"></div>

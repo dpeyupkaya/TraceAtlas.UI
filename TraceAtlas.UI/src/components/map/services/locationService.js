@@ -48,7 +48,6 @@ let mockLocations = [
     latitude: 40.6900,
     longitude: 39.6582,
     creatorUsername: 'Aga',
-    imageBase64: '/deneme-resimler/5.jpg',
     tags: ['Karadeniz', 'Manastır', 'Dağ', 'Tarih']
   },
   {
@@ -58,7 +57,6 @@ let mockLocations = [
     latitude: 37.3122,
     longitude: 40.7350,
     creatorUsername: 'DoğaSever',
-    imageBase64: '/deneme-resimler/6.jpg',
     tags: ['Mardin', 'Mimari', 'Mezopotamya', 'Fotoğraf']
   },
   {
