@@ -1,17 +1,25 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 
-const AuthButton = ({ text, onClick }) => {
+const AuthButton = ({ text, onClick, type = "button" }) => {
   return (
     <button 
-      onClick={(e) => { e.preventDefault(); onClick(); }}
+      type={type}
+      onClick={(e) => {
+        // Eğer bir onClick fonksiyonu gönderildiyse çalıştır, yoksa hata verme
+        if (onClick) {
+            e.preventDefault(); // Sadece özel onClick varsa default'u engelle
+            onClick(e);
+        }
+        // Eğer type="submit" ise ve onClick yoksa, bırak form submit olsun (preventDefault yapma)
+      }}
       className="
         group relative w-full py-4 rounded-xl 
         cursor-pointer outline-none 
         transition-all duration-300
         select-none
         
-        /* TEMEL GÖRÜNÜM (Input ile Birebir Aynı) */
+        /* TEMEL GÖRÜNÜM */
         bg-slate-900/50 
         border border-white/10
         text-slate-200 font-bold tracking-wide

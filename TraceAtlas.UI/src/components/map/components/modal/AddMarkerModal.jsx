@@ -2,30 +2,59 @@ import React, { useState } from "react";
 import { FiX, FiCheck, FiLoader } from "react-icons/fi";
 import MarkerForm from "../Form/MarkerForm";
 import ConfirmationModal from "../../../common/ConfirmationModal";
+import { createLocation } from "../../services/locationService";
+import { getCurrentUserId } from "../../utils/authUtils";
 
-const AddMarkerModal = ({ onClose, onSave }) => {
+const AddMarkerModal = ({ isOpen, onClose, selectedPosition, onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cachedFormData, setCachedFormData] = useState(null);
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      onSave(cachedFormData);
-      onClose();
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!isOpen) return null;
 
   const handleFormSubmit = (formData) => {
     setCachedFormData(formData);
     setConfirmOpen(true);
   };
 
+  const handleFinalSave = async () => {
+    setLoading(true);
+    
+    const userId = getCurrentUserId();
+    
+    if (!userId) {
+      alert("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
+      setLoading(false);
+      setConfirmOpen(false);
+      return;
+    }
+
+    const commandData = {
+      Title: cachedFormData.title,
+      Description: cachedFormData.description,
+      Latitude: selectedPosition?.lat || 0,
+      Longitude: selectedPosition?.lng || 0,
+      Tags: cachedFormData.tags,
+      ImageBase64: cachedFormData.imageBase64 ? cachedFormData.imageBase64.split(',')[1] : null,
+      UserId: userId,
+      Region: ""
+    };
+
+    try {
+      await createLocation(commandData);
+      if (onSuccess) onSuccess();
+      setConfirmOpen(false);
+      onClose();
+    } catch (error) {
+      console.error(error);
+      alert("Konum kaydedilirken bir hata oluştu.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
-      {/* Ana Modal */}
       <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
         <div 
           className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm modal-fade"
@@ -35,7 +64,6 @@ const AddMarkerModal = ({ onClose, onSave }) => {
         <div className="relative w-full max-w-lg bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden modal-scale">
           <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
             <h2 className="text-lg font-semibold text-white">Konum Ekle</h2>
-
             <button 
               onClick={onClose}
               disabled={loading}
@@ -70,30 +98,18 @@ const AddMarkerModal = ({ onClose, onSave }) => {
           </div>
         </div>
 
-        {/* Animasyonlar */}
         <style>{`
-          .modal-fade {
-            animation: fadeIn 0.25s ease-out forwards;
-          }
-          .modal-scale {
-            animation: scaleIn 0.25s ease-out forwards;
-          }
-          @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-          @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-          }
+          .modal-fade { animation: fadeIn 0.25s ease-out forwards; }
+          .modal-scale { animation: scaleIn 0.25s ease-out forwards; }
+          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         `}</style>
       </div>
 
-      {/* Onay Modalı */}
       <ConfirmationModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleSubmit}
+        onConfirm={handleFinalSave}
         title="Konumu Kaydetmek İstiyor Musun?"
         message="Girdiğin bilgileri doğrulayıp konumu eklemek üzeresin."
         confirmText="Evet, Kaydet"

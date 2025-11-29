@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import AddMarkerButton from '../components/button/AddMarkerButton';
 import AddLocation from '../components/button/AddLocation';
@@ -6,7 +6,7 @@ import AddMarkerModal from './modal/AddMarkerModal';
 import MarkerDetailModal from './modal/MarkerDetailModal'; 
 import MarkerPopup from './marker/MarkerPopup';
 import { useLocations } from '../hooks/useLocations';
-import { getMarkerIcon } from '../components/marker/MarkerIcon'; // İkon fonksiyonunu import et
+import { getMarkerIcon } from '../components/marker/MarkerIcon';
 
 const FlyToLocation = ({ center }) => {
   const map = useMap();
@@ -37,21 +37,33 @@ const MapContainer = () => {
     userLocation: null,
   });
 
+  // State değişimlerini izlemek için DEBUG logu
+  useEffect(() => {
+    console.log('🛠️ [MapContainer State Güncellendi]:', {
+        modalOpen: state.modalOpen,
+        isAddingMode: state.isAddingMode,
+        selectedPosition: state.selectedPosition
+    });
+  }, [state.modalOpen, state.isAddingMode, state.selectedPosition]);
+
   const updateState = (key, value) => setState(prev => ({ ...prev, [key]: value }));
 
   const worldBounds = useMemo(() => [[-90, -180], [90, 180]], []);
 
   const handleButtonClick = useCallback(() => {
+    console.log('🔘 [Buton] Ekleme moduna tıklandı. Yeni durum:', !state.isAddingMode);
     setState(prev => ({ ...prev, isAddingMode: !prev.isAddingMode }));
-  }, []);
+  }, [state.isAddingMode]);
 
   const handleMapClick = useCallback((e) => {
+    console.log('🗺️ [Harita] Tıklandı:', e.latlng);
     setState(prev => ({
       ...prev,
       selectedPosition: e.latlng,
       modalOpen: true,
       isAddingMode: false
     }));
+    console.log('🚀 [Modal] Açılma komutu verildi.');
   }, []);
 
   const handleOpenDetail = useCallback((loc) => {
@@ -130,11 +142,19 @@ const MapContainer = () => {
         </div>
       )}
 
+      {/* MODAL FIX KISMI BURASI */}
       {state.modalOpen && state.selectedPosition && (
         <AddMarkerModal
-          position={state.selectedPosition}
-          onClose={() => updateState('modalOpen', false)}
-          onSave={fetchLocations}
+          selectedPosition={state.selectedPosition} // DÜZELTİLDİ: position -> selectedPosition
+          isOpen={true}                             // EKLENDİ: isOpen={true}
+          onClose={() => {
+            console.log('❌ [Modal] Kapatılıyor');
+            updateState('modalOpen', false);
+          }}
+          onSuccess={() => {                        // DÜZELTİLDİ: onSave -> onSuccess
+            console.log('✅ [Modal] Başarılı kayıt, liste yenileniyor');
+            fetchLocations();
+          }}
         />
       )}
 

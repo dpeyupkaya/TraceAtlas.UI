@@ -1,116 +1,139 @@
 import React, { useState, useRef } from "react";
+import { FiImage, FiX } from "react-icons/fi";
 
 const MarkerForm = ({ onSubmit, loading }) => {
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
     tags: [],
     tagInput: "",
-    imageBase64: "",
-    isShared: false,
+    imageBase64: ""
   });
 
   const fileRef = useRef(null);
-  const [preview, setPreview] = useState("");
 
-  const update = (k, v) => setForm((p) => ({ ...p, [k]: v }));
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(form);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFile = (e) => {
+  const handleFileChange = (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    setPreview(URL.createObjectURL(file));
-    const reader = new FileReader();
-    reader.onloadend = () => update("imageBase64", reader.result);
-    reader.readAsDataURL(file);
-  };
-
-  const removeFile = () => {
-    setPreview("");
-    update("imageBase64", "");
-    if (fileRef.current) fileRef.current.value = "";
-  };
-
-  const addTag = (e) => {
-    if ((e.key === "Enter" || e.key === ",") && form.tagInput.trim()) {
-      e.preventDefault();
-      const t = form.tagInput.trim();
-      if (!form.tags.includes(t)) update("tags", [...form.tags, t]);
-      update("tagInput", "");
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData(prev => ({ ...prev, imageBase64: reader.result }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
+  const removeFile = () => {
+    setFormData(prev => ({ ...prev, imageBase64: "" }));
+    if (fileRef.current) fileRef.current.value = "";
+  };
+
+  const handleTagKeyDown = (e) => {
+    if ((e.key === "Enter" || e.key === ",") && formData.tagInput.trim()) {
+      e.preventDefault();
+      const newTag = formData.tagInput.trim();
+      if (!formData.tags.includes(newTag)) {
+        setFormData(prev => ({
+          ...prev,
+          tags: [...prev.tags, newTag],
+          tagInput: ""
+        }));
+      }
+    }
+  };
+
+  const removeTag = (tagToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
   return (
-    <form id="marker-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
-      <div className="flex items-center gap-3">
+    <form id="marker-form" onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-slate-400 mb-1">Başlık</label>
         <input
-          className="flex-1 bg-white/5 border border-white/15 text-white text-sm px-4 py-3 rounded-xl focus:bg-white/10 focus:border-emerald-400/50 outline-none transition-all"
-          placeholder="Konum Başlığı"
-          value={form.title}
-          onChange={(e) => update("title", e.target.value)}
+          type="text"
+          name="title"
           required
+          value={formData.title}
+          onChange={handleChange}
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 transition-colors"
+          placeholder="Konum başlığı..."
         />
-      
       </div>
 
-      <textarea
-        className="bg-white/5 border border-white/15 rounded-xl text-white text-sm px-4 py-3 focus:bg-white/10 focus:border-emerald-400/50 outline-none transition-all resize-none"
-        placeholder="Kısa açıklama"
-        rows={2}
-        value={form.description}
-        onChange={(e) => update("description", e.target.value)}
-        required
-      />
-
-      <div className="flex flex-col gap-3">
-        <input
-          className="bg-white/5 border border-white/15 rounded-xl text-white text-sm px-4 py-3 focus:bg-white/10 focus:border-emerald-400/50 outline-none transition-all"
-          placeholder="Etiket ekle (Enter)"
-          value={form.tagInput}
-          onChange={(e) => update("tagInput", e.target.value)}
-          onKeyDown={addTag}
+      <div>
+        <label className="block text-sm font-medium text-slate-400 mb-1">Açıklama</label>
+        <textarea
+          name="description"
+          rows="3"
+          value={formData.description}
+          onChange={handleChange}
+          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none"
+          placeholder="Bu yer hakkında bilgi..."
         />
-        {form.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {form.tags.map((tag, i) => (
-              <span key={i} className="px-3 py-1 text-xs text-emerald-300 border border-emerald-400/40 rounded-full bg-emerald-500/10 flex items-center gap-1">
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-slate-400 mb-1">Etiketler</label>
+        <div className="bg-white/5 border border-white/10 rounded-lg p-2 focus-within:border-emerald-500 transition-colors">
+          <div className="flex flex-wrap gap-2 mb-2">
+            {formData.tags.map((tag, index) => (
+              <span key={index} className="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded">
                 #{tag}
-                <button
-                  type="button"
-                  onClick={() => update("tags", form.tags.filter((t) => t !== tag))}
-                  className="hover:text-white ml-1"
-                >
-                  ✕
+                <button type="button" onClick={() => removeTag(tag)} className="hover:text-white">
+                  <FiX />
                 </button>
               </span>
             ))}
           </div>
-        )}
+          <input
+            type="text"
+            name="tagInput"
+            value={formData.tagInput}
+            onChange={handleChange}
+            onKeyDown={handleTagKeyDown}
+            className="w-full bg-transparent text-white focus:outline-none text-sm"
+            placeholder="Etiket yazıp Enter'a basın..."
+          />
+        </div>
       </div>
 
-      {!preview ? (
-        <label className="border border-dashed border-white/20 rounded-xl py-4 text-white/50 text-sm cursor-pointer bg-white/5 hover:bg-white/10 transition-all text-center">
-          <input ref={fileRef} type="file" accept="image/*" onChange={handleFile} className="hidden" />
-          Fotoğraf ekle
-        </label>
-      ) : (
-        <div className="relative h-28 rounded-xl overflow-hidden border border-emerald-500/30 group">
-          <img src={preview} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all" alt="Preview" />
-          <button
-            type="button"
-            onClick={removeFile}
-            className="absolute inset-0 flex items-center justify-center bg-black/40 text-white opacity-0 group-hover:opacity-100 transition-all"
+      <div>
+        <label className="block text-sm font-medium text-slate-400 mb-1">Fotoğraf</label>
+        {!formData.imageBase64 ? (
+          <div 
+            onClick={() => fileRef.current?.click()}
+            className="border-2 border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center text-slate-500 hover:text-white hover:border-white/30 cursor-pointer transition-all"
           >
-            Sil
-          </button>
-        </div>
-      )}
-
-      <button type="submit" disabled={loading} className="hidden">Kaydet</button>
+            <FiImage size={24} className="mb-2" />
+            <span className="text-sm">Fotoğraf Seç</span>
+            <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+          </div>
+        ) : (
+          <div className="relative rounded-lg overflow-hidden border border-white/10 group">
+            <img src={formData.imageBase64} alt="Preview" className="w-full h-40 object-cover" />
+            <button 
+              type="button" 
+              onClick={removeFile}
+              className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <FiX />
+            </button>
+          </div>
+        )}
+      </div>
     </form>
   );
 };
