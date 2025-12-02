@@ -8,12 +8,14 @@ import MapPage from "./pages/MapPage";
 import BaseProfil from './components/profile/BaseProfil';
 import ResetPasswordPage from './components/auth/ResetPasswordPage';
 import ConfirmEmailPage from './components/auth/ConfirmEmailPage';
+import TokenAlert from './Alert';
 
 
 
 function App() {
   return (
     <Router>
+      <TokenAlert />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="home" element={<HomePage />} />

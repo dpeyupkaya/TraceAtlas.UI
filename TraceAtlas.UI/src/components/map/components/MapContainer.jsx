@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
 import AddMarkerButton from '../components/button/AddMarkerButton';
 import AddLocation from '../components/button/AddLocation';
 import AddMarkerModal from './modal/AddMarkerModal';
-import MarkerDetailModal from './modal/MarkerDetailModal'; 
+import MarkerDetailModal from './modal/MarkerDetailModal';
 import MarkerPopup from './marker/MarkerPopup';
 import { useLocations } from '../hooks/useLocations';
 import { getMarkerIcon } from '../components/marker/MarkerIcon';
@@ -17,6 +17,12 @@ const FlyToLocation = ({ center }) => {
   }, [center, map]);
   return null;
 };
+const userLocationIcon = L.divIcon({
+  className: 'user-location-marker-container',
+  html: '<div class="user-location-dot"></div><div class="user-location-pulse"></div>',
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
+});
 
 const MapClickHandler = ({ onMapClick, isAddingMode }) => {
   useMapEvents({
@@ -27,7 +33,7 @@ const MapClickHandler = ({ onMapClick, isAddingMode }) => {
 
 const MapContainer = () => {
   const { locations, fetchLocations, loading } = useLocations();
-  
+
   const [state, setState] = useState({
     modalOpen: false,
     selectedPosition: null,
@@ -37,33 +43,21 @@ const MapContainer = () => {
     userLocation: null,
   });
 
-  // State değişimlerini izlemek için DEBUG logu
-  useEffect(() => {
-    console.log('🛠️ [MapContainer State Güncellendi]:', {
-        modalOpen: state.modalOpen,
-        isAddingMode: state.isAddingMode,
-        selectedPosition: state.selectedPosition
-    });
-  }, [state.modalOpen, state.isAddingMode, state.selectedPosition]);
-
   const updateState = (key, value) => setState(prev => ({ ...prev, [key]: value }));
 
   const worldBounds = useMemo(() => [[-90, -180], [90, 180]], []);
 
   const handleButtonClick = useCallback(() => {
-    console.log('🔘 [Buton] Ekleme moduna tıklandı. Yeni durum:', !state.isAddingMode);
     setState(prev => ({ ...prev, isAddingMode: !prev.isAddingMode }));
-  }, [state.isAddingMode]);
+  }, []);
 
   const handleMapClick = useCallback((e) => {
-    console.log('🗺️ [Harita] Tıklandı:', e.latlng);
     setState(prev => ({
       ...prev,
       selectedPosition: e.latlng,
       modalOpen: true,
       isAddingMode: false
     }));
-    console.log('🚀 [Modal] Açılma komutu verildi.');
   }, []);
 
   const handleOpenDetail = useCallback((loc) => {
@@ -99,28 +93,28 @@ const MapContainer = () => {
         />
 
         <FlyToLocation center={state.flyToCoords} />
-        
+
         <MapClickHandler onMapClick={handleMapClick} isAddingMode={state.isAddingMode} />
 
         {locations.map((loc) => (
-          <Marker 
-            key={loc.id} 
+          <Marker
+            key={loc.id}
             position={[loc.latitude, loc.longitude]}
             icon={getMarkerIcon(loc.imageBase64)}
           >
             <Popup closeButton={false} className="custom-popup">
-              <MarkerPopup 
-                location={loc} 
-                onOpenDetail={handleOpenDetail} 
+              <MarkerPopup
+                location={loc}
+                onOpenDetail={handleOpenDetail}
               />
             </Popup>
           </Marker>
         ))}
 
         {state.userLocation && (
-          <Marker 
+          <Marker
             position={[state.userLocation.lat, state.userLocation.lng]}
-            icon={getMarkerIcon(null)}
+           icon={userLocationIcon}
           >
             <Popup>
               <div className="text-center font-semibold text-emerald-600">
@@ -135,26 +129,15 @@ const MapContainer = () => {
           <AddMarkerButton onClick={handleButtonClick} isActive={state.isAddingMode} />
         </div>
       </LeafletMap>
-      
-      {state.isAddingMode && (
-        <div className="absolute top-24 left-1/2 transform -translate-x-1/2 z-[1000] bg-emerald-900/80 text-white px-6 py-2 rounded-full backdrop-blur-md border border-white/20 animate-pulse pointer-events-none">
-          Konum seçmek için haritaya tıklayın
-        </div>
-      )}
 
-      {/* MODAL FIX KISMI BURASI */}
+     
+
       {state.modalOpen && state.selectedPosition && (
         <AddMarkerModal
-          selectedPosition={state.selectedPosition} // DÜZELTİLDİ: position -> selectedPosition
-          isOpen={true}                             // EKLENDİ: isOpen={true}
-          onClose={() => {
-            console.log('❌ [Modal] Kapatılıyor');
-            updateState('modalOpen', false);
-          }}
-          onSuccess={() => {                        // DÜZELTİLDİ: onSave -> onSuccess
-            console.log('✅ [Modal] Başarılı kayıt, liste yenileniyor');
-            fetchLocations();
-          }}
+          selectedPosition={state.selectedPosition}
+          isOpen={true}
+          onClose={() => updateState('modalOpen', false)}
+          onSuccess={() => fetchLocations()}
         />
       )}
 

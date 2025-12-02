@@ -8,7 +8,8 @@ const EnvelopeIcon = ({ className }) => (
   </svg>
 );
 
-const UserPreferences = () => {
+// USER PROP EKLENDİ
+const UserPreferences = ({ user }) => { 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -45,25 +46,20 @@ const UserPreferences = () => {
   ];
 
   useEffect(() => {
-    const fetchPreferences = async () => {
-      try {
-        setLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        setPreferences({
-          marketingEmails: false,
-          securityEmails: true,
-          activityEmails: true,
-          newsletterEmails: false
-        });
-      } catch (error) {
-        console.error("Hata", error);
-      } finally {
-        setLoading(false);
+    // API Yerine LocalStorage'dan oku (Backend olmadığı için)
+    const loadPreferences = async () => {
+      setLoading(true);
+      // Simüle edilmiş bekleme (İstersen kaldırabilirsin)
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const savedPrefs = localStorage.getItem('user_preferences');
+      if (savedPrefs) {
+        setPreferences(JSON.parse(savedPrefs));
       }
+      setLoading(false);
     };
 
-    fetchPreferences();
+    loadPreferences();
   }, []);
 
   const handleToggle = (key) => {
@@ -80,8 +76,13 @@ const UserPreferences = () => {
   const confirmSave = async () => {
     try {
       setSaving(true);
-      console.log("API'ye Giden Veri:", preferences);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // API isteği simülasyonu
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      // Backend olmadığı için LocalStorage'a kaydet
+      localStorage.setItem('user_preferences', JSON.stringify(preferences));
+
       alert("Tercihleriniz başarıyla güncellendi!");
       setIsModalOpen(false);
     } catch (error) {
@@ -108,7 +109,10 @@ const UserPreferences = () => {
         </div>
         <div>
             <h2 className="text-2xl font-bold text-[#1E3A3A]">E-posta Tercihleri</h2>
-            <p className="text-sm text-gray-500">Hangi konularda e-posta almak istediğinizi yönetin.</p>
+            <p className="text-sm text-gray-500">
+                {/* Kullanıcı maili varsa göster */}
+                {user ? `${user.email} için bildirim ayarları.` : 'Bildirim ayarlarını yönetin.'}
+            </p>
         </div>
       </div>
       
@@ -146,7 +150,7 @@ const UserPreferences = () => {
             disabled={saving}
             className="flex items-center gap-2 bg-gradient-to-r from-[#1E3A3A] to-[#2D554F] text-white px-8 py-3 rounded-xl font-medium hover:shadow-lg hover:shadow-[#1E3A3A]/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-            <span>Değişiklikleri Kaydet</span>
+            <span>{saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}</span>
         </button>
       </div>
 

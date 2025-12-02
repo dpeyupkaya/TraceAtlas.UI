@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../common/ConfirmationModal';
+import profileService from '../../../services/profileService'; // Servis importu
 
 const TrashIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -17,6 +19,8 @@ const DeleteAccount = () => {
   const [confirmText, setConfirmText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  const navigate = useNavigate(); // Yönlendirme için hook
 
   const handleInitialClick = () => {
     if (confirmText === 'SİL') {
@@ -24,14 +28,29 @@ const DeleteAccount = () => {
     }
   };
 
-  const handleFinalDelete = () => {
+  const handleFinalDelete = async () => {
     setIsDeleting(true);
     
-    setTimeout(() => {
+    try {
+      // Backend servisine istek at
+      await profileService.deleteAccount();
+
+      // Başarılı olursa token ve kullanıcı bilgilerini temizle
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('user'); // Varsa user bilgisini de sil
+      
+      alert("Hesabınız başarıyla silindi. Giriş sayfasına yönlendiriliyorsunuz.");
+      
+      // Giriş sayfasına yönlendir
+      navigate('/auth');
+      
+    } catch (error) {
+      console.error("Hesap silme hatası:", error);
+      alert("Hesap silinirken bir hata oluştu. Lütfen tekrar deneyiniz.");
+    } finally {
       setIsDeleting(false);
       setIsModalOpen(false);
-      alert("Hesap silme talebiniz alındı. Yönlendiriliyorsunuz...");
-    }, 2000);
+    }
   };
 
   return (
