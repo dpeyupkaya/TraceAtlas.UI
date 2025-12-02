@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import profileService from '../../../services/profileService'; 
 
+// Icon componentleri (LockIcon, EnvelopeIcon) aynı kalacak, buraya tekrar yazmıyorum...
 const LockIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
     <path fillRule="evenodd" d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3a3.75 3.75 0 10-7.5 0v3h7.5z" clipRule="evenodd" />
@@ -13,34 +15,49 @@ const EnvelopeIcon = ({ className }) => (
   </svg>
 );
 
-const SecuritySettings = () => {
+// BURASI DEĞİŞTİ: userEmail'i prop olarak alıyoruz
+const SecuritySettings = ({ userEmail }) => {
   const [loading, setLoading] = useState(false);
   const [mailSent, setMailSent] = useState(false);
 
   const handleResetPassword = async () => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setLoading(false);
-    setMailSent(true);
+    if (!userEmail) {
+      alert("Kullanıcı e-posta bilgisi yüklenemedi.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // Servise prop'tan gelen maili gönderiyoruz
+      await profileService.sendPasswordResetLink(userEmail);
+      
+      setMailSent(true);
+    } catch (error) {
+      console.error("Mail gönderim hatası:", error);
+      alert("Hata oluştu: " + (error.response?.data?.message || "Bağlantı gönderilemedi."));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
+    // ... JSX kısmın tamamen aynı kalacak ...
     <div>
-     
-
       <div className="grid gap-8">
-        
-       
-
         <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
           <div className="flex items-center gap-2 mb-4 text-[#1E3A3A]">
-            <LockIcon className="w-5 h-5" />
+            <div className="p-2 bg-[#1E3A3A]/10 rounded-lg">
+                <LockIcon className="w-5 h-5" />
+            </div>
             <h3 className="text-lg font-bold">Şifre Değiştir</h3>
           </div>
 
           <div className="max-w-xl">
             <p className="text-gray-600 mb-6 leading-relaxed">
-              Hesap güvenliğiniz için şifre değiştirme işlemlerini e-posta doğrulama bağlantısı üzerinden gerçekleştiriyoruz. Aşağıdaki butona tıkladığınızda kayıtlı e-posta adresinize bir sıfırlama bağlantısı gönderilecektir.
+              Hesap güvenliğiniz için şifre değiştirme işlemlerini e-posta doğrulama bağlantısı üzerinden gerçekleştiriyoruz. 
+              {/* İstersen kullanıcının mailini de burada gösterebilirsin */}
+              <span className="block mt-2 font-medium text-[#1E3A3A]">{userEmail}</span> 
+              adresine bir sıfırlama bağlantısı gönderilecektir.
             </p>
 
             {!mailSent ? (
@@ -58,7 +75,10 @@ const SecuritySettings = () => {
                     <span>Gönderiliyor...</span>
                   </>
                 ) : (
-                  <span>Şifre Sıfırlama Bağlantısı Gönder</span>
+                  <>
+                    <EnvelopeIcon className="w-5 h-5" />
+                    <span>Şifre Sıfırlama Bağlantısı Gönder</span>
+                  </>
                 )}
               </button>
             ) : (
@@ -84,7 +104,6 @@ const SecuritySettings = () => {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

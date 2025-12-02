@@ -1,6 +1,5 @@
 import api from '../../../api/api.js';
 
-// Tüm lokasyonları çek
 export const getLocations = async () => {
   try {
     const response = await api.get('/Locations');
@@ -36,3 +35,34 @@ export const getLocationById = async (id) => {
     throw error;
   }
 };
+
+// Favorilere ekle
+export const addFavorite = async (locationId) => {
+  const token = localStorage.getItem('accessToken');
+  if (!token) throw new Error("Kullanıcı giriş yapmamış.");
+
+  try {
+    await api.post(`/Profile/favorites/${locationId}`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return true; // Başarılı
+  } catch (error) {
+    console.error("Favoriye eklenemedi:", error);
+    throw error;
+  }
+}
+// Favori çıkar
+export const removeFavorite = async (locationId) => {
+  const token = localStorage.getItem('accessToken');
+  if (!token) throw new Error("Kullanıcı giriş yapmamış.");
+
+  try {
+    const res = await api.delete(`/Profile/favorites/${locationId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return res.data;
+  } catch (error) {
+    console.error("Favoriden çıkarılamadı:", error);
+    throw error;
+  }
+}

@@ -7,7 +7,6 @@ const SearchIcon = ({ c }) => <Icon c={c} p={<><circle cx="11" cy="11" r="8"/><l
 const CloseIcon = ({ c }) => <Icon c={c} p={<><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>} />;
 const MenuIcon = ({ o, c }) => <Icon c={c} p={o ? <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></> : <><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></>} />;
 
-// --- DÜZELTİLMİŞ JWT DECODE (Türkçe Karakter + Username Fix) ---
 const parseJwt = (token) => {
   try {
     const base64Url = token.split('.')[1];

@@ -57,3 +57,53 @@
 .animate-fadeIn {
   animation: fadeIn 0.2s ease-out;
 }
+
+
+
+/* UserLocation.css */
+
+/* Marker'ın kapsayıcısı - Arkaplanı temizledik */
+.user-location-marker-container {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Ortadaki Mavi Nokta */
+.user-location-dot {
+    width: 16px;
+    height: 16px;
+    background-color: #3b82f6; /* Canlı Mavi */
+    border: 3px solid white;   /* Beyaz Çerçeve */
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+}
+
+/* Yayılan Dalga Animasyonu */
+.user-location-pulse {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(59, 130, 246, 0.4);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    animation: location-pulse 2s infinite ease-out;
+}
+
+@keyframes location-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}

@@ -1,54 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiTrash2, FiCalendar } from 'react-icons/fi';
 import AddMarkerModal from '../../map/components/modal/AddMarkerModal';
 import ConfirmationModal from '../../common/ConfirmationModal';
+import profileService from '../../../services/profileService'; // Servis importu
 
 const SharedPlaces = () => {
   const [editingPlace, setEditingPlace] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [sharedPosts, setSharedPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [sharedPosts, setSharedPosts] = useState([
-    { 
-      id: 101, 
-      title: 'Bursa Gezisi', 
-      date: '20 Ekim 2025', 
-      latitude: 40.1885, 
-      longitude: 29.0610,
-      imageBase64: 'https://placehold.co/600x400/1E3A3A/ffffff?text=Bursa',
-      creatorUsername: 'eyupkaya',
-      createdAt: '2025-10-20T14:00:00',
-      description: 'Yeşil Bursa\'nın tarihi dokusu ve İskender kebabı harikaydı. Ulu Cami ve Kozahan mutlaka görülmeli.',
-      tags: ['Tarih', 'Yemek', 'Gezi']
-    },
-    { 
-      id: 102, 
-      title: 'Sapanca Gölü', 
-      date: '15 Eylül 2025',  
-      latitude: 40.6926, 
-      longitude: 30.2737,
-      imageBase64: 'https://placehold.co/600x400/2D554F/ffffff?text=Sapanca',
-      creatorUsername: 'eyupkaya',
-      createdAt: '2025-09-15T09:30:00',
-      description: 'Hafta sonu kaçamağı için mükemmel bir yer. Göl kenarında kahvaltı ve yürüyüş çok huzurlu.',
-      tags: ['Doğa', 'Göl', 'Huzur']
-    },
-  ]);
+  // Backend'den paylaşımları çek
+  useEffect(() => {
+    const fetchMyPlaces = async () => {
+      try {
+        const data = await profileService.getMyPlaces();
+        const mappedData = data.map(item => ({
+            id: item.id || item.locationId,
+            title: item.name || item.title || 'İsimsiz Mekan',
+            date: item.createdAt ? new Date(item.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Tarih Yok',
+            latitude: item.latitude || 0,
+            longitude: item.longitude || 0,
+            imageBase64: item.imageBase64 || 'https://placehold.co/600x400/1E3A3A/ffffff?text=TraceAtlas',
+            creatorUsername: item.creatorUsername || 'Ben',
+            createdAt: item.createdAt,
+            description: item.description || 'Açıklama girilmemiş.',
+            tags: item.tags || []
+        }));
+        setSharedPosts(mappedData);
+      } catch (error) {
+        console.error("Paylaşımlar çekilemedi:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const handleSaveEdit = () => {
+    fetchMyPlaces();
+  }, []);
+
+  // Düzenlemeyi kaydet
+  const handleSaveEdit = (updatedData) => {
+    setSharedPosts(prev => prev.map(post => 
+        post.id === editingPlace.id ? { ...post, ...updatedData } : post
+    ));
     setEditingPlace(null);
   };
 
+  // Silme modalını aç
   const handleDeleteClick = (id) => {
     setDeleteId(id);
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
-    setSharedPosts(prev => prev.filter(post => post.id !== deleteId));
-    setIsDeleteModalOpen(false);
-    setDeleteId(null);
+  // Silmeyi onayla
+  const confirmDelete = async () => {
+    try {
+        // Backend'de mekan silme endpointi varsa çağır
+        await profileService.deleteMyPlace(deleteId); 
+        
+        // UI'dan sil
+        setSharedPosts(prev => prev.filter(post => post.id !== deleteId));
+        setIsDeleteModalOpen(false);
+        setDeleteId(null);
+    } catch (error) {
+        alert("Silme işlemi başarısız.");
+    }
   };
+
+  if (loading) {
+      return (
+          <div className="flex justify-center items-center h-64">
+               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#1E3A3A]"></div>
+          </div>
+      );
+  }
 
   return (
     <>
@@ -106,7 +132,7 @@ const SharedPlaces = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 px-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-center">
-             <p className="text-gray-500">Henüz paylaşım yapmadınız.</p>
+              <p className="text-gray-500">Henüz paylaşım yapmadınız.</p>
           </div>
         )}
       </div>

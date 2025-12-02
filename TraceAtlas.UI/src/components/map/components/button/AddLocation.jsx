@@ -13,11 +13,10 @@ export const AddLocation = ({ onLocationFound }) => {
       return;
     }
 
-    // Yüksek hassasiyet ayarları
     const options = {
-      enableHighAccuracy: true, // GPS'i zorla (Mümkünse)
-      timeout: 10000,           // 10 saniye bekle
-      maximumAge: 0             // Önbellekten eski konum getirme, yenisini bul
+      enableHighAccuracy: true, // GPS modunu zorla
+      timeout: 15000,           // Süreyi biraz arttırdık (daha iyi uydu bağlantısı için)
+      maximumAge: 0             // Asla önbellekten eski konum getirme
     };
 
     navigator.geolocation.getCurrentPosition(
@@ -25,7 +24,7 @@ export const AddLocation = ({ onLocationFound }) => {
         const coords = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-          accuracy: position.coords.accuracy // Doğruluk payını da alabiliriz (isteğe bağlı)
+          accuracy: position.coords.accuracy // Doğruluk yarıçapını (metre) alıyoruz
         };
         setLoading(false);
         if (onLocationFound) onLocationFound(coords);
@@ -35,7 +34,7 @@ export const AddLocation = ({ onLocationFound }) => {
         setLoading(false);
         let msg = "Konum alınamadı.";
         if (err.code === 1) msg = "Konum izni reddedildi.";
-        if (err.code === 2) msg = "Konum servislerine erişilemiyor.";
+        if (err.code === 2) msg = "Konum servislerine erişilemiyor (GPS kapalı olabilir).";
         if (err.code === 3) msg = "Konum bulma süresi doldu.";
         alert(msg);
       },
