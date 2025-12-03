@@ -25,7 +25,20 @@ const profileService = {
     deleteMyPlace: async (locationId) => {
         const response = await api.delete(`/Profile/${locationId}`);
         return response.data;
+    },
+     updateEmailPreferences: async (preferences) => {
+        // Token işlemi api interceptor içinde halledildiği için header eklemeye gerek yok
+        const response = await api.put('/EmailPreferences', preferences);
+        return response.data;
+    },
+
+    // [GET] Email tercihlerini getirir
+    getEmailPreferences: async () => {
+        const response = await api.get('/EmailPreferences');
+        return response.data;
     }
+
+    
 };
 
 

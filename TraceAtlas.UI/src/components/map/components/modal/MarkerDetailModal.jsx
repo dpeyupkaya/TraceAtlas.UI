@@ -12,7 +12,7 @@ const MarkerDetailModal = ({ location, onClose, onFavoriteAdded }) => {
     ? (location.imageBase64?.startsWith('data:') ? location.imageBase64 : `data:image/jpeg;base64,${location.imageBase64 || location.image}`)
     : null;
 
-  const formatDate = date => new Date(date || Date.now()).toLocaleDateString('tr-TR', { day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  
 
   const handleShare = () => navigator.share 
     ? navigator.share({ title: location.title, text: location.description, url: window.location.href }).catch(console.error)
@@ -51,7 +51,7 @@ const MarkerDetailModal = ({ location, onClose, onFavoriteAdded }) => {
           </div>
           <div className="flex gap-3 flex-wrap text-sm text-gray-600">
             <span className="flex items-center gap-1"><FiUser /> @{location.creatorUsername}</span>
-            <span className="flex items-center gap-1"><FiCalendar /> {formatDate(location.createdAt)}</span>
+        
           </div>
 
           <p className="bg-gray-50 p-4 rounded-xl border border-gray-100">{location.description}</p>

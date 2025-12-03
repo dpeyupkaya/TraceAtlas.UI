@@ -51,6 +51,7 @@ export const addFavorite = async (locationId) => {
     throw error;
   }
 }
+
 // Favori çıkar
 export const removeFavorite = async (locationId) => {
   const token = localStorage.getItem('accessToken');
@@ -66,3 +67,25 @@ export const removeFavorite = async (locationId) => {
     throw error;
   }
 }
+
+// --- YENİ EKLENEN KISIM: OData ile Etiket Arama ---
+export const searchByTag = async (term) => {
+    // 2 karakterden azsa arama yapma
+    if (!term || term.length < 2) return [];
+
+    const cleanTerm = term.trim().toLowerCase();
+    
+    // OData Sorgusu:
+    // 1. $expand=LocationTags($expand=Tag): Lokasyonun etiketlerini de getir.
+    // 2. $filter: Etiket isminde aranan kelime geçiyor mu? (contains & tolower)
+    const query = `/odata/Locations?$expand=LocationTags($expand=Tag)&$filter=LocationTags/any(lt: contains(tolower(lt/Tag/Name), '${cleanTerm}'))`;
+    
+    try {
+        const response = await api.get(query);
+        // OData standardı gereği veriler 'value' dizisi içinde gelir
+        return response.data.value;
+    } catch (error) {
+        console.error("Arama sırasında hata oluştu:", error);
+        return []; // Hata olursa boş dizi dönelim ki uygulama çökmesin
+    }
+};
