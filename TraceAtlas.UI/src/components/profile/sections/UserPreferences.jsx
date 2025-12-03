@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ConfirmationModal from '../../common/ConfirmationModal';
+import profileService from '../../../services/profileService';
 
 const EnvelopeIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -8,7 +9,6 @@ const EnvelopeIcon = ({ className }) => (
   </svg>
 );
 
-// USER PROP EKLENDİ
 const UserPreferences = ({ user }) => { 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -16,9 +16,7 @@ const UserPreferences = ({ user }) => {
   
   const [preferences, setPreferences] = useState({
     marketingEmails: false,
-    securityEmails: true,
-    activityEmails: true,
-    newsletterEmails: false
+    securityEmails: true
   });
 
   const preferenceConfig = [
@@ -29,34 +27,48 @@ const UserPreferences = ({ user }) => {
       disabled: true 
     },
     { 
-      key: 'activityEmails', 
-      title: 'Aktivite ve Yorumlar', 
-      desc: 'Paylaşımlarınıza gelen beğeniler, yorumlar ve etiketlenmeler hakkında bildirimler.' 
-    },
-    { 
-      key: 'newsletterEmails', 
-      title: 'Haftalık Keşif Bülteni', 
-      desc: 'İlginizi çekebilecek popüler rotalar ve haftanın öne çıkan mekan önerileri.' 
-    },
-    { 
       key: 'marketingEmails', 
       title: 'Yenilikler ve Duyurular', 
       desc: 'TraceAtlas güncellemeleri, yeni özellikler ve topluluk duyuruları.' 
     }
   ];
 
+  // --- GET İŞLEMİ (Verileri Çekme) ---
   useEffect(() => {
-    // API Yerine LocalStorage'dan oku (Backend olmadığı için)
     const loadPreferences = async () => {
       setLoading(true);
-      // Simüle edilmiş bekleme (İstersen kaldırabilirsin)
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const savedPrefs = localStorage.getItem('user_preferences');
-      if (savedPrefs) {
-        setPreferences(JSON.parse(savedPrefs));
+      try {
+        // Backend'den veriyi çekiyoruz
+        const data = await profileService.getEmailPreferences();
+        
+    
+        if (data) {
+          // 1. ADIM: Backend'den gelen değer hangi anahtarda (key) saklı?
+          // C# DTO'su "MarketingEmails" gönderiyor ama bazen büyük harf gelir.
+          // O yüzden hepsini kontrol ediyoruz.
+          
+          const rawValue = 
+            data.marketingEmails ?? 
+            data.MarketingEmails ?? 
+            data.IsUsed ?? 
+            data.isUsed;
+
+          
+
+          // 2. ADIM: Gelen değer 1 mi, true mu? (Hepsini true kabul et)
+          const isEnabled = (rawValue === true || rawValue === 1 || rawValue === "true");
+
+          // 3. ADIM: State'i güncelle
+          setPreferences({
+            marketingEmails: isEnabled,
+            securityEmails: true // Bu sabit kalsın demiştik
+          });
+        }
+      } catch (error) {
+        console.error("Yükleme hatası:", error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     loadPreferences();
@@ -76,12 +88,10 @@ const UserPreferences = ({ user }) => {
   const confirmSave = async () => {
     try {
       setSaving(true);
-      
-      // API isteği simülasyonu
-      await new Promise(resolve => setTimeout(resolve, 800));
-      
-      // Backend olmadığı için LocalStorage'a kaydet
-      localStorage.setItem('user_preferences', JSON.stringify(preferences));
+
+      await profileService.updateEmailPreferences({
+        marketingEmails: preferences.marketingEmails
+      });
 
       alert("Tercihleriniz başarıyla güncellendi!");
       setIsModalOpen(false);
@@ -110,7 +120,6 @@ const UserPreferences = ({ user }) => {
         <div>
             <h2 className="text-2xl font-bold text-[#1E3A3A]">E-posta Tercihleri</h2>
             <p className="text-sm text-gray-500">
-                {/* Kullanıcı maili varsa göster */}
                 {user ? `${user.email} için bildirim ayarları.` : 'Bildirim ayarlarını yönetin.'}
             </p>
         </div>
@@ -123,23 +132,29 @@ const UserPreferences = ({ user }) => {
               <h3 className="font-bold text-gray-800">{item.title}</h3>
               <p className="text-sm text-gray-500 mt-1">{item.desc}</p>
             </div>
+           
             <label className="relative inline-flex items-center cursor-pointer">
-              <input 
-                type="checkbox" 
-                checked={preferences[item.key]} 
+              <input
+                type="checkbox"
+                checked={!!preferences[item.key]}
                 onChange={() => handleToggle(item.key)}
-                className="sr-only peer" 
+                className="sr-only"
                 disabled={item.disabled}
               />
-              <div className={`w-11 h-6 rounded-full peer peer-focus:outline-none transition-colors duration-200 ease-in-out
+
+              <div
+                className={`w-11 h-6 rounded-full transition-colors duration-200 ease-in-out
                 ${preferences[item.key] ? 'bg-[#1E3A3A]' : 'bg-gray-200'}
-                peer-checked:after:translate-x-full peer-checked:after:border-white 
-                after:content-[''] after:absolute after:top-[2px] after:left-[2px] 
-                after:bg-white after:border-gray-300 after:border after:rounded-full 
-                after:h-5 after:w-5 after:transition-all
-                ${item.disabled ? 'opacity-60 cursor-not-allowed' : ''}`}
-              ></div>
+                ${item.disabled ? 'opacity-60 cursor-not-allowed' : ''}
+                relative`}
+              >
+                <div
+                  className={`absolute top-[2px] left-[2px] h-5 w-5 bg-white rounded-full border border-gray-300 transition-transform
+                  ${preferences[item.key] ? 'translate-x-full' : ''}`}
+                ></div>
+              </div>
             </label>
+
           </div>
         ))}
       </div>

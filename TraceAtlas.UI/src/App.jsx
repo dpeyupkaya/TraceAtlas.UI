@@ -15,7 +15,7 @@ import TokenAlert from './Alert';
 function App() {
   return (
     <Router>
-      <TokenAlert />
+      
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="home" element={<HomePage />} />

@@ -1,5 +1,7 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
+import { useLocation } from 'react-router-dom';
+import L from 'leaflet';
 import AddMarkerButton from '../components/button/AddMarkerButton';
 import AddLocation from '../components/button/AddLocation';
 import AddMarkerModal from './modal/AddMarkerModal';
@@ -10,13 +12,14 @@ import { getMarkerIcon } from '../components/marker/MarkerIcon';
 
 const FlyToLocation = ({ center }) => {
   const map = useMap();
-  React.useEffect(() => {
+  useEffect(() => {
     if (center) {
       map.flyTo([center.lat, center.lng], 15, { animate: true, duration: 1.5 });
     }
   }, [center, map]);
   return null;
 };
+
 const userLocationIcon = L.divIcon({
   className: 'user-location-marker-container',
   html: '<div class="user-location-dot"></div><div class="user-location-pulse"></div>',
@@ -33,6 +36,7 @@ const MapClickHandler = ({ onMapClick, isAddingMode }) => {
 
 const MapContainer = () => {
   const { locations, fetchLocations, loading } = useLocations();
+  const routeLocation = useLocation();
 
   const [state, setState] = useState({
     modalOpen: false,
@@ -46,6 +50,18 @@ const MapContainer = () => {
   const updateState = (key, value) => setState(prev => ({ ...prev, [key]: value }));
 
   const worldBounds = useMemo(() => [[-90, -180], [90, 180]], []);
+
+  useEffect(() => {
+    if (routeLocation.state && routeLocation.state.focusedLocation) {
+        const { Latitude, Longitude } = routeLocation.state.focusedLocation;
+        if (Latitude && Longitude) {
+            setState(prev => ({
+                ...prev,
+                flyToCoords: { lat: Latitude, lng: Longitude }
+            }));
+        }
+    }
+  }, [routeLocation.state]);
 
   const handleButtonClick = useCallback(() => {
     setState(prev => ({ ...prev, isAddingMode: !prev.isAddingMode }));
@@ -114,7 +130,7 @@ const MapContainer = () => {
         {state.userLocation && (
           <Marker
             position={[state.userLocation.lat, state.userLocation.lng]}
-           icon={userLocationIcon}
+            icon={userLocationIcon}
           >
             <Popup>
               <div className="text-center font-semibold text-emerald-600">
@@ -129,8 +145,6 @@ const MapContainer = () => {
           <AddMarkerButton onClick={handleButtonClick} isActive={state.isAddingMode} />
         </div>
       </LeafletMap>
-
-     
 
       {state.modalOpen && state.selectedPosition && (
         <AddMarkerModal
