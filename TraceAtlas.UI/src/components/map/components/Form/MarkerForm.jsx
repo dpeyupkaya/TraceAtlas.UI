@@ -7,7 +7,8 @@ const MarkerForm = ({ onSubmit, loading }) => {
     description: "",
     tags: [],
     tagInput: "",
-    imageBase64: ""
+    imageFile: null,       // gerçek dosya
+    imagePreview: null     // ekranda göstermek için
   });
 
   const fileRef = useRef(null);
@@ -19,16 +20,21 @@ const MarkerForm = ({ onSubmit, loading }) => {
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, imageBase64: reader.result }));
-      };
-      reader.readAsDataURL(file);
+      setFormData(prev => ({
+        ...prev,
+        imageFile: file,
+        imagePreview: URL.createObjectURL(file)
+      }));
     }
   };
 
   const removeFile = () => {
-    setFormData(prev => ({ ...prev, imageBase64: "" }));
+    setFormData(prev => ({
+      ...prev,
+      imageFile: null,
+      imagePreview: null
+    }));
+
     if (fileRef.current) fileRef.current.value = "";
   };
 
@@ -36,6 +42,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
     if ((e.key === "Enter" || e.key === ",") && formData.tagInput.trim()) {
       e.preventDefault();
       const newTag = formData.tagInput.trim();
+
       if (!formData.tags.includes(newTag)) {
         setFormData(prev => ({
           ...prev,
@@ -87,10 +94,14 @@ const MarkerForm = ({ onSubmit, loading }) => {
 
       <div>
         <label className="block text-sm font-medium text-slate-400 mb-1">Etiketler</label>
+
         <div className="bg-white/5 border border-white/10 rounded-lg p-2 focus-within:border-emerald-500 transition-colors">
           <div className="flex flex-wrap gap-2 mb-2">
             {formData.tags.map((tag, index) => (
-              <span key={index} className="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded">
+              <span
+                key={index}
+                className="flex items-center gap-1 bg-emerald-500/20 text-emerald-400 text-xs px-2 py-1 rounded"
+              >
                 #{tag}
                 <button type="button" onClick={() => removeTag(tag)} className="hover:text-white">
                   <FiX />
@@ -98,6 +109,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
               </span>
             ))}
           </div>
+
           <input
             type="text"
             name="tagInput"
@@ -112,20 +124,32 @@ const MarkerForm = ({ onSubmit, loading }) => {
 
       <div>
         <label className="block text-sm font-medium text-slate-400 mb-1">Fotoğraf</label>
-        {!formData.imageBase64 ? (
-          <div 
+
+        {!formData.imagePreview ? (
+          <div
             onClick={() => fileRef.current?.click()}
             className="border-2 border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center text-slate-500 hover:text-white hover:border-white/30 cursor-pointer transition-all"
           >
             <FiImage size={24} className="mb-2" />
             <span className="text-sm">Fotoğraf Seç</span>
-            <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
           </div>
         ) : (
           <div className="relative rounded-lg overflow-hidden border border-white/10 group">
-            <img src={formData.imageBase64} alt="Preview" className="w-full h-40 object-cover" />
-            <button 
-              type="button" 
+            <img
+              src={formData.imagePreview}
+              alt="Preview"
+              className="w-full h-40 object-cover"
+            />
+
+            <button
+              type="button"
               onClick={removeFile}
               className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             >
