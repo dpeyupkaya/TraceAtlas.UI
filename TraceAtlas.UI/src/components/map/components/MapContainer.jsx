@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
+// --- YENİ EKLENEN İMPORT ---
+import MarkerClusterGroup from 'react-leaflet-cluster'; 
+// ---------------------------
 import { useLocation } from 'react-router-dom';
 import L from 'leaflet';
 import AddMarkerButton from '../components/button/AddMarkerButton';
@@ -10,6 +13,7 @@ import MarkerPopup from './marker/MarkerPopup';
 import { useLocations } from '../hooks/useLocations';
 import { getMarkerIcon } from '../components/marker/MarkerIcon';
 
+// ... (FlyToLocation, userLocationIcon, MapClickHandler kodları AYNI kalsın, dokunma) ...
 const FlyToLocation = ({ center }) => {
   const map = useMap();
   useEffect(() => {
@@ -33,6 +37,7 @@ const MapClickHandler = ({ onMapClick, isAddingMode }) => {
   });
   return null;
 };
+// ... (Buraya kadar aynı) ...
 
 const MapContainer = () => {
   const { locations, fetchLocations, loading } = useLocations();
@@ -48,9 +53,9 @@ const MapContainer = () => {
   });
 
   const updateState = (key, value) => setState(prev => ({ ...prev, [key]: value }));
-
   const worldBounds = useMemo(() => [[-90, -180], [90, 180]], []);
 
+  // ... (useEffect ve Handler fonksiyonları AYNI kalsın) ...
   useEffect(() => {
     if (routeLocation.state && routeLocation.state.focusedLocation) {
         const { Latitude, Longitude } = routeLocation.state.focusedLocation;
@@ -93,6 +98,7 @@ const MapContainer = () => {
   return (
     <div className="relative w-full h-full">
       <LeafletMap
+        preferCanvas={true}
         center={[39, 35]}
         zoom={6}
         minZoom={3}
@@ -109,23 +115,28 @@ const MapContainer = () => {
         />
 
         <FlyToLocation center={state.flyToCoords} />
-
         <MapClickHandler onMapClick={handleMapClick} isAddingMode={state.isAddingMode} />
 
-        {locations.map((loc) => (
-          <Marker
-            key={loc.id}
-            position={[loc.latitude, loc.longitude]}
-            icon={getMarkerIcon(loc.imageBase64)}
-          >
-            <Popup closeButton={false} className="custom-popup">
-              <MarkerPopup
-                location={loc}
-                onOpenDetail={handleOpenDetail}
-              />
-            </Popup>
-          </Marker>
-        ))}
+        {/* --- DÜZELTME VE PERFORMANS AYARI BURADA --- */}
+        {/* chunkedLoading: 20.000 veriyi parça parça işler, tarayıcı donmaz. */}
+        <MarkerClusterGroup chunkedLoading>
+          {locations.map((loc) => (
+            <Marker
+              key={loc.id}
+              position={[loc.latitude, loc.longitude]}
+              // Backend'den gelen yeni DTO yapısına uygun ikon fonksiyonu:
+              icon={getMarkerIcon(loc)} 
+            >
+              <Popup closeButton={false} className="custom-popup">
+                <MarkerPopup
+                  location={loc}
+                  onOpenDetail={handleOpenDetail}
+                />
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
+        {/* ------------------------------------------- */}
 
         {state.userLocation && (
           <Marker
@@ -146,6 +157,7 @@ const MapContainer = () => {
         </div>
       </LeafletMap>
 
+      {/* Modallar aynı kalsın */}
       {state.modalOpen && state.selectedPosition && (
         <AddMarkerModal
           selectedPosition={state.selectedPosition}

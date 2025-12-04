@@ -19,9 +19,8 @@ const AddMarkerModal = ({ isOpen, onClose, selectedPosition, onSuccess }) => {
 
   const handleFinalSave = async () => {
     setLoading(true);
-    
+
     const userId = getCurrentUserId();
-    
     if (!userId) {
       alert("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
       setLoading(false);
@@ -29,34 +28,56 @@ const AddMarkerModal = ({ isOpen, onClose, selectedPosition, onSuccess }) => {
       return;
     }
 
-    const commandData = {
-      Title: cachedFormData.title,
-      Description: cachedFormData.description,
-      Latitude: selectedPosition?.lat || 0,
-      Longitude: selectedPosition?.lng || 0,
-      Tags: cachedFormData.tags,
-      ImageBase64: cachedFormData.imageBase64 ? cachedFormData.imageBase64.split(',')[1] : null,
-      UserId: userId,
-      Region: ""
-    };
-
     try {
-      await createLocation(commandData);
-      if (onSuccess) onSuccess();
-      setConfirmOpen(false);
+      const fd = new FormData();
+      fd.append("Title", cachedFormData.title);
+      fd.append("Description", cachedFormData.description);
+
+      // --- KESİN ÇÖZÜM BURASI ---
+      // .toFixed(8) metodu sayıyı stringe çevirirken HER ZAMAN nokta (.) kullanır.
+      // Tarayıcı dili Türkçe olsa bile virgül koymaz.
+      const latString = Number(selectedPosition.lat).toFixed(8);
+      const lngString = Number(selectedPosition.lng).toFixed(8);
+
+      fd.append("Latitude", latString);
+      fd.append("Longitude", lngString);
+      // ---------------------------
+
+      fd.append("UserId", userId);
+      // Backend'de Region zorunluysa boş string gönderme, "Bilinmiyor" yaz
+      fd.append("Region", "Bilinmiyor");
+
+      // Etiketleri ekle
+      if (cachedFormData.tags && cachedFormData.tags.length > 0) {
+        cachedFormData.tags.forEach((tag) => {
+          fd.append("Tags", tag);
+        });
+      }
+
+      // Resmi ekle
+      if (cachedFormData.imageFile) {
+        fd.append("Image", cachedFormData.imageFile);
+      }
+
+      await createLocation(fd);
+
+      onSuccess?.();
       onClose();
-    } catch (error) {
-      console.error(error);
-      alert("Konum kaydedilirken bir hata oluştu.");
+    } catch (err) {
+      console.error(err);
+      // Backend'den gelen hatayı daha net görmek için:
+      const errorMsg = err.response?.data?.title || err.response?.data?.message || err.message;
+      alert("Konum ekleme başarısız: " + errorMsg);
     } finally {
       setLoading(false);
+      setConfirmOpen(false);
     }
   };
 
   return (
     <>
       <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
-        <div 
+        <div
           className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm modal-fade"
           onClick={onClose}
         />
@@ -64,7 +85,7 @@ const AddMarkerModal = ({ isOpen, onClose, selectedPosition, onSuccess }) => {
         <div className="relative w-full max-w-lg bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden modal-scale">
           <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
             <h2 className="text-lg font-semibold text-white">Konum Ekle</h2>
-            <button 
+            <button
               onClick={onClose}
               disabled={loading}
               className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
