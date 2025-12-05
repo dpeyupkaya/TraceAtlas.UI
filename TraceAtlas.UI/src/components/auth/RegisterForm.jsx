@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, AtSign, Repeat } from 'lucide-react';
+import { User, Mail, Lock, AtSign, Repeat, Eye, EyeOff } from 'lucide-react';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import InputField from './InputField';
 import AuthButton from './AuthButton';
 import { authService } from '../../services/authService';
@@ -16,42 +18,137 @@ const RegisterForm = () => {
     confirmPassword: ''
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (notification) setNotification(null);
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validatePassword = (password) => {
+    // En az 8 karakter, 1 büyük, 1 küçük, 1 sayı, 1 özel karakter
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return re.test(password);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  setNotification(null);
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Şifreler uyuşmuyor!");
+  if (!validateEmail(formData.email)) {
+    setNotification({ severity: 'error', message: 'Geçersiz e-posta formatı.' });
+    return;
+  }
+
+  if (!validatePassword(formData.password)) {
+    setNotification({ 
+      severity: 'error', 
+      message: 'Şifre en az 8 karakter olmalı; 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter içermelidir.' 
+    });
+    return;
+  }
+
+  if (formData.password !== formData.confirmPassword) {
+    setNotification({ severity: 'error', message: 'Şifreler uyuşmuyor!' });
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const dataToSend = {
+      userName: formData.userName,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password
+    };
+
+    await authService.register(dataToSend);
+
+    setNotification({
+      severity: 'success',
+      message: 'Kayıt başarılı! Doğrulama bağlantısı e-posta adresinize gönderildi. Yönlendiriliyorsunuz...'
+    });
+
+    setTimeout(() => {
+      navigate('/auth');
+    }, 3000);
+
+  } catch (err) {
+    const status = err?.response?.status;
+    const data = err?.response?.data;
+
+    // Backend'den gelen mesaj bazen 'message', bazen 'detail', bazen 'error' olabilir.
+    // Hepsini kontrol edip garantiye alıyoruz.
+    const rawMessage = data?.message || data?.detail || data?.error || "";
+    
+    // Kontrol yaparken büyük/küçük harf hatasına düşmemek için küçültüyoruz
+    const messageLower = rawMessage.toString().toLowerCase();
+    
+    const errors = data?.errors; // FluentValidation hataları (örn: şifre kuralları)
+
+    // 1) Backend Validation Hataları (FluentValidation vb.)
+    if (errors) {
+      const firstField = Object.keys(errors)[0];
+      const firstError = errors[firstField][0];
+      setNotification({ severity: 'error', message: firstError });
+      return; // Validation varsa diğerlerine bakmaya gerek yok
+    }
+
+    // 2) Özel Durum Kontrolleri
+    // Backend: "Bu hesap silinmiş."
+    if (messageLower.includes("silinmiş")) {
+      setNotification({ 
+        severity: 'error', // İstersen 'warning' yapıp sarı gösterebilirsin
+        message: 'Bu hesap daha önce silinmiş. Lütfen destek ekibiyle iletişime geçin.' 
+      });
       return;
     }
 
-    try {
-      const dataToSend = {
-        userName: formData.userName,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password
-      };
-
-      await authService.register(dataToSend);
-      
-      alert("Kayıt Başarılı!\n\nLütfen e-posta adresinizi kontrol edin ve gönderilen doğrulama bağlantısına tıklayarak hesabınızı aktif hale getirin.\n\nŞimdi giriş ekranına yönlendiriliyorsunuz.");
-      
-      navigate('/auth');
-
-    } catch (error) {
-      console.error("Register Hatası:", error);
-      alert("Kayıt sırasında bir hata oluştu.");
+    // Backend: "Bu e-posta zaten kayıtlı."
+    if (messageLower.includes("zaten kayıtlı") || messageLower.includes("e-posta")) {
+      setNotification({ 
+        severity: 'error', 
+        message: 'Bu e-posta adresi ile zaten bir hesap mevcut.' 
+      });
+      return;
     }
+
+    // Backend: "Bu kullanıcı adı zaten kullanılıyor."
+    if (messageLower.includes("kullanılıyor") || messageLower.includes("kullanıcı adı")) {
+      setNotification({ 
+        severity: 'error', 
+        message: 'Bu kullanıcı adı başkası tarafından alınmış, lütfen başka bir tane seçin.' 
+      });
+      return;
+    }
+
+
+} finally {
+    setLoading(false);
+}
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 select-none">
+    <form onSubmit={handleSubmit} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 select-none relative">
       
+      {notification && (
+        <Stack sx={{ width: '100%', mb: 2 }} spacing={2}>
+          <Alert severity={notification.severity} variant="filled">
+            {notification.message}
+          </Alert>
+        </Stack>
+      )}
+
       <InputField 
         icon={AtSign} 
         type="text" 
@@ -89,23 +186,41 @@ const RegisterForm = () => {
         onChange={handleChange}
       />
 
-      <InputField 
-        icon={Lock} 
-        type="password" 
-        name="password"
-        placeholder="Şifren" 
-        value={formData.password}
-        onChange={handleChange}
-      />
+      <div className="relative group">
+        <InputField 
+          icon={Lock} 
+          type={showPassword ? "text" : "password"}
+          name="password"
+          placeholder="Şifren" 
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <button
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors focus:outline-none"
+        >
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
       
-      <InputField 
-        icon={Repeat} 
-        type="password" 
-        name="confirmPassword"
-        placeholder="Şifreni Onayla" 
-        value={formData.confirmPassword}
-        onChange={handleChange}
-      />
+      <div className="relative group">
+        <InputField 
+          icon={Repeat} 
+          type={showConfirmPassword ? "text" : "password"}
+          name="confirmPassword"
+          placeholder="Şifreni Onayla" 
+          value={formData.confirmPassword}
+          onChange={handleChange}
+        />
+        <button
+          type="button"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors focus:outline-none"
+        >
+          {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
       
       <label className="flex items-center gap-2 cursor-pointer group select-none px-1 py-2 rounded-lg transition-all duration-300 hover:bg-white/5">
         <input 
@@ -114,9 +229,15 @@ const RegisterForm = () => {
           className="appearance-none w-4 h-4 rounded border border-white/20 bg-white/5 checked:bg-[#10b981] checked:border-[#10b981] transition-all cursor-pointer hover:border-[#10b981]/60 shrink-0 focus:ring-2 focus:ring-[#10b981]/30"
         />
         <span className="text-xs text-slate-300/70 group-hover:text-slate-200 transition-colors">
-          <a href="#" className="text-[#10b981] hover:text-[#10b981]/80 hover:underline underline-offset-2 transition-colors duration-300">
+          <span 
+            onClick={(e) => {
+              e.preventDefault();
+              navigate('/terms');
+            }}
+            className="text-[#10b981] hover:text-[#10b981]/80 hover:underline underline-offset-2 transition-colors duration-300 cursor-pointer"
+          >
             Kullanım Şartları
-          </a>'nı okudum ve kabul ediyorum
+          </span>'nı okudum ve kabul ediyorum
         </span>
       </label>
 
@@ -134,8 +255,9 @@ const RegisterForm = () => {
       
       <div className="pt-2">
         <AuthButton 
-          text="Hesap Oluştur" 
+          text={loading ? "İşlem Yapılıyor..." : "Hesap Oluştur"} 
           type="submit"
+          disabled={loading}
         />
       </div>
 

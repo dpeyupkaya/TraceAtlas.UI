@@ -1,6 +1,5 @@
 import React from 'react';
 
-// İkonları (SVG) aynen koruyoruz
 const EyeIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={className}>
     <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
@@ -27,9 +26,6 @@ const MarkerPopup = ({ location, onOpenDetail }) => {
     onOpenDetail(location);
   };
 
-  // --- MANTIK DEĞİŞİKLİĞİ ---
-  // Elimizde Title yok, ama HasImage var. Buna göre başlık uyduruyoruz.
-  // Eğer detaydan geri dönülmüşse (cache varsa) title olabilir, onu da kontrol ediyoruz.
   const displayTitle = location.title 
     ? location.title 
     : (location.hasImage ? "Fotoğraflı Konum" : "İşaretlenmiş Konum");
@@ -41,10 +37,8 @@ const MarkerPopup = ({ location, onOpenDetail }) => {
   return (
     <div className="w-56 bg-white rounded-lg shadow-xl border border-emerald-100 overflow-hidden">
       
-      {/* İçerik Alanı */}
       <div className="p-3">
         
-        {/* Başlık ve İkon */}
         <div className="flex items-center gap-2 mb-2">
             <div className={`p-1.5 rounded-full ${location.hasImage ? 'bg-teal-100 text-teal-600' : 'bg-slate-100 text-slate-600'}`}>
                 {location.hasImage ? <PhotoIcon className="w-4 h-4" /> : <PinIcon className="w-4 h-4" />}
@@ -60,7 +54,6 @@ const MarkerPopup = ({ location, onOpenDetail }) => {
             {displaySubtitle}
         </p>
 
-        {/* Detay Butonu */}
         <button 
           onClick={handleDetailClick}
           className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-md text-xs font-semibold transition-colors shadow-sm"
@@ -70,7 +63,6 @@ const MarkerPopup = ({ location, onOpenDetail }) => {
         </button>
       </div>
 
-      {/* Alt Çizgi Süslemesi */}
       <div className="h-1 bg-gradient-to-r from-emerald-400 via-teal-500 to-green-400"></div>
     </div>
   );

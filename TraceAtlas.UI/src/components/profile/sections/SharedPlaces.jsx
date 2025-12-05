@@ -110,14 +110,7 @@ const SharedPlaces = () => {
                 </div>
 
                 <div className="w-full sm:w-auto flex items-center gap-2 mt-2 sm:mt-0">
-                  <button 
-                    onClick={() => setEditingPlace(post)}
-                    className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-[#1E3A3A] bg-[#1E3A3A]/5 hover:bg-[#1E3A3A] hover:text-white transition-all duration-300"
-                  >
-                    <FiEdit2 className="w-4 h-4" />
-                    <span>Düzenle</span>
-                  </button>
-                  
+                 
                   <button 
                     onClick={() => handleDeleteClick(post.id)}
                     className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition-all duration-300"

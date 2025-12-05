@@ -103,7 +103,6 @@ const Navbar = ({ onSearch }) => {
   };
 
   const items = [
-    { label: "Home", href: "/home" },
     { label: "Map", href: "/map" },
     { label: user || "Giriş Yap", href: user ? "/profile" : "/auth" }
   ];
@@ -133,7 +132,7 @@ const Navbar = ({ onSearch }) => {
                     if(onSearch) onSearch(e.target.value); 
                 }}
                 onFocus={() => search.length >= 2 && setShowSuggestions(true)}
-                placeholder="Keşfet (örn: doğa, kamp)..." 
+                placeholder="Etiket giriniz(örn: doğa, kamp)..." 
                 className="bg-transparent outline-none ml-3 text-sm font-semibold w-full text-stone-700 placeholder-stone-400" 
             />
             {search && <button onClick={() => { setSearch(""); setSuggestions([]); }} className="ml-2 text-stone-400 hover:text-red-500"><CloseIcon c="w-4 h-4" /></button>}

@@ -81,3 +81,21 @@ export const searchByTag = async (term) => {
         return []; 
     }
 };
+export const createShareLink = async (locationId) => {
+  try {
+    const response = await api.post(`/SharedLinks/${locationId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Paylaşım linki oluşturulamadı:", error);
+    throw error;
+  }
+};
+export const resolveSharedLink = async (token) => {
+  try {
+    const response = await api.get(`/SharedLinks/${token}`);
+    return response.data;
+  } catch (error) {
+    console.error("Shared link çözülemedi:", error);
+    throw error;
+  }
+};
