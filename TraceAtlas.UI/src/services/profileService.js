@@ -36,9 +36,14 @@ const profileService = {
     getEmailPreferences: async () => {
         const response = await api.get('/EmailPreferences');
         return response.data;
-    }
+    },
 
-    
+     getPublicStats: async () => {
+        // Backend'de: [HttpGet("api/public/stats")]
+        // Axios base URL'inin sonunda '/api' olduğunu varsayıyoruz.
+        const response = await api.get('/public/stats');
+        return response.data;
+    }
 };
 
 

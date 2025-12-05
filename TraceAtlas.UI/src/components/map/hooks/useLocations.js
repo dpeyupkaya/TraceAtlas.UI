@@ -1,20 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import * as locationService from '../services/locationService';
 
 export const useLocations = () => {
-  const [locations, setLocations] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['locations'],
+    queryFn: locationService.getLocations,
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const fetchLocations = async () => {
-    setLoading(true);
-    const data = await locationService.getLocations();
-    setLocations(data);
-    setLoading(false);
+  return { 
+    locations: data || [], 
+    loading: isLoading, 
+    fetchLocations: refetch 
   };
-
-  useEffect(() => {
-    fetchLocations();
-  }, []);
-
-  return { locations, fetchLocations, loading };
 };

@@ -1,8 +1,63 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import profileService from '../../../services/profileService'; // profileService üzerinden değil, doğrudan axios instance'ını kullanıyoruz
 import { UserCircle, ArrowRight, LogIn, Map, Users, Star, Compass } from 'lucide-react';
 
 const RegisterPanel = () => {
+  const navigate = useNavigate();
+  
+  // Canlı veriler için state (Başlangıçta boş veya tahmini değerler)
+  const [stats, setStats] = useState({
+    routeCount: 0,
+    userCount: 0
+  });
+
+  const [loading, setLoading] = useState(true);
+
+  // Sayıları "1.2K" formatına çeviren yardımcı fonksiyon
+  const formatNumber = (num) => {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
+    return num.toString();
+  };
+
+  useEffect(() => {
+    const fetchStats = async () => {
+     try {
+        // DEĞİŞİKLİK 2: Servis metodunu çağırıyoruz
+        // Servis zaten response.data döndüğü için direkt değişkene alabiliriz
+        const data = await profileService.getPublicStats();
+        
+        if(data) {
+            setStats({
+                // Servis response.data döndüğü için burada tekrar .data demiyoruz
+                routeCount: data.routeCount, 
+                userCount: data.userCount
+            });
+        }
+      } catch (error) {
+        console.log("İstatistikler yüklenemedi, varsayılanlar gösteriliyor.");
+        // Hata olursa kullanıcıya boş göstermemek için dummy veri setleyebiliriz
+        setStats({ routeCount: 1200, userCount: 50000 });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const handleGuestAccess = () => {
+    
+    console.clear();
+
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+
+    navigate('/map');
+  };
+
   return (
     <div className="w-full h-full bg-gradient-to-br from-[#1E3A3A] via-[#2D554F] to-[#3E6B65] text-emerald-50 flex flex-col justify-center items-center p-4 relative overflow-hidden select-none">
       
@@ -44,14 +99,17 @@ const RegisterPanel = () => {
           </p>
         </div>
 
-        {/* ÖNE ÇIKAN ÖZELLİKLER */}
+        {/* ÖNE ÇIKAN ÖZELLİKLER (DB'DEN GELEN VERİLER) */}
         <div className="grid grid-cols-2 gap-3 w-full mb-6 select-none">
           <div className="p-3 rounded-xl bg-white/8 border border-white/15 backdrop-blur-sm flex flex-col items-center transform hover:scale-[1.02] transition-all duration-200 select-none">
             <div className="relative select-none">
               <Map className="w-6 h-6 text-amber-400 mb-2 select-none" />
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full select-none"></div>
             </div>
-            <div className="text-lg font-bold text-white select-none">1.2K+</div>
+            {/* Canlı Veri */}
+            <div className="text-lg font-bold text-white select-none">
+                {loading ? "..." : formatNumber(stats.routeCount)}
+            </div>
             <div className="text-[10px] text-emerald-200/70 uppercase tracking-wider font-semibold select-none">Özel Rota</div>
           </div>
           
@@ -60,27 +118,31 @@ const RegisterPanel = () => {
               <Users className="w-6 h-6 text-emerald-400 mb-2 select-none" />
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full select-none"></div>
             </div>
-            <div className="text-lg font-bold text-white select-none">50K+</div>
+            {/* Canlı Veri */}
+            <div className="text-lg font-bold text-white select-none">
+                {loading ? "..." : formatNumber(stats.userCount)}
+            </div>
             <div className="text-[10px] text-emerald-200/70 uppercase tracking-wider font-semibold select-none">Gezgin</div>
           </div>
         </div>
 
-        {/* CTA BUTONU */}
-        <Link to="/map" className="w-full mb-3 select-none">
+        {/* CTA BUTONU (KAYIT OL / GİRİŞ YAP) */}
+        <Link to="/auth" className="w-full mb-3 select-none">
           <button className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-[#1A2F33] font-bold py-4 rounded-xl shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group select-none">
-            <span className="select-none">Keşfetmeye Başla</span>
+            <span className="select-none">Hemen Üye Ol</span>
             <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform select-none" />
           </button>
         </Link>
 
-        {/* ALT BİLGİ */}
-        <div className="text-center select-none">
-          <p className="text-xs text-white/60 font-medium mb-1 select-none">
-            📍 7/24 erişim • 🌍 Offline haritalar
-          </p>
-          <p className="text-[10px] text-white/40 font-semibold select-none">
-            Üyelik tamamen ücretsiz
-          </p>
+        {/* KAYIT OLMADAN DEVAM ET LİNKİ */}
+        <div 
+            onClick={handleGuestAccess}
+            className="group cursor-pointer flex flex-col items-center justify-center mt-2 mb-4 transition-all duration-300 active:scale-95"
+        >
+            <span className="text-sm font-medium text-emerald-100/70 group-hover:text-amber-300 transition-colors border-b border-transparent group-hover:border-amber-300/50 pb-0.5 select-none">
+                Kayıt olmadan devam et
+            </span>
+          
         </div>
 
       </div>
@@ -102,7 +164,6 @@ const RegisterPanel = () => {
           animation: float-delayed 8s ease-in-out infinite;
         }
         
-        /* Tüm elementler için seçilemezlik */
         * {
           -webkit-user-select: none;
           -moz-user-select: none;

@@ -1,19 +1,20 @@
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { MapContainer as LeafletMap, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
-// --- YENİ EKLENEN İMPORT ---
 import MarkerClusterGroup from 'react-leaflet-cluster'; 
-// ---------------------------
 import { useLocation } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import L from 'leaflet';
+
 import AddMarkerButton from '../components/button/AddMarkerButton';
 import AddLocation from '../components/button/AddLocation';
 import AddMarkerModal from './modal/AddMarkerModal';
 import MarkerDetailModal from './modal/MarkerDetailModal';
 import MarkerPopup from './marker/MarkerPopup';
+
 import { useLocations } from '../hooks/useLocations';
 import { getMarkerIcon } from '../components/marker/MarkerIcon';
+import { setSelectedLocation, clearSelection, setNewLocationPosition } from '../../../store/slices/mapSlice.js';
 
-// ... (FlyToLocation, userLocationIcon, MapClickHandler kodları AYNI kalsın, dokunma) ...
 const FlyToLocation = ({ center }) => {
   const map = useMap();
   useEffect(() => {
@@ -31,23 +32,30 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [12, 12],
 });
 
-const MapClickHandler = ({ onMapClick, isAddingMode }) => {
+const MapClickHandler = () => {
+  const dispatch = useDispatch();
+  const isAddingMode = useSelector((state) => state.map.isAddingMode);
+
   useMapEvents({
-    click: (e) => isAddingMode && onMapClick(e),
+    click: (e) => {
+      if (isAddingMode) {
+        dispatch(setNewLocationPosition(e.latlng));
+      } else {
+        dispatch(clearSelection());
+      }
+    },
   });
   return null;
 };
-// ... (Buraya kadar aynı) ...
 
 const MapContainer = () => {
+  const dispatch = useDispatch();
   const { locations, fetchLocations, loading } = useLocations();
   const routeLocation = useLocation();
+  
+  const { selectedLocation, isAddingMode } = useSelector((state) => state.map);
 
   const [state, setState] = useState({
-    modalOpen: false,
-    selectedPosition: null,
-    isAddingMode: false,
-    selectedDetailLocation: null,
     flyToCoords: null,
     userLocation: null,
   });
@@ -55,7 +63,27 @@ const MapContainer = () => {
   const updateState = (key, value) => setState(prev => ({ ...prev, [key]: value }));
   const worldBounds = useMemo(() => [[-90, -180], [90, 180]], []);
 
-  // ... (useEffect ve Handler fonksiyonları AYNI kalsın) ...
+  const createClusterCustomIcon = useCallback((cluster) => {
+    const count = cluster.getChildCount();
+    let sizeClass = 'dot-small';
+    let dimension = 16;
+ 
+    if (count > 10 && count <= 50) {
+      sizeClass = 'dot-medium';
+      dimension = 24;
+    }
+    else if (count > 50) {
+      sizeClass = 'dot-large';
+      dimension = 32;
+    }
+
+    return L.divIcon({
+      html: '', 
+      className: `custom-cluster-dot ${sizeClass}`, 
+      iconSize: L.point(dimension, dimension, true),
+    });
+  }, []);
+
   useEffect(() => {
     if (routeLocation.state && routeLocation.state.focusedLocation) {
         const { Latitude, Longitude } = routeLocation.state.focusedLocation;
@@ -68,22 +96,9 @@ const MapContainer = () => {
     }
   }, [routeLocation.state]);
 
-  const handleButtonClick = useCallback(() => {
-    setState(prev => ({ ...prev, isAddingMode: !prev.isAddingMode }));
-  }, []);
-
-  const handleMapClick = useCallback((e) => {
-    setState(prev => ({
-      ...prev,
-      selectedPosition: e.latlng,
-      modalOpen: true,
-      isAddingMode: false
-    }));
-  }, []);
-
   const handleOpenDetail = useCallback((loc) => {
-    updateState('selectedDetailLocation', loc);
-  }, []);
+    dispatch(setSelectedLocation(loc));
+  }, [dispatch]);
 
   const handleLocationFound = useCallback((coords) => {
     setState(prev => ({
@@ -105,7 +120,7 @@ const MapContainer = () => {
         scrollWheelZoom={true}
         maxBounds={worldBounds}
         maxBoundsViscosity={1.0}
-        style={{ background: '#aad3df', cursor: state.isAddingMode ? 'crosshair' : 'grab' }}
+        style={{ background: '#aad3df', cursor: isAddingMode ? 'crosshair' : 'grab' }}
         className="w-full h-full outline-none"
       >
         <TileLayer
@@ -115,17 +130,27 @@ const MapContainer = () => {
         />
 
         <FlyToLocation center={state.flyToCoords} />
-        <MapClickHandler onMapClick={handleMapClick} isAddingMode={state.isAddingMode} />
+        
+        <MapClickHandler />
 
-        {/* --- DÜZELTME VE PERFORMANS AYARI BURADA --- */}
-        {/* chunkedLoading: 20.000 veriyi parça parça işler, tarayıcı donmaz. */}
-        <MarkerClusterGroup chunkedLoading>
+        <MarkerClusterGroup 
+            chunkedLoading
+            iconCreateFunction={createClusterCustomIcon} 
+            maxClusterRadius={50}
+            spiderfyOnMaxZoom={true}
+            showCoverageOnHover={false}
+            disableClusteringAtZoom={16}
+        >
           {locations.map((loc) => (
             <Marker
               key={loc.id}
               position={[loc.latitude, loc.longitude]}
-              // Backend'den gelen yeni DTO yapısına uygun ikon fonksiyonu:
               icon={getMarkerIcon(loc)} 
+              eventHandlers={{
+                click: (e) => {
+                   e.originalEvent.stopPropagation();
+                }
+              }}
             >
               <Popup closeButton={false} className="custom-popup">
                 <MarkerPopup
@@ -136,7 +161,6 @@ const MapContainer = () => {
             </Marker>
           ))}
         </MarkerClusterGroup>
-        {/* ------------------------------------------- */}
 
         {state.userLocation && (
           <Marker
@@ -153,24 +177,16 @@ const MapContainer = () => {
 
         <div className="absolute bottom-8 right-8 z-[1000] flex flex-col items-center gap-4">
           <AddLocation onLocationFound={handleLocationFound} />
-          <AddMarkerButton onClick={handleButtonClick} isActive={state.isAddingMode} />
+          <AddMarkerButton />
         </div>
       </LeafletMap>
 
-      {/* Modallar aynı kalsın */}
-      {state.modalOpen && state.selectedPosition && (
-        <AddMarkerModal
-          selectedPosition={state.selectedPosition}
-          isOpen={true}
-          onClose={() => updateState('modalOpen', false)}
-          onSuccess={() => fetchLocations()}
-        />
-      )}
+      <AddMarkerModal />
 
-      {state.selectedDetailLocation && (
+      {selectedLocation && (
         <MarkerDetailModal
-          location={state.selectedDetailLocation}
-          onClose={() => updateState('selectedDetailLocation', null)}
+          location={selectedLocation}
+          onClose={() => dispatch(clearSelection())}
         />
       )}
     </div>
