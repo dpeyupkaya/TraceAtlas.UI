@@ -32,7 +32,6 @@ const profileService = {
         return response.data;
     },
 
-    // [GET] Email tercihlerini getirir
     getEmailPreferences: async () => {
         const response = await api.get('/EmailPreferences');
         return response.data;
@@ -44,6 +43,7 @@ const profileService = {
         const response = await api.get('/public/stats');
         return response.data;
     }
+    
 };
 
 

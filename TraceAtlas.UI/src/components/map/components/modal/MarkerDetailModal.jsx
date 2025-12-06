@@ -1,195 +1,227 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiX, FiUser, FiTag, FiShare2, FiMap, FiHeart, FiLoader, FiChevronLeft } from 'react-icons/fi';
+import { FiX, FiUser, FiShare2, FiMap, FiHeart, FiNavigation, FiCalendar, FiLoader } from 'react-icons/fi';
 import { addFavorite, getLocationById, createShareLink } from '../../services/locationService';
 import { clearSelection } from '../../../../store/slices/mapSlice';
 
-const MarkerDetailModal = () => {
+const MarkerDetailModal = ({ isOpen, location, onClose }) => {
   const dispatch = useDispatch();
   const { selectedLocation, isSidebarOpen } = useSelector((state) => state.map);
 
-  const [details, setDetails] = useState(null);
+  // Öncelik: Props'tan gelen veri > Redux'tan gelen veri
+  const activeLocation = location || selectedLocation;
+  const showModal = isOpen || isSidebarOpen;
+
+  // State: API'den gelecek detaylı veriler için
+  const [fullDetails, setFullDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [addingFavorite, setAddingFavorite] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  // Modal her açıldığında veya lokasyon değiştiğinde çalışır
   useEffect(() => {
+    if (!activeLocation?.id || !showModal) {
+        setFullDetails(null);
+        return;
+    }
+
     const fetchDetails = async () => {
-      if (!selectedLocation?.id) return;
-      
+      setLoading(true);
       try {
-        setLoading(true);
-        const data = await getLocationById(selectedLocation.id);
-        setDetails(data);
+        const data = await getLocationById(activeLocation.id);
+        setFullDetails(data);
         setIsFavorite(data.isFavorite || false);
       } catch (error) {
-        console.error(error);
+        console.error("Detay yüklenemedi", error);
       } finally {
         setLoading(false);
       }
     };
 
-    if (isSidebarOpen && selectedLocation) {
-      fetchDetails();
-    }
-  }, [selectedLocation, isSidebarOpen]);
+    fetchDetails();
+  }, [activeLocation?.id, showModal]);
 
   const handleClose = () => {
-    dispatch(clearSelection());
-    setDetails(null);
+    if (onClose) onClose();
+    else dispatch(clearSelection());
+    setFullDetails(null);
   };
 
-  if (!isSidebarOpen) return null;
+  // Eğer aktif bir lokasyon yoksa render etme
+  if (!activeLocation) return null;
 
-  let finalImageSrc = null;
-  if (details?.blobUrl && details.blobUrl.length > 0) {
-    finalImageSrc = details.blobUrl[0]; 
-  } 
+  // Görüntülenecek veriyi harmanla (Eldeki veri + API verisi)
+  // Bu sayede başlık anında görünür, açıklama yüklenince gelir.
+  const displayData = {
+      ...activeLocation,
+      ...fullDetails 
+  };
+
+  const finalImageSrc = fullDetails?.blobUrl?.[0] || null;
 
   const handleShare = async () => {
     try {
-      const res = await createShareLink(details.id);
-      const shareUrl = res.url;  
-
+      const res = await createShareLink(displayData.id);
       if (navigator.share) {
-        await navigator.share({
-          title: details.title,
-          text: details.description,
-          url: shareUrl
-        });
+        await navigator.share({ title: displayData.title, url: res.url });
       } else {
-        await navigator.clipboard.writeText(shareUrl);
-        alert("Bağlantı kopyalandı!");
+        await navigator.clipboard.writeText(res.url);
+        // Buraya istersen ufak bir toast/notification ekleyebilirsin
       }
     } catch (err) {
       console.error(err);
-      alert("Paylaşım linki oluşturulamadı.");
     }
   };
 
-  const handleDirections = () => window.open(`http://googleusercontent.com/maps.google.com/?q=${details.latitude},${details.longitude}`, '_blank');
+  const handleDirections = () => {
+    window.open(`https://www.google.com/maps/dir/?api=1&destination=${displayData.latitude},${displayData.longitude}`, '_blank');
+  };
 
   const handleFavoriteClick = async () => {
     if (addingFavorite) return;
-    const token = localStorage.getItem('accessToken');
-    if (!token) return alert("Lütfen giriş yapın.");
-    
     setAddingFavorite(true);
     try {
-      await addFavorite(details.id);
+      await addFavorite(displayData.id);
       setIsFavorite(true);
-      alert("Favorilere eklendi!");
-    } catch {
-      alert("Zaten eklenmiş veya hata oluştu.");
-    } finally {
-      setAddingFavorite(false);
-    }
+    } catch (e) { console.error(e); } 
+    finally { setAddingFavorite(false); }
   };
 
   return (
-    <div className="absolute top-0 left-0 h-full z-[1500] pointer-events-none flex flex-col">
+    <div className={`fixed inset-0 z-[2000] flex pointer-events-none ${showModal ? 'visible' : 'invisible'}`}>
+      
+      {/* BACKDROP (Arkaplan Karartma) */}
+      <div 
+        className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300 pointer-events-auto ${showModal ? 'opacity-100' : 'opacity-0'}`}
+        onClick={handleClose}
+      />
+
+      {/* PANEL KUTUSU */}
       <div 
         className={`
-          pointer-events-auto
-          h-full bg-white shadow-2xl 
-          transition-transform duration-300 ease-in-out
-          w-screen md:w-[400px] flex flex-col
-          ${selectedLocation ? 'translate-x-0' : '-translate-x-full'}
+          pointer-events-auto bg-white shadow-2xl flex flex-col
+          absolute 
+          /* Mobil Ayarları: Alttan yukarı */
+          bottom-0 w-full h-[85vh] rounded-t-3xl
+          /* Masaüstü Ayarları: Soldan sağa */
+          md:top-0 md:left-0 md:h-full md:w-[450px] md:rounded-none md:rounded-r-2xl
+          /* Animasyon Geçişi */
+          transition-transform duration-300 ease-out
+          ${showModal ? 'translate-y-0 md:translate-x-0' : 'translate-y-full md:-translate-x-full'}
         `}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white sticky top-0 z-10">
+        {/* RESİM ALANI (HEADER) */}
+        <div className="relative h-64 md:h-72 w-full shrink-0 bg-gray-100">
           <button 
             onClick={handleClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-600"
+            className="absolute top-4 right-4 z-10 p-2 bg-white/80 hover:bg-white backdrop-blur rounded-full shadow-sm text-gray-700 transition-all active:scale-95"
           >
-            <FiChevronLeft size={24} />
+            <FiX size={20} />
           </button>
-          <span className="font-semibold text-gray-700">Lokasyon Detayı</span>
-          <div className="w-8"></div>
+          
+          {loading && !finalImageSrc ? (
+            <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2 animate-pulse">
+               <FiLoader className="animate-spin" size={24}/>
+               <span className="text-xs">Görsel Yükleniyor...</span>
+            </div>
+          ) : finalImageSrc ? (
+            <img 
+              src={finalImageSrc} 
+              alt={displayData.title} 
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-teal-50 to-emerald-100 flex flex-col items-center justify-center text-teal-700/50 gap-2">
+              <FiMap size={48} />
+              <span className="text-sm font-medium">Görsel Yok</span>
+            </div>
+          )}
+          
+          {/* Resim altı gölge geçişi */}
+          <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-white via-white/80 to-transparent" />
         </div>
 
-        <div className="flex-1 overflow-y-auto custom-scrollbar">
-          {loading ? (
-             <div className="flex flex-col items-center justify-center h-64 gap-3">
-                <FiLoader className="animate-spin text-teal-600" size={32} />
-                <span className="text-gray-500 text-sm">Yükleniyor...</span>
-             </div>
-          ) : details ? (
-            <div className="pb-8">
-              {finalImageSrc ? (
-                 <div className="relative h-64 w-full bg-gray-100">
-                    <img 
-                        src={finalImageSrc} 
-                        alt={details.title} 
-                        className="h-full w-full object-cover"
-                        onError={(e) => { e.target.style.display='none'; }}
-                    />
-                 </div>
-              ) : (
-                <div className="h-32 bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center text-emerald-200">
-                  <FiMap size={48} />
+        {/* İÇERİK ALANI (SCROLLABLE) */}
+        <div className="flex-1 overflow-y-auto px-6 -mt-6 relative z-10 custom-scrollbar">
+          
+          <div className="pb-10 space-y-6">
+            {/* Başlık ve Kullanıcı */}
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 leading-tight">
+                {displayData.title}
+              </h1>
+              
+              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">
+                  <FiUser className="text-teal-600" size={14} />
+                  <span className="font-medium text-gray-700 truncate max-w-[120px]">
+                    {displayData.creatorUsername || "Anonim"}
+                  </span>
                 </div>
-              )}
-
-              <div className="px-6 py-6 flex flex-col gap-5">
-                <div>
-                   <h1 className="text-2xl font-bold text-gray-900 leading-tight mb-2">{details.title}</h1>
-                   <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <div className="p-1 bg-gray-100 rounded-full">
-                        <FiUser size={14} />
-                      </div>
-                      <span>@{details.creatorUsername || "Gizli Kullanıcı"}</span>
-                   </div>
-                </div>
-
-                <div className="flex gap-2">
-                    <button 
-                      onClick={handleDirections} 
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
-                    >
-                      <FiMap /> Yol Tarifi
-                    </button>
-                    <button 
-                       onClick={handleFavoriteClick}
-                       disabled={addingFavorite || isFavorite}
-                       className={`w-12 flex items-center justify-center rounded-xl border transition-colors ${isFavorite ? 'bg-red-50 border-red-200 text-red-500' : 'border-gray-200 text-gray-400 hover:border-gray-300'}`}
-                    >
-                       <FiHeart fill={isFavorite ? "currentColor" : "none"} size={20} />
-                    </button>
-                    <button 
-                       onClick={handleShare}
-                       className="w-12 flex items-center justify-center rounded-xl border border-gray-200 text-gray-400 hover:border-gray-300 transition-colors"
-                    >
-                       <FiShare2 size={20} />
-                    </button>
-                </div>
-
-                <div>
-                   <h3 className="text-sm font-semibold text-gray-900 mb-2">Açıklama</h3>
-                   <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
-                      {details.description || "Açıklama girilmemiş."}
-                   </p>
-                </div>
-
-                {details.tags?.length > 0 && (
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-900 mb-2">Etiketler</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {details.tags.map((tag, i) => (
-                        <span key={i} className="px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full font-medium">
-                           #{tag}
-                        </span>
-                      ))}
+                {fullDetails?.createdAt && (
+                    <div className="flex items-center gap-1.5">
+                      <FiCalendar className="text-gray-400" size={14} />
+                      <span>{new Date(fullDetails.createdAt).toLocaleDateString('tr-TR')}</span>
                     </div>
-                  </div>
                 )}
               </div>
             </div>
-          ) : (
-            <div className="p-8 text-center text-gray-500">
-              Veri bulunamadı.
+
+            {/* Butonlar */}
+            <div className="flex gap-3">
+              <button 
+                onClick={handleDirections} 
+                className="flex-1 bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-gray-200"
+              >
+                <FiNavigation className="stroke-[2.5]" /> Yol Tarifi
+              </button>
+              
+              <button 
+                onClick={handleFavoriteClick}
+                disabled={addingFavorite}
+                className={`w-12 flex items-center justify-center rounded-xl border-2 transition-all active:scale-95 ${isFavorite ? 'border-red-100 bg-red-50 text-red-500' : 'border-gray-100 bg-white text-gray-400 hover:border-gray-300'}`}
+              >
+                <FiHeart fill={isFavorite ? "currentColor" : "none"} className={isFavorite ? "animate-bounce" : ""} size={22} />
+              </button>
+              
+              <button 
+                onClick={handleShare}
+                className="w-12 flex items-center justify-center rounded-xl border-2 border-gray-100 bg-white text-gray-600 hover:border-gray-300 transition-all active:scale-95"
+              >
+                <FiShare2 size={22} />
+              </button>
             </div>
-          )}
+
+            {/* Açıklama (Loading durumunda Skeleton gösterir) */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Açıklama</h3>
+              {loading && !fullDetails ? (
+                 <div className="space-y-2 animate-pulse">
+                    <div className="h-4 bg-gray-100 rounded w-full"></div>
+                    <div className="h-4 bg-gray-100 rounded w-3/4"></div>
+                 </div>
+              ) : (
+                 <p className="text-gray-600 text-[15px] leading-relaxed whitespace-pre-line">
+                    {displayData.description || "Açıklama bulunmuyor."}
+                 </p>
+              )}
+            </div>
+
+            {/* Etiketler */}
+            {fullDetails?.tags?.length > 0 && (
+              <div className="space-y-3 pt-2 border-t border-gray-100">
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Etiketler</h3>
+                <div className="flex flex-wrap gap-2">
+                  {fullDetails.tags.map((tag, i) => (
+                    <span key={i} className="px-3 py-1.5 bg-teal-50 text-teal-700 border border-teal-100 text-xs rounded-full font-semibold">
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -10,23 +10,34 @@ import SecuritySettings from './sections/SecuritySettings';
 import DeleteAccount from './sections/DeleteAccount';
 import { Me } from './sections/Me';
 
+// 1. Hook'u import et
+import { useGlobalLoader } from '../../hooks/useGlobalLoader';
+
 const BaseProfil = () => {
   const [activeTab, setActiveTab] = useState('me');
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // 2. Hook'u başlat
+  const { withLoader } = useGlobalLoader();
+
   useEffect(() => {
     const fetchProfile = async () => {
-      try {
-        const data = await profileService.getProfile();
-        setUser(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+      // 3. API isteğini withLoader ile sarmala
+      await withLoader(async () => {
+        try {
+          const data = await profileService.getProfile();
+          setUser(data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
+      });
     };
+
     fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderContent = () => {

@@ -85,6 +85,29 @@ export const Me = ({ user }) => {
             {formatDate(user.createdAt)}
           </div>
         </div>
+        <div className="md:col-span-2 space-y-1">
+  <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+    Kalan Hakkınız
+  </label>
+  <div className="font-medium text-[#1E3A3A] bg-[#1E3A3A]/5 p-3 rounded-lg border border-[#1E3A3A]/10 flex items-center justify-between">
+    
+    <div className="flex items-center gap-2">
+    
+      <svg className="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+      </svg>
+      
+  
+      <span className="text-xl font-bold tracking-tight">
+        {user?.remainingRights ?? 0}
+      </span>
+      <span className="text-sm opacity-70 font-normal">Adet</span>
+    </div>
+
+    <span className="text-xs text-gray-400 font-semibold">MAX: 5</span>
+
+  </div>
+</div>
           <div className="md:col-span-2"
           >
                <Logout />
@@ -93,4 +116,4 @@ export const Me = ({ user }) => {
       </div>
     </div>
   )
-}
+} 

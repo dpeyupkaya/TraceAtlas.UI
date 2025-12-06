@@ -5,10 +5,14 @@ import InputField from './InputField';
 import AuthButton from './AuthButton';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import { authService } from '../../services/authService';
-
+// 1. Hook'u import ediyoruz
+import { useGlobalLoader } from '../../hooks/useGlobalLoader';
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  // 2. Hook'u başlatıyoruz
+  const { withLoader } = useGlobalLoader(); 
+  
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -22,37 +26,49 @@ const LoginForm = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    await authService.login(formData.email, formData.password);
-    navigate('/map');
-  } catch (err) {
+    // 3. Tüm işlemi withLoader içine alıyoruz.
+    // Böylece işlem başladığında bar çıkar, bittiğinde (hata olsa bile) kapanır.
+    await withLoader(async () => {
+      try {
+        await authService.login(formData.email, formData.password);
+        navigate('/map');
+      } catch (err) {
+        // Hata yönetimi (Senin yazdığın kod aynen korundu)
+        console.log("Login Error:", err.response);
 
-    // Email doğrulanmamış
-    if (err?.status === 401 && err?.message?.includes("Email")) {
-      window.__showSnackbar("Lütfen önce e-posta adresinizi doğrulayın.");
-      return;
-    }
+        const status = err?.response?.status || err?.status;
+        
+        let errorMsg = err?.response?.data?.message || err?.response?.data || err?.message || "";
+        errorMsg = errorMsg.toLowerCase(); 
 
-    // Şifre yanlış
-    if (err?.status === 401 && err?.message?.includes("Geçersiz")) {
-      window.__showSnackbar("Şifre yanlış, tekrar deneyin.");
-      return;
-    }
-    if (err?.status===401 && err?.message?.includes("Kullanıcı")) {
-      setNotification({ severity: 'error', message: 'Bu hesap silinmiş. Lütfen destek ile iletişime geçin.' });
-      return;
-    }
-    // Kullanıcı bulunamadı
-    if (err?.status === 401 && err?.message?.includes("Kullanıcı")) {
-      window.__showSnackbar("Böyle bir kullanıcı bulunamadı.");
-      return;
-    }
-  }
+        if (status === 401 || status === 400) {
+      
+            if (errorMsg.includes("doğrulanmadan") || errorMsg.includes("doğrulama")) {
+                window.__showSnackbar("Giriş yapabilmek için lütfen e-posta adresinizi doğrulayın.");
+                return;
+            }
 
+            if (errorMsg.includes("silinmiş") || errorMsg.includes("devre dışı") || errorMsg.includes("askıya")) {
+                window.__showSnackbar("Bu hesap silinmiş veya askıya alınmış. Lütfen destek ile iletişime geçin.");
+                return;
+            }
+        
+            if (errorMsg.includes("bulunamadı")) {
+                window.__showSnackbar("Bu e-posta adresiyle kayıtlı bir kullanıcı bulunamadı.");
+                return;
+            }
 
+            if (errorMsg.includes("şifre") || errorMsg.includes("password") || errorMsg.includes("hatalı")) {
+                window.__showSnackbar("Girdiğiniz şifre hatalı, lütfen tekrar deneyin.");
+                return;
+            }
+        }
 
+        window.__showSnackbar(errorMsg.length > 5 ? errorMsg : "Giriş yapılırken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
+      }
+    });
   };
 
   return (

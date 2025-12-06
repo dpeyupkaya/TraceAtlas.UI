@@ -23,120 +23,112 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
-  const handleChange = (e) => {
+ const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (notification) setNotification(null);
-  };
+};
 
-  const validateEmail = (email) => {
+const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
-  };
+};
 
-  const validatePassword = (password) => {
-    // En az 8 karakter, 1 büyük, 1 küçük, 1 sayı, 1 özel karakter
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+const validatePassword = (password) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
     return re.test(password);
-  };
+};
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-  setNotification(null);
+const handleSubmit = async (e) => {
+    e.preventDefault();
+    setNotification(null);
 
-  if (!validateEmail(formData.email)) {
-    setNotification({ severity: 'error', message: 'Geçersiz e-posta formatı.' });
-    return;
-  }
-
-  if (!validatePassword(formData.password)) {
-    setNotification({ 
-      severity: 'error', 
-      message: 'Şifre en az 8 karakter olmalı; 1 büyük harf, 1 küçük harf, 1 rakam ve 1 özel karakter içermelidir.' 
-    });
-    return;
-  }
-
-  if (formData.password !== formData.confirmPassword) {
-    setNotification({ severity: 'error', message: 'Şifreler uyuşmuyor!' });
-    return;
-  }
-
-  try {
-    setLoading(true);
-
-    const dataToSend = {
-      userName: formData.userName,
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      password: formData.password
-    };
-
-    await authService.register(dataToSend);
-
-    setNotification({
-      severity: 'success',
-      message: 'Kayıt başarılı! Doğrulama bağlantısı e-posta adresinize gönderildi. Yönlendiriliyorsunuz...'
-    });
-
-    setTimeout(() => {
-      navigate('/auth');
-    }, 3000);
-
-  } catch (err) {
-    const status = err?.response?.status;
-    const data = err?.response?.data;
-
-    // Backend'den gelen mesaj bazen 'message', bazen 'detail', bazen 'error' olabilir.
-    // Hepsini kontrol edip garantiye alıyoruz.
-    const rawMessage = data?.message || data?.detail || data?.error || "";
-    
-    // Kontrol yaparken büyük/küçük harf hatasına düşmemek için küçültüyoruz
-    const messageLower = rawMessage.toString().toLowerCase();
-    
-    const errors = data?.errors; // FluentValidation hataları (örn: şifre kuralları)
-
-    // 1) Backend Validation Hataları (FluentValidation vb.)
-    if (errors) {
-      const firstField = Object.keys(errors)[0];
-      const firstError = errors[firstField][0];
-      setNotification({ severity: 'error', message: firstError });
-      return; // Validation varsa diğerlerine bakmaya gerek yok
+    if (!formData.userName || !formData.firstName || !formData.lastName) {
+        setNotification({ severity: 'error', message: 'Lütfen tüm alanları doldurunuz.' });
+        return;
     }
 
-    // 2) Özel Durum Kontrolleri
-    // Backend: "Bu hesap silinmiş."
-    if (messageLower.includes("silinmiş")) {
-      setNotification({ 
-        severity: 'error', // İstersen 'warning' yapıp sarı gösterebilirsin
-        message: 'Bu hesap daha önce silinmiş. Lütfen destek ekibiyle iletişime geçin.' 
-      });
-      return;
+    if (!validateEmail(formData.email)) {
+        setNotification({ severity: 'error', message: 'Geçersiz e-posta formatı.' });
+        return;
     }
 
-    // Backend: "Bu e-posta zaten kayıtlı."
-    if (messageLower.includes("zaten kayıtlı") || messageLower.includes("e-posta")) {
-      setNotification({ 
-        severity: 'error', 
-        message: 'Bu e-posta adresi ile zaten bir hesap mevcut.' 
-      });
-      return;
+    if (!validatePassword(formData.password)) {
+        setNotification({
+            severity: 'error',
+            message: 'Şifre en az 6 karakter olmalı; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.'
+        });
+        return;
     }
 
-    // Backend: "Bu kullanıcı adı zaten kullanılıyor."
-    if (messageLower.includes("kullanılıyor") || messageLower.includes("kullanıcı adı")) {
-      setNotification({ 
-        severity: 'error', 
-        message: 'Bu kullanıcı adı başkası tarafından alınmış, lütfen başka bir tane seçin.' 
-      });
-      return;
+    if (formData.password !== formData.confirmPassword) {
+        setNotification({ severity: 'error', message: 'Şifreler uyuşmuyor!' });
+        return;
     }
 
+    try {
+        setLoading(true);
 
-} finally {
-    setLoading(false);
-}
-  };
+        const dataToSend = {
+            userName: formData.userName,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            password: formData.password
+        };
+
+        await authService.register(dataToSend);
+
+        setNotification({
+            severity: 'success',
+            message: 'Kayıt başarılı! Doğrulama bağlantısı e-posta adresinize gönderildi. Yönlendiriliyorsunuz...'
+        });
+
+        setTimeout(() => {
+            navigate('/auth');
+        }, 3000);
+
+    } catch (err) {
+        const data = err?.response?.data;
+        const rawMessage = data?.message || data?.detail || data?.error || "";
+        const messageLower = rawMessage.toString().toLowerCase();
+        const errors = data?.errors;
+
+        if (errors) {
+            const firstField = Object.keys(errors)[0];
+            const firstError = errors[firstField][0];
+            setNotification({ severity: 'error', message: firstError });
+            return;
+        }
+
+        if (messageLower.includes("silinmiş")) {
+            setNotification({
+                severity: 'error',
+                message: 'Bu hesap daha önce silinmiş. Lütfen destek ekibiyle iletişime geçin.'
+            });
+            return;
+        }
+
+        if (messageLower.includes("zaten kayıtlı") || messageLower.includes("e-posta")) {
+            setNotification({
+                severity: 'error',
+                message: 'Bu e-posta adresi ile zaten bir hesap mevcut.'
+            });
+            return;
+        }
+
+        if (messageLower.includes("kullanılıyor") || messageLower.includes("kullanıcı adı")) {
+            setNotification({
+                severity: 'error',
+                message: 'Bu kullanıcı adı başkası tarafından alınmış, lütfen başka bir tane seçin.'
+            });
+            return;
+        }
+
+        setNotification({ severity: 'error', message: rawMessage || 'Kayıt işlemi sırasında bir hata oluştu.' });
+    } finally {
+        setLoading(false);
+    }
+};
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500 select-none relative">

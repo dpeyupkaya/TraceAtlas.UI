@@ -18,6 +18,19 @@ const mapSlice = createSlice({
       state.center = action.payload.center;
       state.zoom = action.payload.zoom;
     },
+
+    setViewState: (state, action) => {
+      const { latitude, longitude, zoom } = action.payload;
+      
+      if (latitude !== undefined && longitude !== undefined) {
+        state.center = [latitude, longitude];
+      }
+    
+      if (zoom !== undefined) {
+        state.zoom = zoom;
+      }
+    },
+    // -------------------------
     setSelectedLocation: (state, action) => {
       state.selectedLocation = action.payload;
       state.isSidebarOpen = true;
@@ -46,6 +59,7 @@ const mapSlice = createSlice({
 
 export const { 
   setMapPosition, 
+  setViewState, 
   setSelectedLocation, 
   clearSelection, 
   toggleAddingMode,

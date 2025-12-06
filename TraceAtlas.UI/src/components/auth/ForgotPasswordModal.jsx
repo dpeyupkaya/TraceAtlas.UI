@@ -1,17 +1,43 @@
-import React, { useState } from 'react';
-import { Mail, X, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Mail, X, CheckCircle, AlertCircle } from 'lucide-react';
 import InputField from './InputField';
 import AuthButton from './AuthButton';
 import { authService } from '../../services/authService';
 
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('idle'); // idle, loading, success, error
+  const [status, setStatus] = useState('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setEmail('');
+      setStatus('idle');
+      setErrorMessage('');
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e) => {
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+ const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+
+    if (!email) {
+      setErrorMessage('Lütfen e-posta adresinizi giriniz.');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setErrorMessage('Geçerli bir e-posta adresi giriniz.');
+      return;
+    }
+
     setStatus('loading');
     
     try {
@@ -19,6 +45,51 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
       setStatus('success');
     } catch (error) {
       setStatus('error');
+      
+      const responseData = error?.response?.data;
+      
+      // Backend Middleware'den gelen 'message' alanını öncelikli al
+      const rawMessage = responseData?.message || responseData?.detail || responseData?.error || "";
+      const messageLower = rawMessage.toString().toLowerCase();
+      
+      const validationErrors = responseData?.errors;
+
+      // 1. Eğer Validasyon hatası varsa (Dictionary formatında geldiyse)
+      if (validationErrors) {
+        // İlk hatayı bulup göster
+        const firstField = Object.keys(validationErrors)[0];
+        if (firstField) {
+           const firstError = validationErrors[firstField][0];
+           
+           // Eğer hata "hak" veya "limit" içeriyorsa özel mesaj göster, değilse hatayı olduğu gibi göster
+           if (firstError.toLowerCase().includes("hak") || firstError.toLowerCase().includes("limit")) {
+              setErrorMessage("Günlük şifre sıfırlama hakkınızı aştınız. Lütfen 24 saat sonra tekrar deneyiniz.");
+           } else {
+              setErrorMessage(firstError);
+           }
+           return;
+        }
+      }
+
+      // 2. Genel Mesaj Kontrolleri
+      if (messageLower.includes("silinmiş") || messageLower.includes("deleted")) {
+        setErrorMessage("Bu hesap silinmiş veya devre dışı bırakılmış. Lütfen destek ile iletişime geçin.");
+        return;
+      }
+
+      if (messageLower.includes("bulunamadı") || messageLower.includes("not found")) {
+        setErrorMessage("Bu e-posta adresiyle kayıtlı bir kullanıcı bulunamadı.");
+        return;
+      }
+      
+      // Validasyon listesinde değil de direkt mesajda geldiyse
+      if (messageLower.includes("hak") || messageLower.includes("limit") || messageLower.includes("aştınız")) {
+        setErrorMessage("Günlük şifre sıfırlama hakkınızı aştınız. Lütfen 24 saat sonra tekrar deneyiniz.");
+        return;
+      }
+
+      // Hiçbiri değilse gelen mesajı göster
+      setErrorMessage(rawMessage || "Sunucu ile iletişim kurulurken bir hata oluştu.");
     }
   };
 
@@ -38,9 +109,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
             <div className="w-16 h-16 bg-[#10b981]/10 rounded-full flex items-center justify-center text-[#10b981]">
               <CheckCircle size={32} />
             </div>
-            <h3 className="text-xl font-semibold text-white">E-posta Gönderildi!</h3>
+            <h3 className="text-xl font-semibold text-white">İşlem Başarılı</h3>
             <p className="text-slate-400 text-sm">
-              Şifre sıfırlama talimatlarını içeren bir e-posta gönderdik. Lütfen gelen kutunu (ve spam klasörünü) kontrol et.
+              Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu (ve spam klasörünü) kontrol edin.
             </p>
             <button 
               onClick={onClose}
@@ -63,17 +134,21 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
               type="email"
               placeholder="E-posta Adresin"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (errorMessage) setErrorMessage('');
+              }}
             />
 
-            {status === 'error' && (
-              <div className="text-red-400 text-xs text-center bg-red-400/10 p-2 rounded">
-                Bir hata oluştu. Lütfen tekrar deneyin.
+            {errorMessage && (
+              <div className="flex items-center gap-2 text-red-400 text-sm bg-red-400/10 p-3 rounded-lg animate-in slide-in-from-top-2">
+                <AlertCircle size={16} className="shrink-0" />
+                <span>{errorMessage}</span>
               </div>
             )}
 
             <AuthButton 
-              text={status === 'loading' ? 'Gönderiliyor...' : 'Sıfırlama Linki Gönder'}
+              text={status === 'loading' ? 'Kontrol Ediliyor...' : 'Sıfırlama Linki Gönder'}
               type="submit"
               disabled={status === 'loading'}
             />

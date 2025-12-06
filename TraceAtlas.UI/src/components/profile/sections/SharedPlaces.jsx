@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiTrash2, FiCalendar } from 'react-icons/fi';
 import AddMarkerModal from '../../map/components/modal/AddMarkerModal';
-import ConfirmationModal from '../../common/ConfirmationModal';
+import ConfirmationModal from '../../../common/ConfirmationModal';
 import profileService from '../../../services/profileService'; // Servis importu
 
 const SharedPlaces = () => {

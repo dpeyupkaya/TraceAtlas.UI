@@ -1,45 +1,61 @@
 import React, { useState } from 'react';
 import { Navigation, Loader2 } from 'lucide-react';
+// 1. Hook'u import et
+import { useGlobalLoader } from '../../../../hooks/useGlobalLoader';
 
 export const AddLocation = ({ onLocationFound }) => {
   const [loading, setLoading] = useState(false);
+  // 2. Hook'u başlat
+  const { withLoader } = useGlobalLoader();
 
-  const handleGetLocation = () => {
+  const handleGetLocation = async () => {
+    // Buton üzerindeki spinner için local state
     setLoading(true);
 
-    if (!navigator.geolocation) {
-      alert("Tarayıcınız konum servisini desteklemiyor.");
-      setLoading(false);
-      return;
-    }
+    // 3. İşlemi withLoader ile sarmala
+    await withLoader(async () => {
+      try {
+        if (!navigator.geolocation) {
+          throw new Error("Tarayıcınız konum servisini desteklemiyor.");
+        }
 
-    const options = {
-      enableHighAccuracy: true, // GPS modunu zorla
-      timeout: 15000,           // Süreyi biraz arttırdık (daha iyi uydu bağlantısı için)
-      maximumAge: 0             // Asla önbellekten eski konum getirme
-    };
+        const options = {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0
+        };
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
+        // Geolocation API callback tabanlı olduğu için Promise'e çeviriyoruz
+        // Böylece withLoader işlemin ne zaman bittiğini anlayabiliyor.
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, options);
+        });
+
         const coords = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-          accuracy: position.coords.accuracy // Doğruluk yarıçapını (metre) alıyoruz
+          accuracy: position.coords.accuracy
         };
-        setLoading(false);
+
         if (onLocationFound) onLocationFound(coords);
-      },
-      (err) => {
+
+      } catch (err) {
         console.error(err);
-        setLoading(false);
-        let msg = "Konum alınamadı.";
+        
+        // Hata mesajlarını yönet
+        let msg = err.message || "Konum alınamadı.";
+        
+        // GeolocationPositionError kodları
         if (err.code === 1) msg = "Konum izni reddedildi.";
-        if (err.code === 2) msg = "Konum servislerine erişilemiyor (GPS kapalı olabilir).";
+        if (err.code === 2) msg = "GPS sinyali alınamıyor.";
         if (err.code === 3) msg = "Konum bulma süresi doldu.";
+
         alert(msg);
-      },
-      options
-    );
+      }
+    });
+
+    // İşlem bitince (başarılı veya hatalı) butonu serbest bırak
+    setLoading(false);
   };
 
   return (
@@ -61,4 +77,5 @@ export const AddLocation = ({ onLocationFound }) => {
     </button>
   );
 };
+
 export default AddLocation;

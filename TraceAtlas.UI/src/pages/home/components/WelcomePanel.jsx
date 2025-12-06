@@ -1,67 +1,118 @@
-import React from 'react';
-import MobileMenu from './mobilmenu/MobileMenu'; 
-import FlowingMenu from '../../../bits/FlowingMenu'; 
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // 1. Import
+import { Mountain, Wind, Compass, Navigation } from 'lucide-react';
 
-const atlasItems = [
-  { link: '#', text: 'Zirveler', image: 'https://images.unsplash.com/photo-1519681393797-29e96394526f?auto=format&fit=crop&w=600&q=80' },
-  { link: '#', text: 'Ormanlar', image: 'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=600&q=80' },
-  { link: '#', text: 'Kanyonlar', image: 'https://images.unsplash.com/photo-1474044159687-1ee9fc3cfd1c?auto=format&fit=crop&w=600&q=80' },
-  { link: '#', text: 'Rotalar', image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80' }
-];
+import zirveler from '../../../assets/atlas/1.sm.jpg';
+import ormanlar from '../../../assets/atlas/2.sm.jpg';
+import denizler from '../../../assets/atlas/3.sm.jpg';
+import yol from '../../../assets/atlas/4.sm.jpg';
 
 const WelcomePanel = () => {
+  const navigate = useNavigate(); // 2. Hook
+  const [activeId, setActiveId] = useState(null);
+  
+  const atlasItems = [
+    { id: 1, title: 'Zirveler', image: zirveler, icon: <Mountain size={20} /> },
+    { id: 2, title: 'Ormanlar', image: ormanlar, icon: <Wind size={20} /> },
+    { id: 3, title: 'Denizler', image: denizler, icon: <Compass size={20} /> },
+    { id: 4, title: 'Rotalar',  image: yol,      icon: <Navigation size={20} /> },
+  ];
+
+  const handleInteraction = (id) => {
+    setActiveId(id);
+  };
+
+  // 3. Tıklama Fonksiyonu: Veriyi alıp map'e postalar
+  const handleNavigate = (title) => {
+    navigate('/map', { state: { autoSearch: title } });
+  };
+
   return (
-    <div className="relative w-full h-screen bg-[#3E6B65] overflow-hidden select-none">
+    <div className="w-full h-full flex flex-col py-4 px-2 select-none">
       
-      {/* DEKORATİF ARKA PLAN ELEMENTLERİ */}
-      <div className="absolute inset-0 pointer-events-none select-none">
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3E6B65]/80 via-[#2D554F]/60 to-[#1E3A3A]/40 pointer-events-none select-none"></div>
-        
-        {/* Desen */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] pointer-events-none select-none"></div>
-        
-        {/* Glow efektleri */}
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-400/10 rounded-full blur-[80px] pointer-events-none select-none"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-amber-400/5 rounded-full blur-[100px] pointer-events-none select-none"></div>
+      <div className="text-center mb-6 shrink-0" onClick={() => setActiveId(null)}>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-[0.2em] uppercase text-white">
+          TRACE ATLAS
+        </h2>
+        <div className="w-12 h-1 bg-[#10B981] mx-auto mt-3 rounded-full"></div>
       </div>
 
-      {/* MASRAFÜSTÜ MENÜ */}
-      <div className="hidden md:block w-full h-full absolute inset-0 select-none">
-        <FlowingMenu items={atlasItems} />
+      <div className="flex flex-col gap-4 flex-grow w-full h-full">
+        {atlasItems.map((item) => {
+          const isActive = activeId === item.id;
+
+          return (
+            <div 
+              key={item.id}
+              onMouseEnter={() => handleInteraction(item.id)}
+              // 4. Tıklayınca Yönlendir
+              onClick={() => handleNavigate(item.title)}
+              
+              className={`
+                relative flex-1 w-full min-h-[120px] 
+                rounded-3xl overflow-hidden cursor-pointer 
+                bg-zinc-900 border shadow-lg transition-all duration-300
+                ${isActive ? 'border-[#10B981]/50 ring-1 ring-[#10B981]/30' : 'border-white/5'}
+              `}
+            >
+               <img 
+                 src={item.image} 
+                 alt={item.title} 
+                 className={`
+                   absolute inset-0 w-full h-full object-cover 
+                   transition-all duration-500 ease-out
+                   ${isActive 
+                      ? 'grayscale-0 opacity-100 scale-105' 
+                      : 'grayscale opacity-60 scale-100'
+                   }
+                 `}
+                 draggable={false}
+               />
+               
+               <div className={`
+                 absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent transition-opacity duration-300
+                 ${isActive ? 'opacity-90' : 'opacity-80'}
+               `} />
+
+               <div className="absolute inset-0 flex items-center px-6">
+                  <div className={`
+                    flex items-center gap-4 transform transition-transform duration-300
+                    ${isActive ? 'translate-x-2' : 'translate-x-0'}
+                  `}>
+                     
+                     <div className={`
+                       w-12 h-12 rounded-xl shrink-0
+                       backdrop-blur-md border flex items-center justify-center 
+                       transition-colors duration-300
+                       ${isActive 
+                         ? 'bg-[#10B981] text-white border-[#10B981]' 
+                         : 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/30'
+                       }
+                     `}>
+                        {item.icon}
+                     </div>
+                     
+                     <div className="flex flex-col">
+                        <span className={`
+                          font-bold text-xl tracking-wide transition-colors duration-300
+                          ${isActive ? 'text-[#10B981]' : 'text-white'}
+                        `}>
+                          {item.title}
+                        </span>
+                        
+                        <span className={`
+                          text-xs text-gray-300 transition-all duration-300
+                          ${isActive ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'}
+                        `}>
+                           Keşfet →
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          );
+        })}
       </div>
-
-      {/* MOBİL MENÜ */}
-      <div className="block md:hidden w-full h-full absolute inset-0 z-20 select-none">
-        <MobileMenu items={atlasItems} />
-      </div>
-
-    
-
-      {/* GLOBAL STİLLER */}
-      <style jsx>{`
-        /* Tüm elementler için seçilemezlik */
-        * {
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
-        
-        /* Buton ve linkler için pointer cursor */
-        button, a, [role="button"] {
-          cursor: pointer;
-        }
-        
-        /* Görseller için seçilemezlik */
-        img {
-          -webkit-user-drag: none;
-          -khtml-user-drag: none;
-          -moz-user-drag: none;
-          -o-user-drag: none;
-          user-drag: none;
-        }
-      `}</style>
     </div>
   );
 };

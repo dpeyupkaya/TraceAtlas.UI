@@ -27,7 +27,7 @@ const ProfileSidebar = ({ activeTab, setActiveTab, user }) => {
        
         <div className="min-w-0">
           <h3 className="font-bold text-[#1E3A3A] text-base lg:text-lg truncate">
-             {user ? `${user.firstName} ${user.lastName}` : 'Yükleniyor...'}
+             {user ? `${user.firstName} ${user.lastName} ` : 'Yükleniyor...'}
           </h3>
         
         </div>

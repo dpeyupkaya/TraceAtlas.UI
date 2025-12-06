@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Mail, Github, Twitter, Instagram } from 'lucide-react';
+import { MapPin, Mail, Github, Twitter, Instagram  , Linkedin} from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -31,7 +31,7 @@ const Footer = () => {
               <Link to="/contact" className="block text-emerald-100/70 hover:text-[#10b981] transition-colors duration-300 text-sm">
                 İletişim
               </Link>
-              <Link to="/privacy" className="block text-emerald-100/70 hover:text-[#10b981] transition-colors duration-300 text-sm">
+              <Link to="/privacy-policy" className="block text-emerald-100/70 hover:text-[#10b981] transition-colors duration-300 text-sm">
                 Gizlilik Politikası
               </Link>
               <Link to="/terms" className="block text-emerald-100/70 hover:text-[#10b981] transition-colors duration-300 text-sm">
@@ -45,25 +45,25 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-emerald-100/70 text-sm">
                 <Mail className="w-4 h-4 text-[#10b981]" />
-                <span>info@traceatlas.com</span>
+                <span>dpeyupkaya@gmail.com</span>
               </div>
-              <div className="flex items-center gap-3 text-emerald-100/70 text-sm">
-                <MapPin className="w-4 h-4 text-[#10b981]" />
-                <span>İstanbul, Türkiye</span>
-              </div>
+            
             </div>
 
             <div className="flex items-center gap-4 pt-4">
-              <a href="#" className="p-2 bg-white/5 rounded-lg hover:bg-[#10b981]/20 transition-colors duration-300">
+              <a href="https://github.com/dpeyupkaya" className="p-2 bg-white/5 rounded-lg hover:bg-[#10b981]/20 transition-colors duration-300">
                 <Github className="w-4 h-4 text-emerald-100/70 hover:text-[#10b981]" />
               </a>
-              <a href="#" className="p-2 bg-white/5 rounded-lg hover:bg-[#10b981]/20 transition-colors duration-300">
-                <Twitter className="w-4 h-4 text-emerald-100/70 hover:text-[#10b981]" />
-              </a>
-              <a href="#" className="p-2 bg-white/5 rounded-lg hover:bg-[#10b981]/20 transition-colors duration-300">
+              
+              <a href="https://instagram.com/kaya_eyuup" className="p-2 bg-white/5 rounded-lg hover:bg-[#10b981]/20 transition-colors duration-300">
                 <Instagram className="w-4 h-4 text-emerald-100/70 hover:text-[#10b981]" />
               </a>
+               <a href="https://linkedin.com/in/dp-eyup-kaya" className="p-2 bg-white/5 rounded-lg hover:bg-[#10b981]/20 transition-colors duration-300">
+                <Linkedin className="w-4 h-4 text-emerald-100/70 hover:text-[#10b981]" />
+              </a>
+
             </div>
+
              <div className="text-emerald-100/50 text-sm text-center md:text-left">
               © 2025 TraceAtlas. Tüm hakları saklıdır.
             </div>
