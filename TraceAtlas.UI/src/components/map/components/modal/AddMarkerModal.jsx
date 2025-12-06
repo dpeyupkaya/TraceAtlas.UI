@@ -2,145 +2,167 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiX, FiCheck, FiLoader } from "react-icons/fi";
+import Alert from "@mui/material/Alert";
+import Collapse from "@mui/material/Collapse";
+
 import MarkerForm from "../Form/MarkerForm";
-import ConfirmationModal from "../../../common/ConfirmationModal";
+import ConfirmationModal from "../../../../common/ConfirmationModal";
 import { createLocation } from "../../services/locationService";
 import { getCurrentUserId } from "../../utils/authUtils";
-import { closeAddLocationModal } from "../../../../store/slices/mapSlice.js";
+import { closeAddLocationModal } from "../../../../store/slices/mapSlice";
+
+
+import { useGlobalLoader } from "../../../../hooks/useGlobalLoader";
 
 const AddMarkerModal = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   
-  const { addLocationModalOpen, newLocationPosition } = useSelector((state) => state.map);
+  // 2. Hook'u başlat
+  const { withLoader } = useGlobalLoader();
+
+  const { addLocationModalOpen, newLocationPosition } = useSelector(s => s.map);
 
   const [loading, setLoading] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [cachedFormData, setCachedFormData] = useState(null);
+  const [warning, setWarning] = useState("");
 
   if (!addLocationModalOpen) return null;
 
-  const handleClose = () => {
+  const close = () => {
+    setWarning("");
     dispatch(closeAddLocationModal());
   };
 
   const handleFormSubmit = (formData) => {
-    setCachedFormData(formData);
-    setConfirmOpen(true);
-  };
+    setWarning("");
 
-  const handleFinalSave = async () => {
-    setLoading(true);
-
-    const userId = getCurrentUserId();
-    if (!userId) {
-      alert("Oturum süreniz dolmuş. Lütfen tekrar giriş yapın.");
-      setLoading(false);
-      setConfirmOpen(false);
+    if (!formData.title?.trim()) {
+      setWarning("Başlık zorunludur.");
       return;
     }
 
-    try {
-      const fd = new FormData();
-      fd.append("Title", cachedFormData.title);
-      fd.append("Description", cachedFormData.description);
-
-      const latString = Number(newLocationPosition.lat).toFixed(8);
-      const lngString = Number(newLocationPosition.lng).toFixed(8);
-
-      fd.append("Latitude", latString);
-      fd.append("Longitude", lngString);
-
-      fd.append("UserId", userId);
-      fd.append("Region", "Bilinmiyor");
-
-      if (cachedFormData.tags && cachedFormData.tags.length > 0) {
-        cachedFormData.tags.forEach((tag) => {
-          fd.append("Tags", tag);
-        });
+    if (formData.imageFile) {
+      const okTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+      if (!okTypes.includes(formData.imageFile.type)) {
+        setWarning("Sadece JPG, PNG, WebP veya GIF yükleyebilirsiniz.");
+        return;
       }
 
-      if (cachedFormData.imageFile) {
-        fd.append("Image", cachedFormData.imageFile);
+      if (formData.imageFile.size > 5 * 1024 * 1024) {
+        setWarning("Resim boyutu 5MB’tan küçük olmalıdır.");
+        return;
       }
-
-      await createLocation(fd);
-
-      queryClient.invalidateQueries(['locations']);
-      handleClose();
-
-    } catch (err) {
-      console.error(err);
-      const errorMsg = err.response?.data?.title || err.response?.data?.message || err.message;
-      alert("Konum ekleme başarısız: " + errorMsg);
-    } finally {
-      setLoading(false);
-      setConfirmOpen(false);
     }
+
+    setCachedFormData({
+      title: formData.title.trim(),
+      description: formData.description?.trim() || "",
+      tags: formData.tags || [],
+      imageFile: formData.imageFile || null,
+      region: formData.region || "Bilinmiyor"
+    });
+
+    setConfirmOpen(true);
+  };
+
+  const handleSave = async () => {
+    setLoading(true); // Butonu disable etmek için lokal state'i koruyoruz
+    setWarning("");
+
+    // 3. İşlemi withLoader içine alıyoruz
+    await withLoader(async () => {
+      try {
+        const userId = getCurrentUserId();
+        if (!userId) throw new Error("Oturum süresi dolmuş.");
+
+        const fd = new FormData();
+        fd.append("Title", cachedFormData.title);
+        fd.append("Latitude", newLocationPosition.lat.toFixed(8));
+        fd.append("Longitude", newLocationPosition.lng.toFixed(8));
+        fd.append("UserId", userId);
+        fd.append("Region", cachedFormData.region);
+
+        if (cachedFormData.description)
+          fd.append("Description", cachedFormData.description);
+
+        cachedFormData.tags.forEach(t => fd.append("Tags", t));
+
+        if (cachedFormData.imageFile)
+          fd.append("Image", cachedFormData.imageFile);
+
+        await createLocation(fd);
+        
+        queryClient.invalidateQueries(["locations"]);
+        close();
+        
+      } catch (e) {
+        // Hata olursa modal üzerindeki alert alanına yazdırıyoruz
+        setWarning(e.message || "Kayıt sırasında hata oluştu.");
+      }
+    });
+
+    // İşlem bitince (başarılı veya hatalı) lokal loading'i kapat
+    setLoading(false);
+    setConfirmOpen(false);
   };
 
   return (
     <>
-      <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
-        <div
-          className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm modal-fade"
-          onClick={handleClose}
-        />
+      <div className="fixed inset-0 z-[2500] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+        <div className="w-full max-w-xl bg-zinc-900 text-zinc-100 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
 
-        <div className="relative w-full max-w-lg bg-[#0f172a] border border-white/10 rounded-2xl shadow-2xl overflow-hidden modal-scale">
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02]">
-            <h2 className="text-lg font-semibold text-white">Konum Ekle</h2>
-            <button
-              onClick={handleClose}
-              disabled={loading}
-              className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+          <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
+            <h2 className="text-lg font-semibold text-white">Yeni Konum</h2>
+            <button 
+              onClick={close}
+              className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white"
             >
               <FiX size={20} />
             </button>
-          </div>
+          </header>
 
-          <div className="p-6">
+          <div className="p-6 space-y-4">
+            <Collapse in={!!warning}>
+              <Alert severity="warning" variant="filled" onClose={() => setWarning("")}>
+                {warning}
+              </Alert>
+            </Collapse>
+
             <MarkerForm onSubmit={handleFormSubmit} loading={loading} />
 
-            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-white/5">
+            <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-zinc-800">
               <button
-                onClick={handleClose}
+                onClick={close}
                 disabled={loading}
-                className="px-4 py-2 text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                className="px-5 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
               >
-                İptal
+                Vazgeç
               </button>
 
               <button
                 type="submit"
                 form="marker-form"
                 disabled={loading}
-                className="flex items-center gap-2 px-5 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 rounded-lg transition-colors shadow-lg shadow-emerald-900/20"
+                className="px-6 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-emerald-900/20"
               >
                 {loading ? <FiLoader className="animate-spin" /> : <FiCheck />}
-                <span>Kaydet</span>
+                Kaydet
               </button>
             </div>
           </div>
         </div>
-
-        <style>{`
-          .modal-fade { animation: fadeIn 0.25s ease-out forwards; }
-          .modal-scale { animation: scaleIn 0.25s ease-out forwards; }
-          @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-          @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        `}</style>
       </div>
 
       <ConfirmationModal
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
-        onConfirm={handleFinalSave}
-        title="Konumu Kaydetmek İstiyor Musun?"
-        message="Girdiğin bilgileri doğrulayıp konumu eklemek üzeresin."
-        confirmText="Evet, Kaydet"
-        cancelText="İptal"
-        type="primary"
+        onConfirm={handleSave}
+        title="Onay"
+        message={`"${cachedFormData?.title}" konumu kaydedilecek.`}
+        confirmText="Kaydet"
+        cancelText="Düzenle"
         isLoading={loading}
       />
     </>

@@ -9,7 +9,6 @@ const ResetPasswordPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
-  // 1. Token'ı URL'den gizlice alıyoruz
   const token = searchParams.get('token');
 
   const [formData, setFormData] = useState({
@@ -17,33 +16,40 @@ const ResetPasswordPage = () => {
     confirmPassword: ''
   });
   const [status, setStatus] = useState('idle'); 
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Token yoksa direkt login'e at (Güvenlik)
   useEffect(() => {
     if (!token) {
       navigate('/login');
     }
   }, [token, navigate]);
 
+  const validatePassword = (password) => {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
+    return re.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
     
-    // 2. KONTROL FRONTEND'DE: Şifreler uyuşuyor mu?
     if (formData.password !== formData.confirmPassword) {
-      alert("Şifreler birbirini tutmuyor!");
+      setErrorMessage("Şifreler birbirini tutmuyor!");
+      return;
+    }
+
+    if (!validatePassword(formData.password)) {
+      setErrorMessage("Şifre en az 6 karakter olmalı; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.");
       return;
     }
 
     try {
       setStatus('loading');
       
-      // 3. BACKEND'E SADECE GEREKLİ OLANI YOLLUYORUZ
-      // confirmPassword burada eleniyor.
       await authService.resetPassword(token, formData.password);
       
       setStatus('success');
       
-      // Başarılıysa 3 saniye sonra login'e yönlendir
       setTimeout(() => {
         navigate('/auth');
       }, 3000);
@@ -51,10 +57,11 @@ const ResetPasswordPage = () => {
     } catch (error) {
       console.error(error);
       setStatus('error');
+      const msg = error?.response?.data?.message || error?.response?.data?.detail || "Sıfırlama başarısız. Linkin süresi dolmuş olabilir.";
+      setErrorMessage(msg);
     }
   };
 
-  // Başarılı Ekranı
   if (status === 'success') {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-4">
@@ -70,7 +77,6 @@ const ResetPasswordPage = () => {
     );
   }
 
-  // Form Ekranı
   return (
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-[#0f172a] border border-white/10 rounded-2xl p-8 shadow-2xl relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -87,7 +93,6 @@ const ResetPasswordPage = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          {/* Sadece Şifre Inputları var, Token inputu yok (gizli) */}
           <InputField 
             icon={Lock}
             type="password"
@@ -104,10 +109,10 @@ const ResetPasswordPage = () => {
             onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
           />
 
-          {status === 'error' && (
+          {errorMessage && (
             <div className="flex items-center gap-2 text-red-400 text-sm bg-red-400/10 p-3 rounded-lg">
-              <AlertCircle size={16} />
-              <span>Sıfırlama başarısız. Linkin süresi dolmuş olabilir.</span>
+              <AlertCircle size={16} className="shrink-0" />
+              <span>{errorMessage}</span>
             </div>
           )}
 

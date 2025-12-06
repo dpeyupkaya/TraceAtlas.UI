@@ -14,6 +14,10 @@ import ConfirmEmailPage from './components/auth/ConfirmEmailPage';
 import NotFoundPage from './pages/NotFoundPage';
 import TermsPage from './pages/TermsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import Footer from './components/footer/Footer';
+import About from './components/about/About';
+import Contact from './components/about/Contact';
+import GlobalLoader from './common/GlobalLoader';
 
 function App() {
   const [snack, setSnack] = useState({
@@ -31,6 +35,9 @@ function App() {
   };
 
   return (
+
+    <>
+    <GlobalLoader />
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
@@ -43,7 +50,10 @@ function App() {
         <Route path="/shared/:token" element={<SharedLocationPage />} />
         <Route path='/terms' element={<TermsPage />} />
         <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/contact' element={<Contact />} />
         <Route path='/*' element={<NotFoundPage />} />
+        <Route path='/f' element={<Footer />} />
       </Routes>
 
       <Snackbar
@@ -57,6 +67,7 @@ function App() {
         </Alert>
       </Snackbar>
     </Router>
+    </>
   );
 }
 

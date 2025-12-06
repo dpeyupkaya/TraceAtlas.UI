@@ -1,54 +1,70 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { resolveSharedLink } from "../components/map/services/locationService";
-import MarkerDetailModal from "../components/map/components/modal/MarkerDetailModal";
-import { FiLoader } from "react-icons/fi";
+import { setSelectedLocation, setViewState } from ".././store/slices/mapSlice"; // setViewState action'ın varsa ekle, yoksa aşağıda açıklarım
+import { FiLoader, FiAlertCircle } from "react-icons/fi";
 
 const SharedLocationPage = () => {
   const { token } = useParams();
-  const [locationData, setLocationData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  // Hata durumunu state'te tutalım, başarılı olursa zaten yönlenecek
+  const [error, setError] = React.useState(false);
 
   useEffect(() => {
-    const load = async () => {
+    const loadAndRedirect = async () => {
       try {
+        // 1. Token ile veriyi çek
         const data = await resolveSharedLink(token);
-        setLocationData(data);
-      } catch {
-        alert("Geçersiz veya süresi dolmuş bağlantı.");
-      } finally {
-        setLoading(false);
+
+        if (data) {
+   
+          dispatch(setSelectedLocation(data));
+
+          // 3. (Opsiyonel) Harita kamerasını o noktaya odakla
+          // Eğer mapSlice içinde harita pozisyonunu tutan bir state varsa (örn: viewState):
+          /* dispatch(setViewState({
+            latitude: data.latitude,
+            longitude: data.longitude,
+            zoom: 15
+          }));
+          */
+
+          // 4. Ana harita sayfasına yönlendir
+          navigate("/map");
+        }
+      } catch (err) {
+        console.error("Paylaşım hatası:", err);
+        setError(true);
       }
     };
 
-    load();
-  }, [token]);
+    loadAndRedirect();
+  }, [token, dispatch, navigate]);
 
-  if (loading) {
+  // Yönlendirme yapılana kadar yükleniyor ekranı göster
+  if (error) {
     return (
-      <div className="w-full h-screen flex items-center justify-center">
-        <FiLoader className="animate-spin" size={40} />
-      </div>
-    );
-  }
-
-  if (!locationData) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center text-gray-600">
-        Bağlantı geçersiz.
+      <div className="w-full h-screen flex flex-col gap-4 items-center justify-center bg-slate-900 text-slate-400">
+        <FiAlertCircle size={50} />
+        <p>Bağlantı geçersiz veya süresi dolmuş.</p>
+        <button 
+            onClick={() => navigate('/map')}
+            className="px-4 py-2 bg-slate-800 rounded hover:bg-slate-700 text-white transition"
+        >
+            Haritaya Dön
+        </button>
       </div>
     );
   }
 
   return (
-    <MarkerDetailModal
-      location={{
-        id: locationData.id,
-        latitude: locationData.latitude,
-        longitude: locationData.longitude
-      }}
-      onClose={() => (window.location.href = "/map")}
-    />
+    <div className="w-full h-screen flex flex-col items-center justify-center bg-slate-900 text-white">
+      <FiLoader className="animate-spin mb-4" size={40} />
+      <p className="text-slate-400">Konuma gidiliyor...</p>
+    </div>
   );
 };
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ConfirmationModal from '../../common/ConfirmationModal';
+import ConfirmationModal from '../../../common/ConfirmationModal';
 import profileService from '../../../services/profileService';
 
 const EnvelopeIcon = ({ className }) => (

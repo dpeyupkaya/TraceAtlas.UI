@@ -15,16 +15,21 @@ import { useLocations } from '../hooks/useLocations';
 import { getMarkerIcon } from '../components/marker/MarkerIcon';
 import { setSelectedLocation, clearSelection, setNewLocationPosition } from '../../../store/slices/mapSlice.js';
 
+// Haritayı uçuran alt bileşen
 const FlyToLocation = ({ center }) => {
   const map = useMap();
+  
   useEffect(() => {
+    // Sadece center doluysa uçur
     if (center) {
       map.flyTo([center.lat, center.lng], 15, { animate: true, duration: 1.5 });
     }
   }, [center, map]);
+  
   return null;
 };
 
+// Kullanıcı konum ikonu
 const userLocationIcon = L.divIcon({
   className: 'user-location-marker-container',
   html: '<div class="user-location-dot"></div><div class="user-location-pulse"></div>',
@@ -32,6 +37,7 @@ const userLocationIcon = L.divIcon({
   iconAnchor: [12, 12],
 });
 
+// Harita tıklama olayları
 const MapClickHandler = () => {
   const dispatch = useDispatch();
   const isAddingMode = useSelector((state) => state.map.isAddingMode);
@@ -50,17 +56,17 @@ const MapClickHandler = () => {
 
 const MapContainer = () => {
   const dispatch = useDispatch();
-  const { locations, fetchLocations, loading } = useLocations();
+  const { locations, loading } = useLocations(); // fetchLocations burada kullanılmıyorsa silebilirsin
   const routeLocation = useLocation();
   
-  const { selectedLocation, isAddingMode } = useSelector((state) => state.map);
+  // selectedLocation'ı buradan çektik ama useEffect ile dinleyip uçurmayacağız.
+  const { isAddingMode } = useSelector((state) => state.map);
 
   const [state, setState] = useState({
     flyToCoords: null,
     userLocation: null,
   });
 
-  const updateState = (key, value) => setState(prev => ({ ...prev, [key]: value }));
   const worldBounds = useMemo(() => [[-90, -180], [90, 180]], []);
 
   const createClusterCustomIcon = useCallback((cluster) => {
@@ -84,6 +90,7 @@ const MapContainer = () => {
     });
   }, []);
 
+  // 1. Senaryo: Başka sayfadan yönlendirme ile gelindiyse uçur (Opsiyonel, istersen kalabilir)
   useEffect(() => {
     if (routeLocation.state && routeLocation.state.focusedLocation) {
         const { Latitude, Longitude } = routeLocation.state.focusedLocation;
@@ -96,14 +103,18 @@ const MapContainer = () => {
     }
   }, [routeLocation.state]);
 
+  // DİKKAT: Buradaki "useEffect(() => { if (selectedLocation) ... }, [selectedLocation])" bloğu SİLİNDİ.
+  // Böylece modal açılınca harita hareket etmeyecek.
+
   const handleOpenDetail = useCallback((loc) => {
     dispatch(setSelectedLocation(loc));
   }, [dispatch]);
 
+  // 2. Senaryo: "Konumumu Bul" butonuna basınca uçur
   const handleLocationFound = useCallback((coords) => {
     setState(prev => ({
       ...prev,
-      flyToCoords: coords,
+      flyToCoords: coords, // Burası set edildiği için FlyToLocation çalışır
       userLocation: coords
     }));
   }, []);
@@ -129,6 +140,7 @@ const MapContainer = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        {/* Bu komponent state.flyToCoords değişince haritayı uçurur */}
         <FlyToLocation center={state.flyToCoords} />
         
         <MapClickHandler />
@@ -148,6 +160,7 @@ const MapContainer = () => {
               icon={getMarkerIcon(loc)} 
               eventHandlers={{
                 click: (e) => {
+                   // Tıklayınca sadece harita eventlerini durdur, flyTo yapma
                    e.originalEvent.stopPropagation();
                 }
               }}
@@ -183,12 +196,7 @@ const MapContainer = () => {
 
       <AddMarkerModal />
 
-      {selectedLocation && (
-        <MarkerDetailModal
-          location={selectedLocation}
-          onClose={() => dispatch(clearSelection())}
-        />
-      )}
+      <MarkerDetailModal />
     </div>
   );
 };

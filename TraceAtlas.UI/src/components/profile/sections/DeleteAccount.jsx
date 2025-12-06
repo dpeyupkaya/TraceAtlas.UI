@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ConfirmationModal from '../../common/ConfirmationModal';
+import ConfirmationModal from '../../../common/ConfirmationModal';
 import profileService from '../../../services/profileService'; // Servis importu
 
 const TrashIcon = ({ className }) => (
