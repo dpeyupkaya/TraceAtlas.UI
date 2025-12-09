@@ -10,6 +10,9 @@ const api = axios.create({
   },
 });
 
+// ----------------------
+// REQUEST INTERCEPTOR
+// ----------------------
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
@@ -21,16 +24,84 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
+// ----------------------
+// REFRESH TOKEN QUEUE
+// ----------------------
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach(prom => {
+    if (error) prom.reject(error);
+    else prom.resolve(token);
+  });
+  failedQueue = [];
+};
+
+// ----------------------
+// RESPONSE INTERCEPTOR
+// ----------------------
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+
+  async (error) => {
     if (!error.response) {
       window.__showSnackbar?.("Sunucuya ulaşılamıyor.");
       return Promise.reject({ status: 0, message: "Sunucuya ulaşılamıyor." });
     }
 
+    const originalRequest = error.config;
     const { status, data, headers } = error.response;
 
+    // ----------------------
+    // TOKEN EXPIRED (401)
+    // ----------------------
+    if (status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      isRefreshing = true;
+
+      try {
+      
+        const refreshResponse = await api.post(
+          "/Auth/refresh-token",
+          {},
+          { withCredentials: true }
+        );
+
+        const newAccessToken = refreshResponse.data.token;
+
+        localStorage.setItem("accessToken", newAccessToken);
+
+        api.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
+
+        processQueue(null, newAccessToken);
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return api(originalRequest);
+
+      } catch (refreshError) {
+        processQueue(refreshError, null);
+        localStorage.removeItem("accessToken");
+        window.location.href = "/auth";
+        return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+   
     const message = data?.message || data?.error || "Beklenmeyen bir hata oluştu.";
     const errors = data?.errors || null;
     const traceId = data?.traceId || headers["x-trace-id"];

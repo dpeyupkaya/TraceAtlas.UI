@@ -1,9 +1,11 @@
 import React from 'react';
 import { Code2, Globe, Database, Cpu } from 'lucide-react';
+import Footer from '../footer/Footer';
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-[#1E3A3A] text-white pt-24 pb-12 px-6">
+  <>
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] text-white pt-24 pb-12 px-6">
       <div className="container mx-auto max-w-4xl">
         
         {/* Başlık Bölümü */}
@@ -67,7 +69,10 @@ const About = () => {
         </div>
 
       </div>
+       <Footer />
     </div>
+   
+    </>
   );
 };
 

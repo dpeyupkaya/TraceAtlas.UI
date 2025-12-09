@@ -4,16 +4,14 @@ import { MapPin, Mail, Github, Twitter, Instagram  , Linkedin} from 'lucide-reac
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-gradient-to-br from-[#1E3A3A] via-[#2D554F] to-[#3E6B65] border-t border-[#10b981]/20 select-none">
+    <footer className="w-full bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a]select-none">
       
       <div className="container mx-auto px-6 py-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-[#10b981] rounded-xl flex items-center justify-center">
-                <span className="text-white font-bold text-lg">T</span>
-              </div>
+             
               <span className="text-white font-bold text-2xl">TraceAtlas</span>
             </div>
             <p className="text-emerald-100/70 text-sm leading-relaxed max-w-md">

@@ -30,13 +30,7 @@ const WelcomePanel = () => {
   return (
     <div className="w-full h-full flex flex-col py-4 px-2 select-none">
       
-      <div className="text-center mb-6 shrink-0" onClick={() => setActiveId(null)}>
-        <h2 className="text-2xl md:text-3xl font-bold tracking-[0.2em] uppercase text-white">
-          TRACE ATLAS
-        </h2>
-        <div className="w-12 h-1 bg-[#10B981] mx-auto mt-3 rounded-full"></div>
-      </div>
-
+    
       <div className="flex flex-col gap-4 flex-grow w-full h-full">
         {atlasItems.map((item) => {
           const isActive = activeId === item.id;

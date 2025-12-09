@@ -2,70 +2,101 @@ import React, { useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { jwtDecode } from "jwt-decode";
-
-
-const jwt_decode = jwtDecode.default || jwtDecode;
+import { useNavigate } from 'react-router-dom'; 
 
 export default function TokenAlert() {
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+
+  // 1. OTOMATİK GİZLEME EFEKTİ
+  // showAlert 'true' olduğunda çalışır, 5 saniye sayar ve kapatır.
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 2000); // 5 saniye sonra gizle
+
+      return () => clearTimeout(timer); // Component unmount olursa timer'ı temizle
+    }
+  }, [showAlert]);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) return;
+    const checkTokenStatus = () => {
+      const token = localStorage.getItem('accessToken');
+      if (!token) return;
 
-    const decoded = jwt_decode(token);
-    const expirationTime = decoded.exp * 1000;
-    const now = Date.now();
-    const remainingTime = expirationTime - now;
+      try {
+        const decoded = jwtDecode(token);
+        const expirationTime = decoded.exp * 1000;
+        const now = Date.now();
+        const remainingTime = expirationTime - now;
 
-    if (remainingTime <= 0) {
-      triggerLogout();
-      return;
-    }
-
-    // Uyarı süresi: token bitmeden 2 dakika önce
-    const warningTime = 2 * 60 * 1000;
-    const showWarningAt = remainingTime - warningTime;
-
-    let warningTimer = null;
-    if (showWarningAt > 0) {
-      warningTimer = setTimeout(() => {
-        setMessage('Oturumunuz 2 dakika içinde sona erecek. Lütfen tekrar giriş yapınız.');
-        setShowAlert(true);
-      }, showWarningAt);
-    } else {
-      // Token bitimine 2 dakikadan az kaldıysa hemen göster
-      setMessage('Oturumunuz 2 dakika içinde sona erecek. Lütfen tekrar giriş yapınız.');
-      setShowAlert(true);
-    }
-
-    // Logout timer: token süresi dolunca çalışır
-    const logoutTimer = setTimeout(() => {
-      triggerLogout();
-    }, remainingTime);
-
-    function triggerLogout() {
-      setMessage('Oturumunuz sona erdi. Lütfen tekrar giriş yapınız.');
-      setShowAlert(true);
-      setTimeout(() => {
-        setShowAlert(false);
-        localStorage.removeItem('accessToken');
-        window.location.href = '/auth';
-      }, 3000); // 3 saniye sonra yönlendirme
-    }
-
-    return () => {
-      clearTimeout(warningTimer);
-      clearTimeout(logoutTimer);
+        // 1. Durum: Süre bitti
+        if (remainingTime <= 0) {
+            handleLogout();
+        } 
+     
+        else if (remainingTime < 1 * 60 * 1000) {
+            const minutesLeft = Math.ceil(remainingTime / 60000);
+            const newMessage = `Oturumunuz ${minutesLeft} dakika içinde sona erecek. Lütfen işlerinizi kaydedin.`;
+         
+            if (message !== newMessage || !showAlert) {
+                setMessage(newMessage);
+                setShowAlert(true);
+            }
+        } 
+      } catch (error) {
+        console.error("Token hatası:", error);
+        handleLogout(); 
+      }
     };
-  }, []);
+
+    checkTokenStatus();
+    // Her 10 saniyede bir kontrol (Uyarı kapandıktan sonra süre azalıyorsa tekrar açılmasını sağlar)
+    const intervalId = setInterval(checkTokenStatus, 40000);
+
+    return () => clearInterval(intervalId);
+  }, [navigate]); // message ve showAlert'ı bağımlılıklara eklemiyoruz, sonsuz döngü olmasın diye
+
+  const handleLogout = () => {
+    // Çıkış mesajı zaten varsa tekrar tekrar set etme
+    if (message === 'Oturumunuz sona erdi. Giriş sayfasına yönlendiriliyorsunuz...') return;
+
+    setMessage('Oturumunuz sona erdi. Giriş sayfasına yönlendiriliyorsunuz...');
+    setShowAlert(true);
+    
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+
+    // Kullanıcı mesajı okusun diye biraz bekletip yönlendiriyoruz
+    setTimeout(() => {
+      navigate('/auth'); 
+    }, 3000);
+  };
 
   if (!showAlert) return null;
 
   return (
-    <Stack sx={{ width: '100%', position: 'fixed', top: 20, zIndex: 9999 }}>
-      <Alert variant="outlined" severity="error">
+    <Stack sx={{ 
+        position: 'fixed', 
+        bottom: 50,        // Alt kısımdan 50px yukarıda
+        left: '50%',       // Soldan %50 it
+        transform: 'translateX(-50%)', // Kendi genişliğinin yarısı kadar geri çek (Tam ortalar)
+        zIndex: 9999,
+        width: 'max-content', // Sadece içerik kadar genişlik kaplasın
+        maxWidth: '90%'       // Mobilde taşmasın
+    }}>
+      <Alert 
+        variant="filled" 
+        severity="warning" 
+        sx={{ 
+            boxShadow: 6, 
+            fontSize: '1rem',
+            padding: '10px 20px'
+        }} 
+      >
         {message}
       </Alert>
     </Stack>

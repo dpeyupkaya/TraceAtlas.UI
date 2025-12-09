@@ -30,7 +30,7 @@ const mapSlice = createSlice({
         state.zoom = zoom;
       }
     },
-    // -------------------------
+
     setSelectedLocation: (state, action) => {
       state.selectedLocation = action.payload;
       state.isSidebarOpen = true;

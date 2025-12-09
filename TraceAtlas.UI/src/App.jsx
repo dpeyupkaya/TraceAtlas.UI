@@ -1,6 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// 1. Navigate bileşenini ekledik
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
 import { Snackbar, Alert } from "@mui/material";
 
 import SharedLocationPage from "./pages/SharedLocationPage";
@@ -18,6 +19,20 @@ import Footer from './components/footer/Footer';
 import About from './components/about/About';
 import Contact from './components/about/Contact';
 import GlobalLoader from './common/GlobalLoader';
+import TokenAlert from './Alert';
+
+const ProtectedRoute = ({ children }) => {
+ 
+  const isAuthenticated = localStorage.getItem("accessToken"); 
+
+  if (!isAuthenticated) {
+    
+    return <Navigate to="/home" replace />;
+  }
+
+
+  return children;
+};
 
 function App() {
   const [snack, setSnack] = useState({
@@ -35,38 +50,48 @@ function App() {
   };
 
   return (
-
     <>
-    <GlobalLoader />
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="home" element={<HomePage />} />
-        <Route path="/auth" element={<AuthPanel />} />
-        <Route path="/map" element={<MapPage />} />
-        <Route path="/profile" element={<BaseProfil />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/confirm-email" element={<ConfirmEmailPage />} />
-        <Route path="/shared/:token" element={<SharedLocationPage />} />
-        <Route path='/terms' element={<TermsPage />} />
-        <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/*' element={<NotFoundPage />} />
-        <Route path='/f' element={<Footer />} />
-      </Routes>
+      <GlobalLoader />
+     
+      <Router>
+        
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="home" element={<HomePage />} />
+          <Route path="/auth" element={<AuthPanel />} />
+          <Route path="/map" element={<MapPage />} />
+          
+         
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <BaseProfil />
+              </ProtectedRoute>
+            } 
+          />
 
-      <Snackbar
-        open={snack.open}
-        autoHideDuration={4000}
-        onClose={() => setSnack({ ...snack, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      >
-        <Alert severity={snack.severity} variant="filled">
-          {snack.message}
-        </Alert>
-      </Snackbar>
-    </Router>
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/confirm-email" element={<ConfirmEmailPage />} />
+          <Route path="/shared/:token" element={<SharedLocationPage />} />
+          <Route path='/terms' element={<TermsPage />} />
+          <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/*' element={<NotFoundPage />} />
+        </Routes>
+
+        <Snackbar
+          open={snack.open}
+          autoHideDuration={4000}
+          onClose={() => setSnack({ ...snack, open: false })}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert severity={snack.severity} variant="filled">
+            {snack.message}
+          </Alert>
+        </Snackbar>
+      </Router>
     </>
   );
 }
