@@ -7,8 +7,7 @@ export const authService = {
   // ✅ Login İşlemi (Güncellendi)
   login: async (email, password) => {
     const response = await api.post('/Auth/login', { email, password });
-    
-    // Backend yanıtında accessToken ve refreshToken bekliyoruz
+   
     const { accessToken, refreshToken } = response.data;
 
     if (accessToken) {

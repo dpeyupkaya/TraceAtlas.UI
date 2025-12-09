@@ -37,7 +37,7 @@ const BaseProfil = () => {
     };
 
     fetchProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   const renderContent = () => {
@@ -68,7 +68,7 @@ const BaseProfil = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#1E3A3A] via-[#2D554F] to-[#3E6B65] select-none">
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] select-none">
       
       <div className="z-50">
         <Navbar />

@@ -5,13 +5,11 @@ import InputField from './InputField';
 import AuthButton from './AuthButton';
 import ForgotPasswordModal from './ForgotPasswordModal';
 import { authService } from '../../services/authService';
-// 1. Hook'u import ediyoruz
 import { useGlobalLoader } from '../../hooks/useGlobalLoader';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  // 2. Hook'u başlatıyoruz
-  const { withLoader } = useGlobalLoader(); 
+  const { withLoader } = useGlobalLoader();
   
   const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -28,16 +26,11 @@ const LoginForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 3. Tüm işlemi withLoader içine alıyoruz.
-    // Böylece işlem başladığında bar çıkar, bittiğinde (hata olsa bile) kapanır.
     await withLoader(async () => {
       try {
         await authService.login(formData.email, formData.password);
         navigate('/map');
       } catch (err) {
-        // Hata yönetimi (Senin yazdığın kod aynen korundu)
-        console.log("Login Error:", err.response);
-
         const status = err?.response?.status || err?.status;
         
         let errorMsg = err?.response?.data?.message || err?.response?.data || err?.message || "";
@@ -73,18 +66,25 @@ const LoginForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 select-none relative">
+      <form 
+        onSubmit={handleSubmit} 
+        className="space-y-5 select-none relative"
+        autoComplete="off"
+      >
+        <div className="relative group">
+          <InputField
+            icon={Mail}
+            type="text"
+            name="email"
+            placeholder="E-posta Adresin"
+            value={formData.email}
+            onChange={handleChange}
+            autoComplete="off"
+            data-lpignore="true"
+          />
+        </div>
 
-        <InputField
-          icon={Mail}
-          type="email"
-          name="email"
-          placeholder="E-posta Adresin"
-          value={formData.email}
-          onChange={handleChange}
-        />
-
-        <div className="relative">
+        <div className="relative group">
           <InputField
             icon={Lock}
             type={showPassword ? "text" : "password"}
@@ -92,38 +92,37 @@ const LoginForm = () => {
             placeholder="Şifren"
             value={formData.password}
             onChange={handleChange}
+            autoComplete="new-password"
           />
 
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-emerald-400 transition-colors duration-200 outline-none"
+            tabIndex="-1"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </div>
 
-        <div className="flex justify-end pt-1 pb-4">
+        <div className="flex justify-end pt-1">
           <button
             type="button"
             onClick={() => setIsForgotModalOpen(true)}
-            className="text-xs text-[#10b981] hover:text-[#10b981]/80 hover:underline transition-colors"
+            className="text-xs font-medium text-emerald-500 hover:text-emerald-400 hover:underline transition-all duration-200 outline-none"
           >
             Şifremi Unuttum?
           </button>
         </div>
 
-        <AuthButton text="Giriş Yap" type="submit" />
-
-        <div className="text-center pt-4">
-          <div className="inline-flex items-center gap-2 text-xs text-slate-400/80">
-            <div className="w-1.5 h-1.5 bg-[#10b981]/60 rounded-full animate-pulse"></div>
-            <span>Güvenli giriş • SSL korumalı</span>
-          </div>
+        <div className="pt-2">
+            <AuthButton text="Giriş Yap" type="submit" />
         </div>
 
-        <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-[#10b981]/5 rounded-full blur-xl pointer-events-none"></div>
-        <div className="absolute -top-4 -left-4 w-16 h-16 bg-[#10b981]/3 rounded-full blur-lg pointer-events-none"></div>
+      
+
+        <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
+        <div className="absolute -top-10 -left-10 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
       </form>
 
       <ForgotPasswordModal
