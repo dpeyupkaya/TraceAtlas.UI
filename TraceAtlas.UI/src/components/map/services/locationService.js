@@ -15,8 +15,7 @@ export const createLocation = async (formData) => {
     // FormData gönderirken header manipülasyonu şart:
     const response = await api.post('/Locations', formData, {
       headers: {
-        // "multipart/form-data" YAZMA! 
-        // undefined bırakınca tarayıcı boundary'i kendisi ekler.
+      
         "Content-Type": undefined 
       }
     });

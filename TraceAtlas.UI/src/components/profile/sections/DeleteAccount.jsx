@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../../common/ConfirmationModal';
-import profileService from '../../../services/profileService'; // Servis importu
+import profileService from '../../../services/profileService';
+import { Snackbar, Alert } from '@mui/material';
 
 const TrashIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -20,7 +21,21 @@ const DeleteAccount = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   
-  const navigate = useNavigate(); // Yönlendirme için hook
+ 
+  const [notification, setNotification] = useState({
+    open: false,
+    message: '',
+    severity: 'success' 
+  });
+  
+  const navigate = useNavigate();
+
+  const handleCloseNotification = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setNotification({ ...notification, open: false });
+  };
 
   const handleInitialClick = () => {
     if (confirmText === 'SİL') {
@@ -32,24 +47,35 @@ const DeleteAccount = () => {
     setIsDeleting(true);
     
     try {
-      // Backend servisine istek at
       await profileService.deleteAccount();
 
-      // Başarılı olursa token ve kullanıcı bilgilerini temizle
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('user'); // Varsa user bilgisini de sil
+      localStorage.removeItem('user');
       
-      alert("Hesabınız başarıyla silindi. Giriş sayfasına yönlendiriliyorsunuz.");
+      setNotification({
+        open: true,
+        message: 'Hesabınız başarıyla silindi. Giriş sayfasına yönlendiriliyorsunuz...',
+        severity: 'success'
+      });
       
-      // Giriş sayfasına yönlendir
-      navigate('/auth');
+     
+      setIsModalOpen(false);
+
+      setTimeout(() => {
+        navigate('/auth');
+      }, 2000);
       
     } catch (error) {
       console.error("Hesap silme hatası:", error);
-      alert("Hesap silinirken bir hata oluştu. Lütfen tekrar deneyiniz.");
+    
+      setNotification({
+        open: true,
+        message: 'Hesap silinirken bir hata oluştu. Lütfen tekrar deneyiniz.',
+        severity: 'error'
+      });
+      setIsModalOpen(false);
     } finally {
       setIsDeleting(false);
-      setIsModalOpen(false);
     }
   };
 
@@ -91,7 +117,7 @@ const DeleteAccount = () => {
                               <span className="text-green-600">✓</span> <strong>Paylaşımlarınız silinmez.</strong>
                           </li>
                           <li className="flex items-center gap-2 text-sm text-gray-600">
-                              (Eklediğiniz mekanlar ve fotoğraflar "Anonim Kullanıcı" olarak platformda kalmaya devam eder.)
+                              (Eklediğiniz mekanlar ve fotoğraflar "Silinmiş Hesap" olarak platformda kalmaya devam eder.)
                           </li>
                       </ul>
                   </div>
@@ -134,6 +160,23 @@ const DeleteAccount = () => {
         cancelText="Vazgeç"
         isLoading={isDeleting}
       />
+
+     
+      <Snackbar 
+        open={notification.open} 
+        autoHideDuration={6000} 
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} 
+      >
+        <Alert 
+          onClose={handleCloseNotification} 
+          severity={notification.severity} 
+          sx={{ width: '100%' }}
+          variant="filled"
+        >
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

@@ -117,7 +117,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
             onChange={handleChange}
             onKeyDown={handleTagKeyDown}
             className="w-full bg-transparent text-white focus:outline-none text-sm"
-            placeholder="Etiket yazıp Enter'a basın..."
+            placeholder="Etiket yazıp Enter'a basın(En fazla 3 etiket)..."
           />
         </div>
       </div>

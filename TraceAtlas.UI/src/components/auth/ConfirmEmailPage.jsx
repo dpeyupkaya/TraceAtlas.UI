@@ -63,7 +63,7 @@ const ConfirmEmailPage = () => {
             <div className="pt-4">
                 <AuthButton 
                     text="Giriş Yap" 
-                    onClick={() => navigate('/login')}
+                    onClick={() => navigate('/auth')}
                 />
             </div>
           </div>
