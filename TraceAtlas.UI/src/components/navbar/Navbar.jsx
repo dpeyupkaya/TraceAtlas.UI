@@ -32,8 +32,7 @@ const Navbar = ({ onSearch, searchInput }) => {
   const searchRef = useRef(null); 
   const [tabStyle, setTabStyle] = useState({ left: 0, width: 0 });
 
-  // 1. BU KISIM EKLENDİ/GÜNCELLENDİ: 
-  // WelcomePanel'den gelen 'autoSearch' verisini yakalar ve inputa yazar.
+
   useEffect(() => {
     // Props olarak gelen varsa onu al (Eski mantık)
     if (searchInput) {
@@ -102,7 +101,7 @@ const Navbar = ({ onSearch, searchInput }) => {
   };
 
   const items = [
-    { label: "Map", href: "/map" },
+    { label: "Keşfet", href: "/map" },
     { label: user || "Giriş Yap", href: user ? "/profile" : "/auth" }
   ];
 

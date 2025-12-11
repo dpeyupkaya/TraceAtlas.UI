@@ -27,7 +27,7 @@ const profileService = {
         return response.data;
     },
      updateEmailPreferences: async (preferences) => {
-        // Token işlemi api interceptor içinde halledildiği için header eklemeye gerek yok
+   
         const response = await api.put('/EmailPreferences', preferences);
         return response.data;
     },
@@ -38,8 +38,7 @@ const profileService = {
     },
 
      getPublicStats: async () => {
-        // Backend'de: [HttpGet("api/public/stats")]
-        // Axios base URL'inin sonunda '/api' olduğunu varsayıyoruz.
+       
         const response = await api.get('/public/stats');
         return response.data;
     }

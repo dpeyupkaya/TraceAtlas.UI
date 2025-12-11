@@ -124,7 +124,7 @@ const RegisterPanel = () => {
           <>
             <Link to="/auth" className="w-full mb-3">
               <button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group">
-                <span>Hemen Üye Ol</span>
+                <span>Giriş Yap</span>
                 <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
               </button>
             </Link>

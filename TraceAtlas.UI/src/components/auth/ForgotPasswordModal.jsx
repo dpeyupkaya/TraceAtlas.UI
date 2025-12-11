@@ -47,49 +47,24 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
       setStatus('error');
       
       const responseData = error?.response?.data;
-      
-      // Backend Middleware'den gelen 'message' alanını öncelikli al
-      const rawMessage = responseData?.message || responseData?.detail || responseData?.error || "";
-      const messageLower = rawMessage.toString().toLowerCase();
-      
-      const validationErrors = responseData?.errors;
 
-      // 1. Eğer Validasyon hatası varsa (Dictionary formatında geldiyse)
-      if (validationErrors) {
-        // İlk hatayı bulup göster
-        const firstField = Object.keys(validationErrors)[0];
+      
+      if (responseData?.errors) {
+        const firstField = Object.keys(responseData.errors)[0];
         if (firstField) {
-           const firstError = validationErrors[firstField][0];
-           
-           // Eğer hata "hak" veya "limit" içeriyorsa özel mesaj göster, değilse hatayı olduğu gibi göster
-           if (firstError.toLowerCase().includes("hak") || firstError.toLowerCase().includes("limit")) {
-              setErrorMessage("Günlük şifre sıfırlama hakkınızı aştınız. Lütfen 24 saat sonra tekrar deneyiniz.");
-           } else {
-              setErrorMessage(firstError);
-           }
+       
+           setErrorMessage(responseData.errors[firstField][0]);
            return;
         }
       }
 
-      // 2. Genel Mesaj Kontrolleri
-      if (messageLower.includes("silinmiş") || messageLower.includes("deleted")) {
-        setErrorMessage("Bu hesap silinmiş veya devre dışı bırakılmış. Lütfen destek ile iletişime geçin.");
+   
+      if (responseData?.message) {
+        setErrorMessage(responseData.message);
         return;
       }
 
-      if (messageLower.includes("bulunamadı") || messageLower.includes("not found")) {
-        setErrorMessage("Bu e-posta adresiyle kayıtlı bir kullanıcı bulunamadı.");
-        return;
-      }
-      
-      // Validasyon listesinde değil de direkt mesajda geldiyse
-      if (messageLower.includes("hak") || messageLower.includes("limit") || messageLower.includes("aştınız")) {
-        setErrorMessage("Günlük şifre sıfırlama hakkınızı aştınız. Lütfen 24 saat sonra tekrar deneyiniz.");
-        return;
-      }
-
-      // Hiçbiri değilse gelen mesajı göster
-      setErrorMessage(rawMessage || "Sunucu ile iletişim kurulurken bir hata oluştu.");
+      setErrorMessage("Sunucu ile iletişim kurulurken bir hata oluştu.");
     }
   };
 

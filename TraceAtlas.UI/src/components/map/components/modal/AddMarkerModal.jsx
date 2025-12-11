@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
-import { FiX, FiCheck, FiLoader } from "react-icons/fi";
+import { FiX, FiCheck, FiLoader, FiInfo } from "react-icons/fi"; // FiInfo ikonunu ekledik
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 
@@ -11,14 +11,12 @@ import { createLocation } from "../../services/locationService";
 import { getCurrentUserId } from "../../utils/authUtils";
 import { closeAddLocationModal } from "../../../../store/slices/mapSlice";
 
-
 import { useGlobalLoader } from "../../../../hooks/useGlobalLoader";
 
 const AddMarkerModal = () => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-  
-  // 2. Hook'u başlat
+
   const { withLoader } = useGlobalLoader();
 
   const { addLocationModalOpen, newLocationPosition } = useSelector(s => s.map);
@@ -42,6 +40,13 @@ const AddMarkerModal = () => {
       setWarning("Başlık zorunludur.");
       return;
     }
+
+  
+    if (formData.tags && formData.tags.length > 3) {
+        setWarning("En fazla 3 adet etiket (tag) ekleyebilirsiniz.");
+        return;
+    }
+ 
 
     if (formData.imageFile) {
       const okTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -68,10 +73,9 @@ const AddMarkerModal = () => {
   };
 
   const handleSave = async () => {
-    setLoading(true); // Butonu disable etmek için lokal state'i koruyoruz
+    setLoading(true);
     setWarning("");
 
-    // 3. İşlemi withLoader içine alıyoruz
     await withLoader(async () => {
       try {
         const userId = getCurrentUserId();
@@ -98,12 +102,10 @@ const AddMarkerModal = () => {
         close();
         
       } catch (e) {
-        // Hata olursa modal üzerindeki alert alanına yazdırıyoruz
         setWarning(e.message || "Kayıt sırasında hata oluştu.");
       }
     });
 
-    // İşlem bitince (başarılı veya hatalı) lokal loading'i kapat
     setLoading(false);
     setConfirmOpen(false);
   };
@@ -130,7 +132,14 @@ const AddMarkerModal = () => {
               </Alert>
             </Collapse>
 
-            <MarkerForm onSubmit={handleFormSubmit} loading={loading} />
+         
+        
+            <MarkerForm 
+                onSubmit={handleFormSubmit} 
+                loading={loading}
+               
+                maxTags={3} 
+            />
 
             <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4 border-t border-zinc-800">
               <button

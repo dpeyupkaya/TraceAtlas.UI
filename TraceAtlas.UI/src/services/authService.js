@@ -58,7 +58,7 @@ export const authService = {
   },
 
  getCurrentUserId: () => {
-    const token = localStorage.getItem('accessToken');  // DOĞRU TOKEN BU
+    const token = localStorage.getItem('accessToken');  
     if (!token) return null;
 
     try {

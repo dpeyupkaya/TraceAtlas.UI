@@ -140,7 +140,7 @@ const MapContainer = () => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Bu komponent state.flyToCoords değişince haritayı uçurur */}
+      
         <FlyToLocation center={state.flyToCoords} />
         
         <MapClickHandler />
@@ -165,7 +165,7 @@ const MapContainer = () => {
                 }
               }}
             >
-              <Popup closeButton={false} className="custom-popup">
+              <Popup closeButton={false} className="custom-popup-clean">
                 <MarkerPopup
                   location={loc}
                   onOpenDetail={handleOpenDetail}

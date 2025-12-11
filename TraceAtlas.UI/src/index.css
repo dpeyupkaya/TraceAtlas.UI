@@ -137,3 +137,23 @@
 .dot-large {
   background-color: #f87171;
 }
+
+
+/* Leaflet'in standart arka planını ve gölgesini kaldırır */
+.custom-popup-clean .leaflet-popup-content-wrapper {
+  background: transparent !important; /* Arka planı şeffaf yap */
+  box-shadow: none !important;        /* Gölgeyi kaldır */
+  padding: 0 !important;              /* İç boşluğu sıfırla */
+  border: none !important;            /* Kenarlığı kaldır */
+}
+
+
+.custom-popup-clean .leaflet-popup-tip-container {
+  display: none !important;
+}
+
+
+.custom-popup-clean .leaflet-popup-content {
+  margin: 0 !important;
+  width: auto !important;
+}
