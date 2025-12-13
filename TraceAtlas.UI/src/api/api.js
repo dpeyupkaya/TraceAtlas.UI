@@ -31,7 +31,7 @@ let isRefreshing = false;
 let failedQueue = [];
 
 const processQueue = (error, token = null) => {
-  failedQueue.forEach(prom => {
+  failedQueue.forEach((prom) => {
     if (error) prom.reject(error);
     else prom.resolve(token);
   });
@@ -43,15 +43,12 @@ const processQueue = (error, token = null) => {
 // ----------------------
 api.interceptors.response.use(
   (response) => response,
-
   async (error) => {
-    if (!error.response) {
-      window.__showSnackbar?.("Sunucuya ulaşılamıyor.");
-      return Promise.reject({ status: 0, message: "Sunucuya ulaşılamıyor." });
-    }
-
     const originalRequest = error.config;
-    const { status, data, headers } = error.response;
+    const { response } = error;
+    const status = response?.status;
+    const data = response?.data;
+    const headers = response?.headers;
 
     // ----------------------
     // TOKEN EXPIRED (401)
@@ -73,7 +70,6 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-      
         const refreshResponse = await api.post(
           "/Auth/refresh-token",
           {},
@@ -83,7 +79,6 @@ api.interceptors.response.use(
         const newAccessToken = refreshResponse.data.token;
 
         localStorage.setItem("accessToken", newAccessToken);
-
         api.defaults.headers.Authorization = `Bearer ${newAccessToken}`;
 
         processQueue(null, newAccessToken);
@@ -101,15 +96,20 @@ api.interceptors.response.use(
       }
     }
 
-   
+    // ----------------------
+    // RATE LIMIT (429)
+    // ----------------------
+    if (status === 429) {
+      window.__showSnackbar?.("Çok fazla istek gönderdin, lütfen biraz bekle.");
+      return Promise.reject({ status, message: "Too many requests" });
+    }
+
+    // ----------------------
+    // NORMAL ERROR HANDLING
+    // ----------------------
     const message = data?.message || data?.error || "Beklenmeyen bir hata oluştu.";
     const errors = data?.errors || null;
-    const traceId = data?.traceId || headers["x-trace-id"];
-
-    if (status === 401) {
-      window.__showSnackbar?.(message || "Giriş yetkisi bulunamadı.");
-      return Promise.reject({ status, message, traceId });
-    }
+    const traceId = data?.traceId || headers?.["x-trace-id"];
 
     if (status === 403) {
       window.__showSnackbar?.("Bu işlem için yetkin yok.");
@@ -121,6 +121,11 @@ api.interceptors.response.use(
       const firstError = errors[firstField][0];
       window.__showSnackbar?.(firstError);
       return Promise.reject({ status, message, errors, traceId });
+    }
+
+    if (status === 401) {
+      window.__showSnackbar?.(message || "Giriş yetkisi bulunamadı.");
+      return Promise.reject({ status, message, traceId });
     }
 
     window.__showSnackbar?.(message);

@@ -1,78 +1,102 @@
 import React from 'react';
-import { Code2, Globe, Database, Cpu } from 'lucide-react';
+import { Map, User, Mail, Linkedin, Github, ExternalLink, Heart } from 'lucide-react';
 import Footer from '../footer/Footer';
 
 const About = () => {
   return (
-  <>
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] text-white pt-24 pb-12 px-6">
-      <div className="container mx-auto max-w-4xl">
+    // 1. DEĞİŞİKLİK: flex ve flex-col ekledik, böylece dikeyde esnek bir kutu oldu
+    <div className="min-h-screen bg-[#05110e] relative overflow-hidden text-slate-200 font-sans selection:bg-emerald-500/30 flex flex-col">
+      
+      {/* Arkaplan Efektleri */}
+      <div className="fixed top-0 left-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-teal-800/10 rounded-full blur-[120px] pointer-events-none" />
+
+      {/* 2. DEĞİŞİKLİK: flex-grow (flex-1) ekledik. Bu div kalan tüm boşluğu kaplayacak ve Footer'ı en alta itecek. */}
+      {/* Ayrıca justify-between'i sildik çünkü flex-grow bu işi hallediyor. */}
+      <div className="relative pt-32 pb-20 px-6 container mx-auto max-w-5xl flex-1 z-10">
         
-        {/* Başlık Bölümü */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-[#10b981] bg-clip-text text-transparent">
-            TraceAtlas Hakkında
-          </h1>
-          <p className="text-emerald-100/70 text-lg max-w-2xl mx-auto">
-            Doğayı keşfet, rotanı çiz, anılarını haritala. TraceAtlas, modern web teknolojileri ile geliştirilmiş açık kaynaklı bir haritalama projesidir.
-          </p>
+        {/* İçerik */}
+        <div>
+          {/* Başlık Bölümü */}
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center justify-center p-3 bg-emerald-500/10 rounded-2xl mb-6 ring-1 ring-emerald-500/20">
+              <Map className="w-8 h-8 text-emerald-400" />
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
+              Her Rota Bir <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-200">Hikayedir.</span>
+            </h1>
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+              TraceAtlas, sadece gidilen yolları haritalamak için değil, o yollarda biriken anıları ölümsüzleştirmek için tasarlandı.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-24">
+            {/* Misyon Kartı */}
+            <div className="group p-8 rounded-3xl bg-white/5 border border-white/5 hover:border-emerald-500/30 transition-all duration-500 hover:bg-white/[0.07]">
+              <h2 className="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+                <span className="w-2 h-8 bg-emerald-500 rounded-full"/>
+                Neden TraceAtlas?
+              </h2>
+              <p className="text-slate-400 leading-relaxed mb-6">
+                Modern dünyada keşfetme duygusunu canlı tutmak istiyoruz. İster şehrin bilinmeyen sokaklarında, ister doğanın kalbinde olun; 
+                önemli olan sadece "nerede" olduğunuz değil, orada "ne hissettiğinizdir".
+              </p>
+              <p className="text-slate-400 leading-relaxed">
+                Bu platform, gezginlerin kendi dijital atlaslarını oluşturmalarına, favori mekanlarını not etmelerine ve keşif tutkularını düzenli bir arşiv haline getirmelerine olanak tanır.
+              </p>
+            </div>
+
+            {/* Geliştirici Kartı */}
+            <div className="group p-8 rounded-3xl bg-gradient-to-br from-emerald-900/20 to-transparent border border-white/5 hover:border-emerald-500/30 transition-all duration-500 relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-32 bg-emerald-500/5 rounded-full blur-3xl group-hover:bg-emerald-500/10 transition-all"/>
+              
+              <h2 className="text-2xl font-semibold text-white mb-4 flex items-center gap-3">
+                <User className="text-emerald-400" />
+                Geliştirici Hakkında
+              </h2>
+             <div className="space-y-4 relative z-10">
+                <p className="text-slate-300 leading-relaxed">
+                  Selam, ben <strong className="text-emerald-300">Eyüp Kaya</strong>.
+                </p>
+                <p className="text-slate-400 leading-relaxed">
+                  Bilgisayar Mühendisliği öğrencisiyim. Kod yazmayı, yeni teknolojileri kurcalamayı ve kafamdaki fikirleri hayata geçirmeyi seviyorum.
+                </p>
+                <p className="text-slate-400 leading-relaxed flex items-center gap-2">
+                   TraceAtlas da hem kendimi geliştirmek hem de ortaya keyifli bir iş çıkarmak için yaptığım kişisel bir proje. Umarım kullanırken eğlenirsiniz! <Heart size={16} className="text-rose-500 inline fill-rose-500/20"/>
+                </p>
+              </div>
+
+         
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a href="https://www.linkedin.com/in/dp-eyup-kaya/" target="_blank" rel="noreferrer" 
+                   className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 hover:bg-[#0077b5]/20 hover:text-[#0077b5] border border-white/10 hover:border-[#0077b5]/30 transition-all group/btn">
+                  <Linkedin size={20} />
+                  <span className="font-medium">LinkedIn</span>
+                  <ExternalLink size={14} className="opacity-0 -ml-2 group-hover/btn:opacity-100 group-hover/btn:ml-0 transition-all"/>
+                </a>
+                
+                <a href="https://github.com/dpeyupkaya" target="_blank" rel="noreferrer"
+                   className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 hover:text-white border border-white/10 transition-all">
+                  <Github size={20} />
+                  <span className="font-medium">GitHub</span>
+                </a>
+
+                <a href="mailto:dpeyupkaya@gmail.com"
+                   className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 transition-all">
+                  <Mail size={20} />
+                  <span className="font-medium">İletişime Geç</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-
-        {/* Proje Hikayesi Kartı */}
-        <div className="bg-[#2D554F]/50 border border-[#10b981]/20 rounded-2xl p-8 mb-12 backdrop-blur-sm">
-          <h2 className="text-2xl font-bold mb-4 text-[#10b981]">Proje Vizyonu</h2>
-          <p className="text-emerald-100/80 leading-relaxed mb-4">
-            Bu proje, gezginlerin keşfettikleri lokasyonları kaydedebilmesi ve diğer doğaseverlerle paylaşabilmesi amacıyla geliştirilmiştir. 
-            Klasik harita uygulamalarından farklı olarak, TraceAtlas kullanıcı deneyimini ve topluluk odaklı paylaşımı merkeze alır.
-          </p>
-          <p className="text-emerald-100/80 leading-relaxed">
-            Tamamen eğitim amaçlı geliştirilen bu proje, modern yazılım mimarileri (Clean Architecture, Onion Architecture) kullanılarak tasarlanmıştır.
-          </p>
-        </div>
-
-        {/* Teknoloji Stack Bölümü */}
-        <h3 className="text-xl font-bold mb-6 text-center text-white">Kullanılan Teknolojiler</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-          
-          <div className="p-6 bg-[#2D554F]/30 rounded-xl border border-[#10b981]/10 hover:border-[#10b981]/50 transition-all">
-            <div className="flex items-center gap-3 mb-3">
-              <Globe className="w-6 h-6 text-[#10b981]" />
-              <h4 className="font-bold">Frontend</h4>
-            </div>
-            <p className="text-sm text-emerald-100/60">React, Vite, Tailwind CSS, Leaflet Maps entegrasyonu.</p>
-          </div>
-
-          <div className="p-6 bg-[#2D554F]/30 rounded-xl border border-[#10b981]/10 hover:border-[#10b981]/50 transition-all">
-            <div className="flex items-center gap-3 mb-3">
-              <Database className="w-6 h-6 text-[#10b981]" />
-              <h4 className="font-bold">Backend</h4>
-            </div>
-            <p className="text-sm text-emerald-100/60">.NET Core 8, C#, Entity Framework Core, PostgreSQL.</p>
-          </div>
-
-          <div className="p-6 bg-[#2D554F]/30 rounded-xl border border-[#10b981]/10 hover:border-[#10b981]/50 transition-all">
-            <div className="flex items-center gap-3 mb-3">
-              <Code2 className="w-6 h-6 text-[#10b981]" />
-              <h4 className="font-bold">Mimari</h4>
-            </div>
-            <p className="text-sm text-emerald-100/60">Clean Architecture, CQRS Pattern, MediatR.</p>
-          </div>
-          
-           <div className="p-6 bg-[#2D554F]/30 rounded-xl border border-[#10b981]/10 hover:border-[#10b981]/50 transition-all">
-            <div className="flex items-center gap-3 mb-3">
-              <Cpu className="w-6 h-6 text-[#10b981]" />
-              <h4 className="font-bold">Geliştirici</h4>
-            </div>
-            <p className="text-sm text-emerald-100/60">Eyüp Kaya tarafından geliştirilmektedir.</p>
-          </div>
-
-        </div>
-
       </div>
-       <Footer />
+
+      <div className="w-full relative z-10">
+        <Footer />
+      </div>
+
     </div>
-   
-    </>
   );
 };
 
