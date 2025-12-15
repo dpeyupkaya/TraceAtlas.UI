@@ -23,46 +23,26 @@ const LoginForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    await withLoader(async () => {
-      try {
-        await authService.login(formData.email, formData.password);
-        navigate('/map');
-      } catch (err) {
-        const status = err?.response?.status || err?.status;
-        
-        let errorMsg = err?.response?.data?.message || err?.response?.data || err?.message || "";
-        errorMsg = errorMsg.toLowerCase(); 
+  await withLoader(async () => {
+    try {
+      await authService.login(formData.email, formData.password);
+      navigate('/map');
+    } catch (err) {
+      console.error("Login Error:", err);
 
-        if (status === 401 || status === 400) {
-      
-            if (errorMsg.includes("doğrulanmadan") || errorMsg.includes("doğrulama")) {
-                window.__showSnackbar("Giriş yapabilmek için lütfen e-posta adresinizi doğrulayın.");
-                return;
-            }
+      const message =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Bir hata oluştu.";
 
-            if (errorMsg.includes("silinmiş") || errorMsg.includes("devre dışı") || errorMsg.includes("askıya")) {
-                window.__showSnackbar("Bu hesap silinmiş veya askıya alınmış. Lütfen destek ile iletişime geçin.");
-                return;
-            }
-        
-            if (errorMsg.includes("bulunamadı")) {
-                window.__showSnackbar("Bu e-posta adresiyle kayıtlı bir kullanıcı bulunamadı.");
-                return;
-            }
+      window.__showSnackbar(message);
+    }
+  });
+};
 
-            if (errorMsg.includes("şifre") || errorMsg.includes("password") || errorMsg.includes("hatalı")) {
-                window.__showSnackbar("Girdiğiniz şifre hatalı, lütfen tekrar deneyin.");
-                return;
-            }
-        }
-
-        window.__showSnackbar(errorMsg.length > 5 ? errorMsg : "Giriş yapılırken bir hata oluştu. Lütfen daha sonra tekrar deneyin.");
-      }
-    });
-  };
 
   return (
     <>
@@ -118,8 +98,6 @@ const LoginForm = () => {
         <div className="pt-2">
             <AuthButton text="Giriş Yap" type="submit" />
         </div>
-
-      
 
         <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
         <div className="absolute -top-10 -left-10 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
