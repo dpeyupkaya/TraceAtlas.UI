@@ -12,11 +12,11 @@ const WelcomePanel = () => {
   const [activeId, setActiveId] = useState(null);
   
   const atlasItems = [
-    { id: 1, title: 'Zirveler', image: zirveler, icon: <Mountain size={20} /> },
-    { id: 2, title: 'Ormanlar', image: ormanlar, icon: <Wind size={20} /> },
-    { id: 3, title: 'Denizler', image: denizler, icon: <Compass size={20} /> },
-    { id: 4, title: 'Rotalar',  image: yol,      icon: <Navigation size={20} /> },
-  ];
+    { id: 1, title: 'Zirveler', image: zirveler },
+    { id: 2, title: 'Ormanlar', image: ormanlar },
+    { id: 3, title: 'Denizler', image: denizler   },
+    { id: 4, title: 'Rotalar',  image: yol     },
+  ]
 
   const handleInteraction = (id) => {
     setActiveId(id);
@@ -74,17 +74,8 @@ const WelcomePanel = () => {
                     ${isActive ? 'translate-x-2' : 'translate-x-0'}
                   `}>
                      
-                     <div className={`
-                       w-12 h-12 rounded-xl shrink-0
-                       backdrop-blur-md border flex items-center justify-center 
-                       transition-colors duration-300
-                       ${isActive 
-                         ? 'bg-[#10B981] text-white border-[#10B981]' 
-                         : 'bg-[#10B981]/20 text-[#10B981] border-[#10B981]/30'
-                       }
-                     `}>
-                        {item.icon}
-                     </div>
+                    
+                
                      
                      <div className="flex flex-col">
                         <span className={`

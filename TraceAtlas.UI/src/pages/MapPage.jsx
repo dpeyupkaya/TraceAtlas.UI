@@ -2,28 +2,25 @@
 import React from "react";
 import Navbar from "../components/navbar/Navbar"; 
 import MapContainer from "../components/map/components/MapContainer";
-// Aynı dosyayı import ediyoruz, ama içeriği artık resim tabanlı.
 import MiniatureWidget from "../common/MiniatureWidget"; 
 
-export const MapPage = () => {
+const MapPage = () => {
   return (
-    <div className="w-full h-screen relative overflow-hidden bg-gray-100">
+    <div className="relative w-full min-h-[100svh] overflow-hidden bg-gray-100">
       
-      {/* Navbar */}
-      <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-[9999]">
-        <Navbar />
+      {/* Navbar - Üstte sabit, yeni navbar tasarımıyla uyumlu */}
+      <Navbar />
+
+      {/* Mini Widget */}
+      <div className="fixed bottom-4 right-4 z-[9000]">
+        <MiniatureWidget />
       </div>
 
-      {/* --- BİZİM YENİ RESİMLİ WİDGET --- */}
-      {/* Kendisi absolute olduğu için nereye koyduğunun çok önemi yok ama haritanın üstünde olması iyi */}
-      <MiniatureWidget />
-      {/* -------------------------------- */}
-
-      {/* Harita Alanı */}
-      <div className="absolute inset-0 z-0"> 
-         <MapContainer />
+      {/* Harita */}
+      <div className="absolute inset-0 z-0">
+        <MapContainer />
       </div>
-      
+
     </div>
   );
 };
