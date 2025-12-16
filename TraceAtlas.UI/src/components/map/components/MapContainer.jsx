@@ -119,7 +119,18 @@ const MapContainer = () => {
     }));
   }, []);
 
-  if (loading) return <div className="flex items-center justify-center h-full text-white">Yükleniyor...</div>;
+// Mevcut "if (loading)..." satırını sil ve yerine bunu yapıştır:
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center w-full h-full bg-gray-50">
+      {/* Dönen Çember (Spinner) */}
+      <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin shadow-sm"></div>
+      
+      {/* Altındaki Yanıp Sönen Yazı */}
+      <span className="mt-3 text-emerald-600 text-sm font-semibold tracking-wide animate-pulse">
+        Yükleniyor...
+      </span>
+    </div>
+  );
 
   return (
     <div className="relative w-full h-full">
