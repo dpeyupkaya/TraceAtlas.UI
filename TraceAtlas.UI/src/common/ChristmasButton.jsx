@@ -1,9 +1,14 @@
 import React from 'react';
 
-const ChristmasButton = ({ children, className = "", ...props }) => {
+const ChristmasButton = ({ children, className = "", onClick, ...props }) => {
   return (
-    <div className={`relative inline-block ${className.includes('w-full') ? 'w-full' : ''} group`}>
-      {/* Kar Birikintisi - Boyutu biraz küçültüldü ki taşma yapmasın */}
+    // button yerine div kullanarak HTML kural hatasını önlüyoruz
+    <div 
+      onClick={onClick}
+      {...props}
+      className={`relative inline-block ${className.includes('w-full') ? 'w-full' : ''} group cursor-pointer`}
+    >
+      {/* Kar Birikintisi */}
       <svg
         className="absolute -top-[14px] left-2 z-20 w-24 h-auto pointer-events-none transition-transform group-hover:-translate-y-1"
         viewBox="0 0 130 50"
@@ -25,8 +30,8 @@ const ChristmasButton = ({ children, className = "", ...props }) => {
         <path d="M15 60C15 60 20 80 45 75C70 70 35 50 15 60Z" fill="white" />
       </svg>
 
-      <button
-        {...props}
+      {/* Ana Gövde (Div olarak değiştirildi) */}
+      <div
         className={`
           relative w-full overflow-hidden
           bg-[#d92525] p-1.5 rounded-full
@@ -41,7 +46,7 @@ const ChristmasButton = ({ children, className = "", ...props }) => {
             {children}
           </span>
         </div>
-      </button>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { use } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import GradientBlinds from '../bits/GradientBlinds ';
 import Snowfall from 'react-snowfall'
 import ChristmasButton  from '../common/ChristmasButton';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black font-sans select-none">
 <Snowfall 
@@ -69,11 +70,9 @@ const LandingPage = () => {
   {/* Butonun arkasına gizli bir parlama ekleyerek derinliği artırıyoruz */}
   <div className="absolute inset-0 bg-[#00eecaff]/10 blur-[50px] rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity duration-1000" />
   
-  <Link to="/home" className="relative z-10 no-underline">
-    <ChristmasButton>
+ <ChristmasButton onClick={() => navigate('/home')}>
       YOLCULUĞA BAŞLA
     </ChristmasButton>
-  </Link>
 </div>
       
         <div className="absolute bottom-10 flex flex-col items-center gap-2 select-none">
