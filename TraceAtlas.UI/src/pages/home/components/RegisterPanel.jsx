@@ -1,161 +1,143 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import profileService from '../../../services/profileService';
-import { ArrowRight, LogIn, Map, Users, Star, Compass } from 'lucide-react';
+import { LogIn, Map, Users, Gift } from 'lucide-react';
+import ChristmasButton from '../../../common/ChristmasButton';
+
+const Counter = ({ value }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  useEffect(() => {
+    let start = 0;
+    const end = parseInt(value);
+    if (isNaN(end)) return;
+    const duration = 1000;
+    const increment = end / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= end) {
+        setDisplayValue(end);
+        clearInterval(timer);
+      } else {
+        setDisplayValue(Math.floor(start));
+      }
+    }, 16);
+    return () => clearInterval(timer);
+  }, [value]);
+  return <span>{displayValue}</span>;
+};
 
 const RegisterPanel = () => {
   const navigate = useNavigate();
-  
-  const [stats, setStats] = useState({
-    routeCount: 0,
-    userCount: 0
-  });
-
+  const [stats, setStats] = useState({ routeCount: 0, userCount: 0 });
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const formatNumber = (num) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M+';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K+';
-    return num.toString();
-  };
-
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (token) {
-      setIsLoggedIn(true);
-    }
-
+    if (token) setIsLoggedIn(true);
     const fetchStats = async () => {
       try {
-        const data = await profileService.getPublicStats();
-        if(data) {
-            setStats({
-                routeCount: data.routeCount, 
-                userCount: data.userCount
-            });
-        }
+        const response = await profileService.getPublicStats();
+        setStats({
+          routeCount: response?.routeCount || 2,
+          userCount: response?.userCount || 3
+        });
       } catch (error) {
-        setStats({ routeCount: 1200, userCount: 50000 });
+        setStats({ routeCount: 2, userCount: 3 });
       } finally {
         setLoading(false);
       }
     };
-
     fetchStats();
   }, []);
 
   const handleGuestAccess = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+    localStorage.clear();
     navigate('/map');
   };
 
-  // Ortak yazı efekti sınıfı: Geçişli parlama
-  const textHoverClass = "transition-all duration-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] cursor-default";
-
   return (
-    <div className="w-full h-full bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] text-emerald-50 flex flex-col justify-center items-center p-4 relative overflow-hidden">
+    <div className="w-full h-full bg-gradient-to-br from-[#021a14] via-[#052c22] to-[#0a3d31] text-emerald-50 flex flex-col justify-center items-center p-6 relative overflow-hidden border-l border-white/5">
       
-      {/* Statik Arkaplan */}
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none"></div>
-      <div className="absolute top-10 left-5 w-24 h-24 bg-emerald-500/10 rounded-full blur-[40px] pointer-events-none"></div>
-      <div className="absolute bottom-10 right-5 w-32 h-32 bg-teal-400/10 rounded-full blur-[50px] pointer-events-none"></div>
-      
-      {/* İkonlar (Tamamen Sabit) */}
-      <div className="absolute top-1/4 left-1/6 opacity-[0.08] pointer-events-none">
-        <Compass size={40} />
-      </div>
-      <div className="absolute bottom-1/3 right-1/5 opacity-[0.06] pointer-events-none">
-        <Star size={32} />
+      {/* Animasyonlu Işıklar */}
+      <style>{`
+        @keyframes light-swing {
+          0%, 100% { transform: rotate(-5deg); }
+          50% { transform: rotate(5deg); }
+        }
+        .animate-light-swing { animation: light-swing 3s ease-in-out infinite; transform-origin: top; }
+      `}</style>
+
+      <div className="absolute top-0 left-0 w-full flex justify-around px-2 pointer-events-none z-20">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="flex flex-col items-center animate-light-swing" style={{ animationDelay: `${i * 0.3}s` }}>
+            <div className="w-[1px] h-10 bg-white/20"></div>
+            <div className={`w-3 h-3 rounded-full shadow-[0_0_15px_white] animate-pulse ${i % 2 === 0 ? 'bg-red-500' : 'bg-yellow-400'}`}></div>
+          </div>
+        ))}
       </div>
 
-      <div className="w-full max-w-[320px] relative z-10 flex flex-col items-center text-center">
+      <div className="w-full max-w-[280px] relative z-10 flex flex-col items-center">
         
-        {/* LOGO */}
-        <div className="relative mb-6">
-          <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-green-400 rounded-2xl flex items-center justify-center shadow-lg shadow-black/30 rotate-12">
-            <LogIn className="w-10 h-10 text-white" />
+        {/* LOGO ALANI */}
+        <div className="relative mb-10 mt-4">
+          <span className="absolute -top-8 -left-6 text-5xl z-30 transform -rotate-12 drop-shadow-lg">🎅</span>
+          <div className="w-24 h-24 bg-emerald-500 rounded-[2rem] flex items-center justify-center shadow-2xl rotate-3 border border-white/20 relative overflow-hidden group">
+            <LogIn className="w-12 h-12 text-white group-hover:scale-110 transition-transform" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent"></div>
           </div>
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-amber-400 rounded-full flex items-center justify-center">
-            <Star className="w-3 h-3 text-white fill-current" />
+          <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center animate-bounce shadow-lg border-4 border-[#052c22]">
+            <Gift className="w-5 h-5 text-white" />
           </div>
         </div>
 
-        {/* METİN ALANI */}
-        <div className="mb-6">
-          {/* Başlık: Hoverda hafif parlama */}
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent mb-3 hover:brightness-125 transition-all duration-300 cursor-default">
-            TraceAtlas'a Katıl
-          </h2>
-          {/* Açıklama: Hoverda beyazlaşma ve parlama */}
-          <p className={`text-emerald-100/80 text-sm leading-relaxed px-2 ${textHoverClass}`}>
-            Doğa maceralarını kaydet, keşiflerini paylaş, topluluğa dahil ol.
-          </p>
+        {/* METİN */}
+        <div className="text-center mb-10">
+          <h1 className="text-3xl font-black text-white tracking-tighter leading-none">
+            TRACEATLAS <span className="text-red-500 block text-4xl mt-1">2026</span>
+          </h1>
+          <p className="text-emerald-100/40 text-[10px] tracking-[0.3em] uppercase mt-3 font-bold">Maceraya Hazır Mısın?</p>
         </div>
 
         {/* İSTATİSTİKLER */}
-        <div className="grid grid-cols-2 gap-3 w-full mb-6">
-          <div className="p-3 rounded-xl bg-white/8 border border-white/15 backdrop-blur-sm flex flex-col items-center">
-            <div className="relative">
-              <Map className="w-6 h-6 text-emerald-400 mb-2" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full"></div>
+        <div className="grid grid-cols-2 gap-3 w-full mb-12">
+          <div className="py-4 px-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col items-center transition-colors hover:bg-white/10">
+            <Map className="w-5 h-5 text-red-400 mb-2" />
+            <div className="text-2xl font-black text-white">
+              {loading ? "..." : <Counter value={stats.routeCount} />}
             </div>
-            {/* Sayı Efekti */}
-            <div className={`text-lg font-bold text-white ${textHoverClass}`}>
-                {loading ? "..." : formatNumber(stats.routeCount)}
-            </div>
-            {/* Alt Metin Efekti */}
-            <div className={`text-[10px] text-emerald-200/70 uppercase tracking-wider font-semibold ${textHoverClass}`}>
-                İşaretlemiş Mekan
-            </div>
+            <div className="text-[9px] text-emerald-200/40 uppercase tracking-widest font-bold">Rotalar</div>
           </div>
-          
-          <div className="p-3 rounded-xl bg-white/8 border border-white/15 backdrop-blur-sm flex flex-col items-center">
-            <div className="relative">
-              <Users className="w-6 h-6 text-teal-400 mb-2" />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full"></div>
+
+          <div className="py-4 px-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex flex-col items-center transition-colors hover:bg-white/10">
+            <Users className="w-5 h-5 text-yellow-400 mb-2" />
+            <div className="text-2xl font-black text-white">
+              {loading ? "..." : <Counter value={stats.userCount} />}
             </div>
-            {/* Sayı Efekti */}
-            <div className={`text-lg font-bold text-white ${textHoverClass}`}>
-                {loading ? "..." : formatNumber(stats.userCount)}
-            </div>
-            {/* Alt Metin Efekti */}
-            <div className={`text-[10px] text-emerald-200/70 uppercase tracking-wider font-semibold ${textHoverClass}`}>
-                Kullanıcı
-            </div>
+            <div className="text-[9px] text-emerald-200/40 uppercase tracking-widest font-bold">Gezginler</div>
           </div>
         </div>
 
-        {isLoggedIn ? (
-          <Link to="/map" className="w-full mb-3">
-            <button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
-              <span>Devam Et</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+        {/* AKSİYON BUTONLARI */}
+        <div className="w-full space-y-6">
+          <Link to={isLoggedIn ? "/map" : "/auth"} className="block w-full pt-4"> {/* pt-4 kar süsü için boşluk bırakır */}
+            <ChristmasButton className="w-full">
+              {isLoggedIn ? "KEŞFE DEVAM ET" : "GİRİŞ YAP"}
+            </ChristmasButton>
           </Link>
-        ) : (
-          <>
-            <Link to="/auth" className="w-full mb-3">
-              <button className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2">
-                <span>Giriş Yap</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </Link>
 
-            <div 
-                onClick={handleGuestAccess}
-                className="cursor-pointer flex flex-col items-center justify-center mt-2 mb-4"
+          {!isLoggedIn && (
+            <button 
+              onClick={handleGuestAccess} 
+              className="w-full group flex flex-col items-center pt-2"
             >
-                {/* Link Yazısı Efekti */}
-                <span className={`text-sm font-medium text-emerald-100/70 border-b border-transparent pb-0.5 ${textHoverClass}`}>
-                  Kayıt olmadan devam et
-                </span>
-            </div>
-          </>
-        )}
-
+              <span className="text-[10px] text-white/30 group-hover:text-yellow-500 transition-colors tracking-[0.3em] font-bold">
+                KAYIT OLMADAN GÖZ AT
+              </span>
+              <div className="w-12 h-[1px] bg-white/10 group-hover:w-24 group-hover:bg-yellow-500/50 transition-all duration-500 mt-2"></div>
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

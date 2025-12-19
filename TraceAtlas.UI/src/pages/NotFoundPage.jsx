@@ -2,12 +2,27 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FiMap, FiCompass, FiHome, FiArrowLeft, FiNavigation } from 'react-icons/fi';
 import Footer from '../components/footer/Footer';
+import Snowfall from 'react-snowfall'
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-900 via-[#1E3A3A] to-teal-800 flex items-center justify-center p-4 relative overflow-hidden">
+      <Snowfall 
+        color='white'
+        speed={[0.5, 1.5]}
+        wind={[-0.5, 2.0]} 
+        snowflakeCount={150}
+      
+        style={{
+          position: 'fixed',
+          width: '100vw',
+          height: '100vh',
+          zIndex: 9999,
+          pointerEvents: 'none'
+        }}
+      />
       {/* Arkaplan Dekorasyonu - Geliştirilmiş */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 left-10 transform -rotate-12 text-white/5">

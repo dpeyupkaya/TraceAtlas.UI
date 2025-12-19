@@ -65,7 +65,7 @@ function App() {
 
   return (
     <>
-      <GlobalLoader />
+     <GlobalLoader />
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />

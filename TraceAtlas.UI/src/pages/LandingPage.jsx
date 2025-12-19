@@ -2,11 +2,26 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import GradientBlinds from '../bits/GradientBlinds ';
+import Snowfall from 'react-snowfall'
+import ChristmasButton  from '../common/ChristmasButton';
 
 const LandingPage = () => {
   return (
     <div className="relative w-full h-screen overflow-hidden bg-black font-sans select-none">
+<Snowfall 
+  color='white'
+  speed={[0.5, 1.5]}
+  wind={[-0.5, 2.0]} 
+  snowflakeCount={150}
 
+  style={{
+    position: 'fixed',
+    width: '100vw',
+    height: '100vh',
+    zIndex: 9999,
+    pointerEvents: 'none'
+  }}
+/>
       <div className="absolute inset-0 z-0 select-none">
         <GradientBlinds
           gradientColors={['#022c22', '#10b981']}
@@ -50,25 +65,16 @@ const LandingPage = () => {
           Doğanın ritmini yakala, izini sonsuzluğa bırak.
         </p>
 
-    
-        <Link 
-          to="/home" 
-          className="group relative inline-flex items-center gap-4 px-12 py-6 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 rounded-full overflow-hidden transition-all duration-500 hover:scale-105 hover:border-[#00eecaff] hover:shadow-[0_0_50px_rgba(0,238,202,0.5)] select-none cursor-pointer"
-        >
-       
-          <span className="text-xl font-bold tracking-widest text-black transition-colors select-none">
-            YOLCULUĞA BAŞLA
-          </span>
-          
-    
-          <div className="bg-[#00eecaff]/20 p-2 rounded-full group-hover:bg-[#00eecaff] transition-colors duration-300 select-none">
-            <ArrowRight className="w-6 h-6 text-black transition-colors select-none" />
-          </div>
-          
-        
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer select-none" />
-        </Link>
-
+    <div className="relative group/btn">
+  {/* Butonun arkasına gizli bir parlama ekleyerek derinliği artırıyoruz */}
+  <div className="absolute inset-0 bg-[#00eecaff]/10 blur-[50px] rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity duration-1000" />
+  
+  <Link to="/home" className="relative z-10 no-underline">
+    <ChristmasButton>
+      YOLCULUĞA BAŞLA
+    </ChristmasButton>
+  </Link>
+</div>
       
         <div className="absolute bottom-10 flex flex-col items-center gap-2 select-none">
           <span className="text-black text-[10px] tracking-[0.3em] uppercase select-none">

@@ -157,3 +157,57 @@
   margin: 0 !important;
   width: auto !important;
 }
+
+/* RegisterPanel Animasyonları */
+
+
+@keyframes lightSwing {
+  0% { transform: rotate(-2deg); }
+  100% { transform: rotate(2deg); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 2px currentColor); }
+  50% { filter: brightness(1.5) drop-shadow(0 0 8px currentColor); }
+}
+
+.animate-light-swing {
+  transform-origin: top center;
+  animation: lightSwing 3s ease-in-out infinite alternate;
+}
+
+.animate-glow-pulse {
+  animation: glowPulse var(--duration, 2s) ease-in-out infinite;
+}
+
+/* Yılbaşı Butonu Özel Animasyonları */
+
+@keyframes light-swing {
+  0%, 100% { transform: rotate(-3deg); transform-origin: top; }
+  50% { transform: rotate(3deg); transform-origin: top; }
+}
+.animate-light-swing {
+  animation: light-swing 2s ease-in-out infinite;
+}
+
+@keyframes bulb-glow {
+  0% {
+    background-color: rgba(255, 255, 255, 0.05);
+    box-shadow: none;
+    transform: scale(1);
+  }
+  50% {
+    background-color: currentColor;
+    box-shadow: 0 0 15px currentColor;
+    transform: scale(1.2);
+  }
+  100% {
+    background-color: currentColor;
+    box-shadow: 0 0 10px currentColor;
+    transform: scale(1.1);
+  }
+}
+
+.animate-bulb-glow {
+  animation: bulb-glow 0.8s ease-in-out forwards;
+}
