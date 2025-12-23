@@ -39,11 +39,11 @@ const RegisterPanel = () => {
       try {
         const response = await profileService.getPublicStats();
         setStats({
-          routeCount: response?.routeCount || 2,
-          userCount: response?.userCount || 3
+          routeCount: response?.routeCount || 10000,
+          userCount: response?.userCount || 50000
         });
       } catch (error) {
-        setStats({ routeCount: 2, userCount: 3 });
+        setStats({ routeCount: 10000, userCount: 50000});
       } finally {
         setLoading(false);
       }
@@ -118,13 +118,24 @@ const RegisterPanel = () => {
           </div>
         </div>
 
-        {/* AKSİYON BUTONLARI */}
-        <div className="w-full space-y-6">
-          <Link to={isLoggedIn ? "/map" : "/auth"} className="block w-full pt-4"> {/* pt-4 kar süsü için boşluk bırakır */}
-            <ChristmasButton className="w-full">
-              {isLoggedIn ? "KEŞFE DEVAM ET" : "GİRİŞ YAP"}
-            </ChristmasButton>
-          </Link>
+    <div className="w-full space-y-6">
+  <Link to={isLoggedIn ? "/map" : "/auth"} className="block w-full pt-4">
+    <ChristmasButton className="w-full">
+      {isLoggedIn ? (
+        "KEŞFE DEVAM ET"
+      ) : (
+        /* flex-row ile yan yana dizilim, gap-2 ile aradaki boşluk */
+        <div className="flex flex-row items-center justify-center gap-2 w-full font-black tracking-tighter">
+          <span>GİRİŞ YAP </span>
+          <span >VEYA</span> 
+          <span>KAYIT OL</span>
+        </div>
+      )}
+    </ChristmasButton>
+  </Link>
+
+
+
 
           {!isLoggedIn && (
             <button 
