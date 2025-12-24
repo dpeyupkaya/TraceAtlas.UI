@@ -119,41 +119,65 @@ const MapContainer = () => {
     }));
   }, []);
 
-// Mevcut "if (loading)..." satırını sil ve yerine bunu yapıştır:
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center w-full h-full bg-gray-50">
-      {/* Dönen Çember (Spinner) */}
-      <div className="w-12 h-12 border-4 border-emerald-100 border-t-emerald-600 rounded-full animate-spin shadow-sm"></div>
+
+if (loading) return (
+  <div className="flex flex-col items-center justify-center w-full h-full bg-[#050505]">
+    <div className="relative flex items-center justify-center">
       
-      {/* Altındaki Yanıp Sönen Yazı */}
-      <span className="mt-3 text-emerald-600 text-sm font-semibold tracking-wide animate-pulse">
-        Yükleniyor...
-      </span>
+      {/* Dönen Dış Halkalar (Çift katman derinlik katar) */}
+      <div className="w-24 h-24 border-2 border-emerald-500/10 rounded-full absolute"></div>
+      <div className="w-24 h-24 border-t-2 border-emerald-500 rounded-full animate-spin shadow-[0_0_15px_rgba(16,185,129,0.2)]"></div>
+      
+      {/* İçerideki Yazı */}
+      <div className="absolute flex flex-col items-center">
+        <span className="text-emerald-500 text-[10px] font-black tracking-[0.2em] uppercase">
+          Trace
+        </span>
+        <span className="text-white text-[9px] font-light tracking-[0.1em] opacity-60 uppercase">
+          Atlas
+        </span>
+      </div>
+
     </div>
-  );
+
+   
+  </div>
+);
 
   return (
-    <div className="relative w-full h-full">
-      <LeafletMap
-        preferCanvas={true}
-        center={[39, 35]}
-        zoom={6}
-        minZoom={3}
-        scrollWheelZoom={true}
-        maxBounds={worldBounds}
-        maxBoundsViscosity={1.0}
-        style={{ background: '#aad3df', cursor: isAddingMode ? 'crosshair' : 'grab' }}
-        className="w-full h-full outline-none"
-      >
-        <TileLayer
-          noWrap={true}
-          attribution='&copy; OpenStreetMap contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+<div className="relative w-full h-full bg-[#050505]">
+    <LeafletMap
+      preferCanvas={true}
+      center={[39, 35]}
+      zoom={6}
+      minZoom={3}
+      maxZoom={20} // Haritanın toplamda ne kadar yaklaşabileceği
+      scrollWheelZoom={true}
+      maxBounds={worldBounds}
+      maxBoundsViscosity={1.0}
+      style={{ cursor: isAddingMode ? 'crosshair' : 'grab' }}
+      className="w-full h-full outline-none"
+    >
+      {/* 1. KATMAN: ANA UYDU GÖRÜNTÜSÜ */}
+      <TileLayer
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+        attribution='&copy; Esri'
+        /* maxNativeZoom ÇOK KRİTİK: 18'den sonra tile yoksa harita beyaz olmaz, 18'i büyütür */
+        maxNativeZoom={18} 
+        maxZoom={20}
+      />
 
+   
+      <TileLayer
+        url="https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}"
+        attribution='&copy; Esri'
+        opacity={0.8} // İsimlerin uydu üzerinde çok parlak durmaması için hafif şeffaflık
+        maxNativeZoom={18}
+        maxZoom={20}
+      />
+
+      <FlyToLocation center={state.flyToCoords} />
       
-        <FlyToLocation center={state.flyToCoords} />
-        
         <MapClickHandler />
 
         <MarkerClusterGroup 

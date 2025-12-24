@@ -107,7 +107,7 @@ api.interceptors.response.use(
     // ----------------------
     // NORMAL ERROR HANDLING
     // ----------------------
-    const message = data?.message || data?.error || "Beklenmeyen bir hata oluştu.";
+    const message = data?.message || data?.error || "Beklenmeyen bir hata oluştu. Daha sonra tekrar deneyiniz.";
     const errors = data?.errors || null;
     const traceId = data?.traceId || headers?.["x-trace-id"];
 

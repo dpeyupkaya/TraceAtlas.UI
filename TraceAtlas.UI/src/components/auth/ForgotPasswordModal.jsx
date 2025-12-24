@@ -56,7 +56,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
         setErrorMessage(responseData.message);
         return;
       }
-      setErrorMessage("Sunucu ile iletişim kurulurken bir hata oluştu.");
+ 
     }
   };
 
