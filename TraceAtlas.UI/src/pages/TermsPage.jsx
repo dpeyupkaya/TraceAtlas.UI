@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiPrinter, FiShield, FiAlertCircle, FiCheck, FiUser } from 'react-icons/fi';
+import Footer from '../components/footer/Footer';
 
 const TermsPage = () => {
   const navigate = useNavigate();
@@ -153,20 +154,15 @@ const TermsPage = () => {
                     </p>
                 </section>
 
-                {/* FOOTER NOTU */}
-                <div className="mt-8 bg-gray-50 p-4 rounded text-center text-xs text-gray-500">
-                    <p>Bu sözleşme, yerel yasalara tabidir. Uyuşmazlık durumunda iyi niyet ve projenin ticari olmayan doğası esas alınır.</p>
-                </div>
+              
 
             </div>
         </div>
 
-        {/* Alt Bilgi */}
-        <div className="text-center mt-8 text-gray-400 text-sm">
-            &copy; 2025 TraceAtlas • Geliştirici: Eyüp Kaya
-        </div>
+    
 
       </div>
+           <Footer />
     </div>
   );
 };

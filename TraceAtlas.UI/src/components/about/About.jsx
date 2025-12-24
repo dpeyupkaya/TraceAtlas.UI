@@ -54,18 +54,17 @@ const About = () => {
                 <User className="text-emerald-400" />
                 Geliştirici Hakkında
               </h2>
-             <div className="space-y-4 relative z-10">
-                <p className="text-slate-300 leading-relaxed">
-                  Selam, ben <strong className="text-emerald-300">Eyüp Kaya</strong>.
-                </p>
-                <p className="text-slate-400 leading-relaxed">
-                  Bilgisayar Mühendisliği öğrencisiyim. Kod yazmayı, yeni teknolojileri kurcalamayı ve kafamdaki fikirleri hayata geçirmeyi seviyorum.
-                </p>
-                <p className="text-slate-400 leading-relaxed flex items-center gap-2">
-                   TraceAtlas da hem kendimi geliştirmek hem de ortaya keyifli bir iş çıkarmak için yaptığım kişisel bir proje. Umarım kullanırken eğlenirsiniz! <Heart size={16} className="text-rose-500 inline fill-rose-500/20"/>
-                </p>
-              </div>
-
+            <div className="space-y-4 relative z-10">
+  <p className="text-slate-300 leading-relaxed">
+    Selam, ben <strong className="text-emerald-300">Eyüp Kaya</strong>.
+  </p>
+  <p className="text-slate-400 leading-relaxed">
+    Kod yazmayı, modern teknolojileri keşfetmeyi ve yaratıcı fikirleri dijital dünyada hayata geçirmeyi seven bir yazılım tutkunuyum. 
+  </p>
+  <p className="text-slate-400 leading-relaxed flex items-center gap-2">
+    TraceAtlas da hem kendimi geliştirmek hem de ortaya keyifli bir iş çıkarmak için hazırladığım kişisel bir proje. Umarım kullanırken eğlenirsiniz! <Heart size={16} className="text-rose-500 inline fill-rose-500/20"/>
+  </p>
+</div>
          
               <div className="mt-8 flex flex-wrap gap-4">
                 <a href="https://www.linkedin.com/in/dp-eyup-kaya/" target="_blank" rel="noreferrer" 

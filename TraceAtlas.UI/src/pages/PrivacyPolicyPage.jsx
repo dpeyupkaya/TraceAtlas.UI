@@ -4,6 +4,7 @@ import {
   FiArrowLeft, FiShield, FiLock, FiDatabase, FiGlobe, 
   FiEye, FiServer, FiFileText, FiUser, FiInfo, FiMenu, FiX 
 } from 'react-icons/fi';
+import Footer from '../components/footer/Footer';
 
 const PrivacyPolicyPage = () => {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ const PrivacyPolicyPage = () => {
     { id: 'saklama-suresi', title: '4. Saklama Süresi' },
     { id: 'kullanici-haklari', title: '5. Kullanıcı Hakları' },
     { id: 'guvenlik', title: '6. Güvenlik Önlemleri' },
+    { id: 'telif-haklari', title: '7. Telif Hakları' },
   ];
 
   const scrollToSection = (id) => {
@@ -55,7 +57,14 @@ const PrivacyPolicyPage = () => {
               </p>
             </div>
             <div className="text-xs md:text-sm font-mono text-teal-300 opacity-80">
-              Geliştirici: Eyüp Kaya <br />
+               <button 
+    onClick={() => navigate('/contact')}
+    className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
+               hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
+               transition-all duration-300 active:scale-95 cursor-pointer group"
+  >
+    Geliştirici: <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
+  </button>
             </div>
           </div>
         </div>
@@ -226,33 +235,45 @@ const PrivacyPolicyPage = () => {
                <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold flex items-center gap-2"><FiDatabase/> Secure API Endpoints</span>
             </div>
           </section>
+          {/* 7. TELİF HAKLARI */}
+<section id="telif-haklari">
+  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">
+    7. Fikri Mülkiyet ve Telif Hakları
+  </h2>
+  <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+    <p className="text-gray-800 leading-relaxed">
+      Bu projenin (TraceAtlas) kaynak kodları, arayüz tasarımı, logo ve tüm içerik materyalleri 
+      <strong> Eyüp Kaya</strong>'ya aittir. 
+    </p>
+    <ul className="mt-3 list-disc list-inside text-sm text-red-900 space-y-1">
+      <li>Yazılı izin alınmaksızın projenin kopyalanması, çoğaltılması veya dağıtılması yasaktır.</li>
+      <li>Ticari amaçlarla kullanılamaz veya başka mecralarda paylaşımı yapılamaz.</li>
+      <li>Tüm hakları saklıdır.</li>
+    </ul>
+  </div>
+</section>
           
-           {/* İLETİŞİM */}
-           <section className="bg-gray-800 text-gray-300 p-6 md:p-8 rounded-2xl text-center">
-             <h2 className="text-xl font-bold text-white mb-2">İletişim</h2>
-             <p className="mb-4 text-sm">
-               Bu proje hakkındaki teknik sorularınız veya incelemeleriniz için geliştirici ile iletişime geçebilirsiniz.
-             </p>
-             <div className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600">
-                Geliştirici: Eyüp Kaya
-             </div>
-           </section>
+       {/* İLETİŞİM */}
+<section className="bg-gray-800 text-gray-300 p-6 md:p-8 rounded-2xl text-center">
+  <h2 className="text-xl font-bold text-white mb-2">İletişim</h2>
+  <p className="mb-4 text-sm">
+    Bu proje hakkındaki teknik sorularınız veya incelemeleriniz için geliştirici ile iletişime geçebilirsiniz.
+  </p>
+  
+  <button 
+    onClick={() => navigate('/contact')}
+    className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
+               hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
+               transition-all duration-300 active:scale-95 cursor-pointer group"
+  >
+    Geliştirici: <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
+  </button>
+</section>
 
         </div>
       </div>
       
-      {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-center md:text-left">
-                <span className="font-bold text-teal-900 text-lg">TraceAtlas</span>
-                <p className="text-xs text-gray-500 mt-1">© 2025 Eyüp Kaya • Kişisel  Projesi</p>
-            </div>
-            <div className="text-xs text-gray-400 max-w-md text-center md:text-right">
-                Bu site ticari amaç gütmemektedir. İçerik ve veriler tamamen tanıtım ve eğitim amaçlıdır.
-            </div>
-        </div>
-      </footer>
+    <Footer />
 
     </div>
   );
