@@ -2,10 +2,10 @@ import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AtlasCard from '../../../common/AtlasCard ';
 
-import zirveler from '../../../assets/atlas/1.sm.jpg';
-import ormanlar from '../../../assets/atlas/2.sm.jpg';
-import denizler from '../../../assets/atlas/3.sm.jpg';
-import yol from '../../../assets/atlas/4.sm.jpg';
+import zirveler from '../../../assets/atlas/1.sm.webp';
+import ormanlar from '../../../assets/atlas/2.sm.webp';
+import denizler from '../../../assets/atlas/3.sm.webp';
+import yol from '../../../assets/atlas/4.sm.webp';
 
 const atlasItems = [
   { id: 1, title: 'Zirveler', image: zirveler },

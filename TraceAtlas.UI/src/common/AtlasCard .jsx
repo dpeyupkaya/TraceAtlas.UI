@@ -21,6 +21,8 @@ const AtlasCard = ({ item, isActive, onHover, onClick }) => {
       <img
         src={item.image}
         alt={item.title}
+        loading="lazy"
+        decoding="async"
         draggable={false}
         className={`
           absolute inset-0 w-full h-full object-cover

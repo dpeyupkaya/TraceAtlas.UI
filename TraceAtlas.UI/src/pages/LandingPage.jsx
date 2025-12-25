@@ -76,10 +76,10 @@ const LandingPage = () => {
 </div>
       
         <div className="absolute bottom-10 flex flex-col items-center gap-2 select-none">
-          <span className="text-black text-[10px] tracking-[0.3em] uppercase select-none">
+          <span className="text-white text-[10px] tracking-[0.3em] uppercase select-none">
             Keşfet • Favorilere Ekle • Paylaş
           </span>
-          <span className="text-black text-xs font-light select-none">
+          <span className="text-white text-xs font-light select-none">
             &copy; 2025 TRACEATLAS
           </span>
         </div>

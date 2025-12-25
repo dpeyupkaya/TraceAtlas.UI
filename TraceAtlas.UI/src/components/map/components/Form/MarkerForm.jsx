@@ -68,7 +68,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
   return (
     <form id="marker-form" onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Başlık</label>
+        <label className="block text-sm font-medium text-slate-400 mb-1">Başlık(Zorunlu)</label>
         <input
           type="text"
           name="title"
@@ -81,7 +81,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Açıklama</label>
+        <label className="block text-sm font-medium text-slate-400 mb-1">Açıklama(Zorunlu)</label>
         <textarea
           name="description"
           rows="3"

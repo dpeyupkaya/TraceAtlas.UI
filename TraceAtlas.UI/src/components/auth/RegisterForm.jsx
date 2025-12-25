@@ -125,7 +125,7 @@ const RegisterForm = () => {
           return;
         }
 
-        setNotification({ severity: 'error', message: rawMessage || 'Kayıt işlemi sırasında bir hata oluştu.' });
+      
       }
     });
   };

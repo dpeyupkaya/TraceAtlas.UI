@@ -45,7 +45,7 @@ const RegisterPanel = () => {
     const token = localStorage.getItem('accessToken');
     if (token) setIsLoggedIn(true);
 
-    const cached = localStorage.getItem('public_stats');
+    const cached = sessionStorage.getItem('public_stats');
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Date.now() - parsed.time < 30000) {
@@ -59,7 +59,7 @@ const RegisterPanel = () => {
       try {
         const response = await profileService.getPublicStats();
         setStats(response);
-        localStorage.setItem(
+        sessionStorage.setItem(
           'public_stats',
           JSON.stringify({ data: response, time: Date.now() })
         );
