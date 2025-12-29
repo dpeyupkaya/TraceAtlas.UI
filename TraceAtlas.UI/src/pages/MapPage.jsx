@@ -24,13 +24,12 @@ const MapPage = () => {
     <div className="relative w-full h-[100dvh] overflow-hidden bg-zinc-950">
       <Navbar />
 
-    
-      <div className={`absolute inset-0 z-0 transition-all duration-1000 ${showModal ? 'blur-sm scale-105' : 'blur-0 scale-100'}`}>
+      <div className="absolute inset-0 z-0">
         <MapContainer />
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md transition-opacity">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6 bg-black/60 backdrop-blur-sm transition-opacity">
           
           <div className="relative bg-zinc-900 border border-white/10 w-full max-w-[360px] rounded-[32px] p-10 text-center shadow-2xl overflow-hidden">
             

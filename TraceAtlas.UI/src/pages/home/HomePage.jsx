@@ -4,10 +4,11 @@ import WelcomePanel from './components/WelcomePanel';
 import RegisterPanel from './components/RegisterPanel';
 import Footer from '../../components/footer/Footer';
 import Snowfall from 'react-snowfall';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Snowflake, Cloud } from 'lucide-react';
 
 const HomePage = () => {
   const [showArrow, setShowArrow] = useState(true);
+  const [isSnowing, setIsSnowing] = useState(true);
   const registerRef = useRef(null);
 
   useEffect(() => {
@@ -26,20 +27,35 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-[#022c22] overflow-x-hidden font-sans">
+    <div className="flex flex-col w-full min-h-screen bg-[#022c22] overflow-x-hidden font-sans relative">
+      {isSnowing && (
       <Snowfall 
-        color='white'
-        speed={[0.5, 1.5]} 
-        wind={[-0.5, 2.0]} 
-        snowflakeCount={150}
-        style={{
-          position: 'fixed',
-          width: '100vw',
-          height: '100vh',
-          zIndex: 9999,
-          pointerEvents: 'none'
-        }}
-      />
+          color='white'
+          speed={[1.0, 3.0]} 
+          wind={[-1.0, 3.0]} 
+          snowflakeCount={150}
+          radius={[2.5, 3.0]}
+          style={{
+            position: 'fixed',
+            width: '100vw',
+            height: '100vh',
+            zIndex: 9999,
+            pointerEvents: 'none'
+          }}
+        />
+      )}
+
+      <button 
+        onClick={() => setIsSnowing(!isSnowing)}
+        className="fixed top-4 right-4 z-[10000] p-2.5 md:p-3 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition-all active:scale-95 shadow-lg group"
+        aria-label="Hava Durumu"
+      >
+        {isSnowing ? (
+          <Snowflake size={20} className="animate-pulse" />
+        ) : (
+          <Cloud size={20} className="opacity-50" />
+        )}
+      </button>
       
       <div className="flex flex-col md:flex-row w-full flex-grow">
         <div className="w-full md:w-1/3 h-[100dvh] md:h-auto border-b md:border-b-0 md:border-r border-[#10b981]/10 shrink-0">

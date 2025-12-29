@@ -88,7 +88,7 @@ const Navbar = () => {
             
             <input 
               className="bg-transparent border-none outline-none w-full ml-3 text-sm font-medium text-zinc-700 placeholder:text-zinc-400 placeholder:font-normal"
-              placeholder="Rota, şehir veya etiket ara..."
+              placeholder="Gizemli yerleri keşfet..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
