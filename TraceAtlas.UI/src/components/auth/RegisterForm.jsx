@@ -259,9 +259,8 @@ const RegisterForm = () => {
 
       <div className="pt-2">
         <AuthButton 
-          text="Hesap Oluştur" 
           type="submit"
-        />
+        > Kayıt Ol </AuthButton>
       </div>
 
      

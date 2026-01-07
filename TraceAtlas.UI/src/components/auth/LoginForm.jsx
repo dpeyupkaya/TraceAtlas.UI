@@ -95,14 +95,17 @@ const LoginForm = () => {
           </button>
         </div>
 
-        <div className="pt-2">
-            <AuthButton text="Giriş Yap" type="submit" />
-        </div>
-      <Link to="/home" className='pt-2'>
-        <div className='pt-4'>
-          <AuthButton text="Ana Sayfa" />
-        </div>
-      </Link>
+      <div className="pt-2">
+  
+    <AuthButton type="submit">Giriş Yap</AuthButton> 
+</div>
+
+<Link to="/home" className='pt-2'>
+    <div className='pt-4'>
+      
+        <AuthButton>Ana Sayfa</AuthButton>
+    </div>
+</Link>
 
         <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
         <div className="absolute -top-10 -left-10 w-24 h-24 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>

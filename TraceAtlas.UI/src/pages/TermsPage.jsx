@@ -40,7 +40,7 @@ const TermsPage = () => {
 
             <h1 className="text-3xl md:text-4xl font-bold mb-3">Kullanıcı Sözleşmesi</h1>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-teal-100 text-sm">
-                <span>Son Güncelleme: 2025</span>
+                <span>Son Güncelleme: 2026</span>
                 <span className="hidden sm:inline">•</span>
                 <span>TraceAtlas Platform Kullanım Şartları</span>
             </div>

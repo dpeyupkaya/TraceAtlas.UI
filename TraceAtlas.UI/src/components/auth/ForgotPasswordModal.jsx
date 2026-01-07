@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, X, CheckCircle, AlertCircle, Snowflake } from 'lucide-react';
+import { Mail, X, CheckCircle, AlertCircle, Compass } from 'lucide-react'; 
 import InputField from './InputField';
 import AuthButton from './AuthButton';
 import { authService } from '../../services/authService';
@@ -56,37 +56,39 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
         setErrorMessage(responseData.message);
         return;
       }
- 
     }
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="relative w-full max-w-md bg-emerald-950/90 border border-white/10 rounded-3xl shadow-[0_0_50px_rgba(0,0,0,0.5)] p-8 overflow-hidden">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
+      {/* Modal Kutusu */}
+      <div className="relative w-full max-w-md bg-[#020617] border border-white/10 rounded-3xl shadow-2xl p-8 overflow-hidden">
         
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+        {/* Üst Dekoratif Çizgi */}
+        <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
         
+        {/* Kapatma Butonu */}
         <button 
           onClick={onClose}
-          className="absolute top-5 right-5 text-emerald-100/40 hover:text-red-500 transition-colors duration-300"
+          className="absolute top-5 right-5 text-emerald-100/20 hover:text-emerald-400 transition-colors duration-300"
         >
-          <X size={24} />
+          <X size={20} />
         </button>
 
         {status === 'success' ? (
           <div className="flex flex-col items-center text-center py-6 space-y-6 animate-in zoom-in duration-500">
-            <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center text-emerald-400 border border-emerald-500/30 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center text-emerald-400 border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
               <CheckCircle size={40} />
             </div>
             <div className="space-y-2">
               <h3 className="text-xl font-black text-white tracking-tight uppercase">Bağlantı Gönderildi</h3>
-              <p className="text-emerald-100/60 text-sm font-medium leading-relaxed px-4">
-                Şifre sıfırlama bağlantısı e-posta adresinize ulaştırıldı. Gelen kutunuzu kontrol edin.
+              <p className="text-emerald-100/40 text-xs font-medium leading-relaxed px-4 uppercase tracking-wider">
+                Şifre sıfırlama bağlantısı e-posta adresinize ulaştırıldı. Lütfen gelen kutunuzu kontrol edin.
               </p>
             </div>
             <button 
               onClick={onClose}
-              className="px-8 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all text-xs font-black tracking-widest uppercase active:scale-95"
+              className="px-8 py-3 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl border border-white/10 transition-all text-[10px] font-black tracking-[0.2em] uppercase active:scale-95"
             >
               Kapat
             </button>
@@ -95,13 +97,13 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="text-center space-y-3">
               <div className="flex justify-center mb-2">
-                <div className="p-3 bg-emerald-900/50 rounded-2xl border border-white/5 text-emerald-400">
-                  <Snowflake size={32} className="animate-spin-slow" />
+                <div className="p-4 bg-emerald-900/20 rounded-2xl border border-emerald-500/20 text-emerald-400">
+                  <Compass size={32} className="animate-spin-slow" />
                 </div>
               </div>
               <h3 className="text-2xl font-black text-white tracking-tighter uppercase">Şifreni mi Unuttun?</h3>
               <p className="text-emerald-100/40 text-[10px] font-black tracking-[0.2em] uppercase">
-                Sıfırlama linki için e-posta adresini gir
+                Yolculuğa devam etmek için sıfırlama bağlantısı iste
               </p>
             </div>
 
@@ -115,12 +117,12 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                   setEmail(e.target.value);
                   if (errorMessage) setErrorMessage('');
                 }}
-                className="bg-black/20 border-white/5 focus:border-emerald-500/50"
+                className="bg-white/[0.02] border-white/5 focus:border-emerald-500/50"
               />
 
               {errorMessage && (
-                <div className="flex items-center gap-3 text-red-400 text-[11px] font-bold bg-red-400/10 p-4 rounded-xl border border-red-400/20 animate-in slide-in-from-top-2">
-                  <AlertCircle size={16} className="shrink-0" />
+                <div className="flex items-center gap-3 text-red-400/80 text-[10px] font-black bg-red-500/5 p-4 rounded-xl border border-red-500/10 animate-in slide-in-from-top-2 tracking-wider">
+                  <AlertCircle size={14} className="shrink-0" />
                   <span>{errorMessage.toUpperCase()}</span>
                 </div>
               )}
@@ -130,9 +132,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
               <AuthButton
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full"
+                className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black tracking-[0.2em] transition-all shadow-lg shadow-emerald-900/20"
               >
-                {status === 'loading' ? 'GÖNDERİLİYOR...' : 'BAĞLANTI GÖNDER'}
+                {status === 'loading' ? 'İŞLENİYOR...' : 'BAĞLANTI GÖNDER'}
               </AuthButton>
             </div>
           </form>

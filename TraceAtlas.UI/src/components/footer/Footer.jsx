@@ -84,7 +84,7 @@ const Footer = () => {
             </div>
 
              <div className="text-emerald-100/50 text-sm text-center md:text-left">
-              © 2025 TraceAtlas. Tüm hakları saklıdır.
+              © 2026 TraceAtlas. Tüm hakları saklıdır.
             </div>
           </div>
 
