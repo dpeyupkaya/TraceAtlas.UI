@@ -1,25 +1,25 @@
 import 'leaflet/dist/leaflet.css';
-// 1. useEffect'i import etmeyi unutma
-import React, { useState, useEffect } from "react"; 
+import React, { useState, useEffect, lazy, Suspense } from "react"; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
 import { Snackbar, Alert } from "@mui/material";
 
-import SharedLocationPage from "./pages/SharedLocationPage";
-import LandingPage from "./pages/LandingPage";
-import HomePage from "./pages/home/HomePage";
-import AuthPanel from "./components/auth/AuthPanel";
-import MapPage from "./pages/MapPage";
-import BaseProfil from './components/profile/BaseProfil';
-import ResetPasswordPage from './components/auth/ResetPasswordPage';
-import ConfirmEmailPage from './components/auth/ConfirmEmailPage';
-import NotFoundPage from './pages/NotFoundPage';
-import TermsPage from './pages/TermsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
-import Footer from './components/footer/Footer';
-import About from './components/about/About';
-import Contact from './components/about/Contact';
 import GlobalLoader from './common/GlobalLoader';
 import TokenAlert from './Alert';
+import LandingPage from './pages/LandingPage';
+
+const SharedLocationPage = lazy(() => import("./pages/SharedLocationPage"));
+const HomePage = lazy(() => import("./pages/home/HomePage"));
+const AuthPanel = lazy(() => import("./components/auth/AuthPanel"));
+const MapPage = lazy(() => import("./pages/MapPage"));
+const BaseProfil = lazy(() => import("./components/profile/BaseProfil"));
+const ResetPasswordPage = lazy(() => import("./components/auth/ResetPasswordPage"));
+const ConfirmEmailPage = lazy(() => import("./components/auth/ConfirmEmailPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+const TermsPage = lazy(() => import("./pages/TermsPage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
+const About = lazy(() => import("./components/about/About"));
+const Contact = lazy(() => import("./components/about/Contact"));
+const Footer = lazy(() => import("./components/footer/Footer"));
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("accessToken"); 
@@ -48,7 +48,6 @@ function App() {
 
   }, []); 
 
-
   const [snack, setSnack] = useState({
     open: false,
     message: "",
@@ -65,32 +64,34 @@ function App() {
 
   return (
     <>
-     <GlobalLoader />
+      <GlobalLoader />
       <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="home" element={<HomePage />} />
-          <Route path="/auth" element={<AuthPanel />} />
-          <Route path="/map" element={<MapPage />} />
-          
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute>
-                <BaseProfil />
-              </ProtectedRoute>
-            } 
-          />
+        <Suspense fallback={<GlobalLoader />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="home" element={<HomePage />} />
+            <Route path="/auth" element={<AuthPanel />} />
+            <Route path="/map" element={<MapPage />} />
+            
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <BaseProfil />
+                </ProtectedRoute>
+              } 
+            />
 
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/confirm-email" element={<ConfirmEmailPage />} />
-          <Route path="/shared/:token" element={<SharedLocationPage />} />
-          <Route path='/terms' element={<TermsPage />} />
-          <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/*' element={<NotFoundPage />} />
-        </Routes>
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/confirm-email" element={<ConfirmEmailPage />} />
+            <Route path="/shared/:token" element={<SharedLocationPage />} />
+            <Route path='/terms' element={<TermsPage />} />
+            <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
+            <Route path='/about' element={<About />} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/*' element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
 
         <Snackbar
           open={snack.open}
