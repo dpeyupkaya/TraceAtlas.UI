@@ -2,6 +2,7 @@ import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect, lazy, Suspense } from "react"; 
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
 import { Snackbar, Alert } from "@mui/material";
+import ReactGA from "react-ga4";
 
 import GlobalLoader from './common/GlobalLoader';
 import TokenAlert from './Alert';
@@ -21,6 +22,8 @@ const About = lazy(() => import("./components/about/About"));
 const Contact = lazy(() => import("./components/about/Contact"));
 const Footer = lazy(() => import("./components/footer/Footer"));
 
+ReactGA.initialize("G-Q1EE4FZ4BB");
+
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("accessToken"); 
 
@@ -33,6 +36,8 @@ const ProtectedRoute = ({ children }) => {
 function App() {
 
   useEffect(() => {
+    ReactGA.send({ hitType: "pageview", page: window.location.pathname + window.location.search });
+
     const hostname = window.location.hostname;
     const targetDomain = "www.traceatlas.com.tr";
 
