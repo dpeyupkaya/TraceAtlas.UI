@@ -34,9 +34,18 @@ const HomePage = () => {
       <Helmet>
         <title>Keşfet | TraceAtlas Deneyim Haritası</title>
         <meta name="description" content="Çevrendeki gizli kalmış mekanları ve popüler rotaları harita üzerinden keşfet. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri incele." />
+        
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.traceatlas.com.tr/home" />
         <meta property="og:title" content="Keşfet | TraceAtlas Deneyim Haritası" />
         <meta property="og:description" content="En iyi kamp alanları, gizli mekanlar ve şehir rotaları. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri harita üzerinde incele." />
-        <meta property="og:url" content="https://www.traceatlas.com.tr/home" />
+        <meta property="og:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Keşfet | TraceAtlas Deneyim Haritası" />
+        <meta name="twitter:description" content="En iyi kamp alanları, gizli mekanlar ve şehir rotaları. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri harita üzerinde incele." />
+        <meta name="twitter:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
+
         <link rel="canonical" href="https://www.traceatlas.com.tr/home" />
       </Helmet>
       

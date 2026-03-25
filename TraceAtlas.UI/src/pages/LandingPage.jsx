@@ -12,10 +12,19 @@ const LandingPage = () => {
       <Helmet>
         <title>TraceAtlas - İzini Sonsuzluğa Bırak</title>
         <meta name="description" content="Doğanın ritmini yakala, izini sonsuzluğa bırak. TraceAtlas ile lokasyon bazlı yeni deneyimler keşfetmeye başla!" />
-        <meta property="og:title" content="TraceAtlas | İzini Sonsuzluğa Bırak" />
-        <meta property="og:description" content="Doğanın ritmini yakala, izini sonsuzluğa bırak. Lokasyon bazlı deneyim paylaşım platformu." />
+        
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.traceatlas.com.tr/" />
+        <meta property="og:title" content="TraceAtlas | İzini Sonsuzluğa Bırak" />
+        <meta property="og:description" content="Doğanın ritmini yakala, izini sonsuzluğa bırak. Lokasyon bazlı deneyim paylaşım platformu." />
+        <meta property="og:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
+        <meta property="og:site_name" content="TraceAtlas" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="TraceAtlas | İzini Sonsuzluğa Bırak" />
+        <meta name="twitter:description" content="Yeni rotalar keşfet ve anılarını haritada ölümsüzleştir." />
+        <meta name="twitter:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
+        
         <link rel="canonical" href="https://www.traceatlas.com.tr/" />
       </Helmet>
 
