@@ -7,6 +7,7 @@ import ReactGA from "react-ga4";
 import GlobalLoader from './common/GlobalLoader';
 import TokenAlert from './Alert';
 import LandingPage from './pages/LandingPage';
+import { HelmetProvider } from 'react-helmet-async';
 
 const SharedLocationPage = lazy(() => import("./pages/SharedLocationPage"));
 const HomePage = lazy(() => import("./pages/home/HomePage"));
@@ -69,6 +70,7 @@ function App() {
 
   return (
     <>
+    <HelmetProvider>
       <GlobalLoader />
       <Router>
         <Suspense fallback={<GlobalLoader />}>
@@ -109,6 +111,7 @@ function App() {
           </Alert>
         </Snackbar>
       </Router>
+      </HelmetProvider>
     </>
   );
 }

@@ -1,22 +1,29 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FiArrowLeft, FiPrinter, FiShield, FiAlertCircle, FiCheck, FiUser } from 'react-icons/fi';
+import { FiArrowLeft, FiPrinter, FiShield, FiAlertCircle, FiCheck } from 'react-icons/fi';
+import { Helmet } from 'react-helmet-async';
 import Footer from '../components/footer/Footer';
 
 const TermsPage = () => {
   const navigate = useNavigate();
 
-  // Sayfa açıldığında en üste kaydır
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-700">
-      
-      {/* --- HEADER (Gizlilik Politikası ile aynı stil) --- */}
+      <Helmet>
+        <title>Kullanıcı Sözleşmesi | TraceAtlas</title>
+        <meta name="description" content="TraceAtlas platform kullanım şartları ve kullanıcı sözleşmesi. Platform kullanım kuralları, sorumluluk reddi ve telif hakları hakkında detaylı bilgi edinin." />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Kullanıcı Sözleşmesi | TraceAtlas" />
+        <meta property="og:description" content="TraceAtlas platformunun kullanım kurallarını ve şartlarını içeren kullanıcı sözleşmesi." />
+        <meta property="og:url" content="https://www.traceatlas.com.tr/terms" />
+        <link rel="canonical" href="https://www.traceatlas.com.tr/terms" />
+      </Helmet>
+
       <div className="bg-gradient-to-r from-teal-800 to-teal-900 text-white py-10 px-4 sm:px-6 shadow-lg relative overflow-hidden">
-         {/* Dekoratif Arkaplan */}
          <div className="absolute top-0 right-0 opacity-10 transform translate-x-10 -translate-y-10">
             <FiShield size={250} />
          </div>
@@ -47,24 +54,17 @@ const TermsPage = () => {
          </div>
       </div>
 
-      {/* --- ANA İÇERİK --- */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 relative z-20 pb-12">
-        
-        {/* Beyaz Kağıt Alanı */}
         <div className="bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden">
-            
-            {/* Yasal Uyarı Kutusu */}
             <div className="bg-blue-50 p-6 border-b border-blue-100 flex gap-4">
                 <FiAlertCircle className="text-blue-600 flex-shrink-0 mt-1" size={24} />
                 <div className="text-sm text-blue-800">
-                    <strong>Önemli Bilgilendirme:</strong> Bu platform (TraceAtlas), bireysel bir  proje olarak geliştirilmiştir. 
+                    <strong>Önemli Bilgilendirme:</strong> Bu platform (TraceAtlas), bireysel bir proje olarak geliştirilmiştir. 
                     Aşağıdaki sözleşme, platformun kullanımı sırasındaki kuralları belirler ancak hizmetin sürekliliği veya verilerin kalıcılığı konusunda ticari bir garanti verilmez.
                 </div>
             </div>
 
             <div className="p-8 md:p-12 space-y-10 leading-relaxed">
-
-                {/* GİRİŞ */}
                 <section>
                     <p className="text-gray-600 mb-4">
                         Bu Kullanıcı Sözleşmesi ("Sözleşme"), TraceAtlas ("Platform") ile Platforma üye olan veya ziyaret eden kullanıcı ("Kullanıcı") arasında akdedilmiştir.
@@ -72,7 +72,6 @@ const TermsPage = () => {
                     </p>
                 </section>
 
-                {/* 1. HİZMETİN KAPSAMI */}
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">1</span> Hizmetin Kapsamı
@@ -91,7 +90,6 @@ const TermsPage = () => {
 
                 <hr className="border-gray-100" />
 
-            
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">2</span> Kullanıcı Yükümlülükleri
@@ -109,7 +107,6 @@ const TermsPage = () => {
 
                 <hr className="border-gray-100" />
 
-                {/* 3. SORUMLULUK REDDİ (EN ÖNEMLİ KISIM) */}
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <span className="bg-red-100 text-red-800 text-sm px-2 py-1 rounded">3</span> Sorumluluk Reddi (Disclaimer)
@@ -129,7 +126,6 @@ const TermsPage = () => {
 
                 <hr className="border-gray-100" />
 
-                {/* 4. İÇERİK VE TELİF HAKLARI */}
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">4</span> İçerik ve Telif Hakları
@@ -143,26 +139,19 @@ const TermsPage = () => {
 
                 <hr className="border-gray-100" />
 
-                {/* 5. PAYLAŞILABİLİR LİNKLER */}
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">5</span> Paylaşım ve Gizlilik
                     </h3>
                     <p className="text-sm text-gray-600 mb-2">
-                        Oluşturulan "Paylaşılabilir Linkler" (<span className="font-mono bg-gray-100 px-1">/shared/:id</span>), linke sahip olan herkes tarafından görüntülenebilir. 
+                        Oluşturulan "Paylaşılabilir Linkler" , linke sahip olan herkes tarafından görüntülenebilir. 
                         Bu linklerin paylaşımından doğacak gizlilik ihlallerinden kullanıcı sorumludur.
                     </p>
                 </section>
-
-              
-
             </div>
         </div>
-
-    
-
       </div>
-           <Footer />
+      <Footer />
     </div>
   );
 };

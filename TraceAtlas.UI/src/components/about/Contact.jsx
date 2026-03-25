@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Mail, Send, Linkedin, Github, AlertCircle, Loader2, Instagram } from 'lucide-react'
 import { Snackbar, Alert } from '@mui/material'
+import { Helmet } from 'react-helmet-async'
 import contactService from '../../services/contactService'
 import Footer from '../footer/Footer'
 
@@ -114,7 +115,7 @@ const Contact = () => {
     { icon: Mail, text: 'Mail Gönderin', link: 'mailto:dpeyupkaya@gmail.com' },
     { icon: Linkedin, text: 'Bağlantı Kurun', link: 'https://www.linkedin.com/in/dp-eyup-kaya/' },
     { icon: Github, text: 'Github', link: 'https://github.com/dpeyupkaya' },
-    {icon: Instagram, text: 'Takip Edin', link: 'https://www.instagram.com/kaya_eyuup/' }
+    { icon: Instagram, text: 'Takip Edin', link: 'https://www.instagram.com/kaya_eyuup/' }
   ]
 
   const inputFields = [
@@ -125,6 +126,15 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] text-slate-200 select-none">
+      <Helmet>
+        <title>İletişim | TraceAtlas - Bize Ulaşın</title>
+        <meta name="description" content="TraceAtlas ile ilgili sorularınız, iş birliği teklifleriniz veya geri bildirimleriniz için bizimle iletişime geçin. Doğrudan mesaj gönderin veya sosyal medya üzerinden bağlantı kurun." />
+        <meta property="og:title" content="İletişim | TraceAtlas - Bize Ulaşın" />
+        <meta property="og:description" content="Sorularınız veya iş birliği teklifleriniz için doğrudan bağlantı kurun. TraceAtlas ekibi size yardımcı olmaktan mutluluk duyacaktır." />
+        <meta property="og:url" content="https://www.traceatlas.com.tr/contact" />
+        <link rel="canonical" href="https://www.traceatlas.com.tr/contact" />
+      </Helmet>
+
       <div className="flex-1 pt-24 px-4 pb-12">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">

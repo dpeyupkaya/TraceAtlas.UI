@@ -1,21 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FiArrowLeft, FiShield, FiLock, FiDatabase, FiGlobe, 
-  FiEye, FiServer, FiFileText, FiUser, FiInfo, FiMenu, FiX 
-} from 'react-icons/fi';
+import { Helmet } from 'react-helmet-async';
+import { FiArrowLeft, FiX, FiMenu, FiInfo, FiUser, FiGlobe, FiLock, FiShield, FiDatabase } from 'react-icons/fi';
 import Footer from '../components/footer/Footer';
 
 const PrivacyPolicyPage = () => {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Sayfa açıldığında en üste kaydır
-  useEffect(() => {
+
+    useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Bölüm başlıkları
   const sections = [
     { id: 'proje-hakkinda', title: 'Proje Hakkında' },
     { id: 'toplanan-veriler', title: '1. Toplanan Veriler' },
@@ -23,22 +20,30 @@ const PrivacyPolicyPage = () => {
     { id: 'veri-paylasimi', title: '3. Veri Paylaşımı' },
     { id: 'saklama-suresi', title: '4. Saklama Süresi' },
     { id: 'kullanici-haklari', title: '5. Kullanıcı Hakları' },
-    { id: 'guvenlik', title: '6. Güvenlik Önlemleri' },
-    { id: 'telif-haklari', title: '7. Telif Hakları' },
+    { id: 'guvenlik', title: '6. Güvenlik' },
+    { id: 'telif-haklari', title: '7. Telif Hakları' }
   ];
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setMobileMenuOpen(false); // Mobildeysek menüyü kapat
+      element.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-700">
-      
-      {/* --- HEADER --- */}
+      <Helmet>
+        <title>Gizlilik Politikası | TraceAtlas</title>
+        <meta name="description" content="TraceAtlas gizlilik politikası ve aydınlatma metni. Veri güvenliği, kullanıcı hakları ve proje kapsamı hakkında detaylı bilgi edinin." />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Gizlilik Politikası | TraceAtlas" />
+        <meta property="og:description" content="Kullanıcı verilerinin nasıl işlendiği ve korunduğu hakkında bilgilendirme." />
+        <meta property="og:url" content="https://www.traceatlas.com.tr/privacy-policy" />
+        <link rel="canonical" href="https://www.traceatlas.com.tr/privacy-policy" />
+      </Helmet>
+
       <div className="bg-gradient-to-r from-teal-800 to-teal-900 text-white py-10 px-4 sm:px-6 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <button 
@@ -58,19 +63,18 @@ const PrivacyPolicyPage = () => {
             </div>
             <div className="text-xs md:text-sm font-mono text-teal-300 opacity-80">
                <button 
-    onClick={() => navigate('/contact')}
-    className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
-               hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
-               transition-all duration-300 active:scale-95 cursor-pointer group"
-  >
-    Geliştirici: <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
-  </button>
+                onClick={() => navigate('/contact')}
+                className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
+                           hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
+                           transition-all duration-300 active:scale-95 cursor-pointer group"
+              >
+                Geliştirici: <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* --- MOBILE QUICK MENU BUTTON --- */}
       <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 shadow-sm flex justify-between items-center">
         <span className="font-bold text-gray-800 text-sm">İçindekiler</span>
         <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-teal-700 p-1 border border-teal-100 rounded">
@@ -78,9 +82,8 @@ const PrivacyPolicyPage = () => {
         </button>
       </div>
 
-      {/* --- MOBILE MENU DROPDOWN --- */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)}>
+        <div className="fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)}>
            <div className="bg-white absolute top-[110px] left-0 right-0 p-4 border-b border-gray-200 shadow-xl" onClick={e => e.stopPropagation()}>
               <ul className="space-y-3">
                 {sections.map((section) => (
@@ -98,10 +101,7 @@ const PrivacyPolicyPage = () => {
         </div>
       )}
 
-      {/* --- MAIN CONTENT LAYOUT --- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 flex flex-col lg:flex-row gap-8 lg:gap-12">
-        
-        {/* SIDEBAR (Desktop Sticky) */}
         <aside className="hidden lg:block w-64 flex-shrink-0">
           <div className="sticky top-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 mb-4 border-b pb-2 text-sm uppercase tracking-wide">İçindekiler</h3>
@@ -120,22 +120,18 @@ const PrivacyPolicyPage = () => {
           </div>
         </aside>
 
-        {/* DOCUMENT CONTENT */}
         <div className="flex-1 bg-white p-6 md:p-10 rounded-2xl shadow-lg border border-gray-100 space-y-10 md:space-y-12">
-
-          {/* UYARI KUTUSU */}
           <section id="proje-hakkinda" className="bg-blue-50 p-6 rounded-xl border border-blue-100 flex gap-4 items-start">
             <FiInfo className="text-blue-600 flex-shrink-0 mt-1" size={24} />
             <div>
                <h2 className="font-bold text-blue-900 text-lg mb-1">Yasal Uyarı & Proje Kapsamı</h2>
                <p className="text-sm text-blue-800 leading-relaxed">
-                 Bu uygulama (TraceAtlas), <strong>Eyüp Kaya</strong> tarafından yazılım geliştirme yetkinliklerini sergilemek amacıyla hazırlanmış bir <strong>bireysel  projedir.</strong> 
+                 Bu uygulama (TraceAtlas), <strong>Eyüp Kaya</strong> tarafından yazılım geliştirme yetkinliklerini sergilemek amacıyla hazırlanmış bir <strong>bireysel projedir.</strong> 
                  Herhangi bir ticari şirket veya tüzel kişilik (TraceAtlas Teknoloji vb.) mevcut değildir. 
                </p>
             </div>
           </section>
 
-          {/* 1. TOPLANAN VERİLER */}
           <section id="toplanan-veriler">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">1. Toplanan Veriler (Demo Kapsamında)</h2>
             <p className="mb-4 text-sm text-gray-600">Sistem, projenin çalışabilirliğini göstermek amacıyla aşağıdaki verileri veritabanında işler:</p>
@@ -159,7 +155,6 @@ const PrivacyPolicyPage = () => {
             </div>
           </section>
 
-          {/* 2. KULLANIM AMACI */}
           <section id="kullanim-amaci">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">2. Kullanım Amacı</h2>
             <p className="mb-4 text-gray-600">Toplanan veriler yalnızca eğitim ve portfolyo sunumu amaçlıdır:</p>
@@ -170,18 +165,16 @@ const PrivacyPolicyPage = () => {
             </ul>
           </section>
 
-          {/* 3. VERİ PAYLAŞIMI */}
           <section id="veri-paylasimi">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">3. Veri Paylaşımı</h2>
-            <p className="mb-4">
+            <p className="mb-4 text-gray-600">
               Bu proje ticari olmadığı için verileriniz <span className="font-bold text-red-500">kesinlikle</span> reklam şirketleri veya üçüncü taraf veri simsarlarıyla paylaşılmaz.
             </p>
             <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 text-sm text-yellow-800">
-               <strong>Not:</strong> Projenin sunucusu (Hosting/Cloud) üzerinde tutulan veriler, ilgili bulut sağlayıcısının (örn: Azure, AWS veya Yerel Host) altyapısında saklanmaktadır.
+               <strong>Not:</strong> Projenin sunucusu (Hosting/Cloud) üzerinde tutulan veriler, ilgili bulut sağlayıcısının altyapısında saklanmaktadır.
             </div>
           </section>
 
-          {/* 4. SAKLAMA SÜRESİ */}
           <section id="saklama-suresi">
              <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">4. Saklama Süresi</h2>
              <div className="overflow-x-auto">
@@ -206,75 +199,68 @@ const PrivacyPolicyPage = () => {
              </div>
           </section>
 
-          {/* 5. KULLANICI HAKLARI */}
           <section id="kullanici-haklari">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">5. Kullanıcı Hakları (Simülasyon)</h2>
-            <p className="mb-4 text-gray-600">Gerçek bir KVKK/GDPR senaryosunda sahip olacağınız haklar şunlardır (ve bu projede uygulanabilir):</p>
-            
+            <p className="mb-4 text-gray-600">Gerçek bir KVKK/GDPR senaryosunda sahip olacağınız haklar şunlardır:</p>
             <div className="grid sm:grid-cols-2 gap-3">
-               {[
-                 "Hesabımı tamamen silme hakkı",
-                 "Verilerimin bir kopyasını isteme hakkı",
-                 "Paylaştığım konumları ve fotoğrafları kaldırma hakkı",
-               ].map((hak, index) => (
-                 <div key={index} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
-                    <FiArrowLeft className="text-teal-500 rotate-180" />
-                    <span className="text-sm font-medium text-gray-700">{hak}</span>
-                 </div>
-               ))}
+                {[
+                  "Hesabımı tamamen silme hakkı",
+                  "Verilerimin bir kopyasını isteme hakkı",
+                  "Paylaştığım konumları ve fotoğrafları kaldırma hakkı",
+                ].map((hak, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
+                     <FiArrowLeft className="text-teal-500 rotate-180" />
+                     <span className="text-sm font-medium text-gray-700">{hak}</span>
+                  </div>
+                ))}
             </div>
           </section>
 
-          {/* 6. GÜVENLİK */}
           <section id="guvenlik">
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">6. Güvenlik Önlemleri</h2>
-            <p className="mb-4 text-gray-600">Bir öğrenci projesi olmasına rağmen, endüstri standardı güvenlik önlemleri kodlanmıştır:</p>
+            <p className="mb-4 text-gray-600">Proje genelinde uygulanan güvenlik standartları:</p>
             <div className="flex flex-wrap gap-3">
                <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold flex items-center gap-2"><FiLock/> Password Hashing</span>
                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold flex items-center gap-2"><FiShield/> JWT Authentication</span>
                <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold flex items-center gap-2"><FiDatabase/> Secure API Endpoints</span>
             </div>
           </section>
-          {/* 7. TELİF HAKLARI */}
-<section id="telif-haklari">
-  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">
-    7. Fikri Mülkiyet ve Telif Hakları
-  </h2>
-  <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
-    <p className="text-gray-800 leading-relaxed">
-      Bu projenin (TraceAtlas) kaynak kodları, arayüz tasarımı, logo ve tüm içerik materyalleri 
-      <strong> Eyüp Kaya</strong>'ya aittir. 
-    </p>
-    <ul className="mt-3 list-disc list-inside text-sm text-red-900 space-y-1">
-      <li>Yazılı izin alınmaksızın projenin kopyalanması, çoğaltılması veya dağıtılması yasaktır.</li>
-      <li>Ticari amaçlarla kullanılamaz veya başka mecralarda paylaşımı yapılamaz.</li>
-      <li>Tüm hakları saklıdır.</li>
-    </ul>
-  </div>
-</section>
-          
-       {/* İLETİŞİM */}
-<section className="bg-gray-800 text-gray-300 p-6 md:p-8 rounded-2xl text-center">
-  <h2 className="text-xl font-bold text-white mb-2">İletişim</h2>
-  <p className="mb-4 text-sm">
-    Bu proje hakkındaki teknik sorularınız veya incelemeleriniz için geliştirici ile iletişime geçebilirsiniz.
-  </p>
-  
-  <button 
-    onClick={() => navigate('/contact')}
-    className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
-               hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
-               transition-all duration-300 active:scale-95 cursor-pointer group"
-  >
-    Geliştirici: <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
-  </button>
-</section>
 
+          <section id="telif-haklari">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">
+              7. Fikri Mülkiyet ve Telif Hakları
+            </h2>
+            <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
+              <p className="text-gray-800 leading-relaxed">
+                Bu projenin (TraceAtlas) kaynak kodları, arayüz tasarımı ve logo materyalleri 
+                <strong> Eyüp Kaya</strong>'ya aittir. 
+              </p>
+              <ul className="mt-3 list-disc list-inside text-sm text-red-900 space-y-1">
+                <li>Yazılı izin alınmaksızın kopyalanması veya dağıtılması yasaktır.</li>
+                <li>Ticari amaçlarla kullanılamaz.</li>
+                <li>Tüm hakları saklıdır.</li>
+              </ul>
+            </div>
+          </section>
+            
+          <section className="bg-gray-800 text-gray-300 p-6 md:p-8 rounded-2xl text-center">
+            <h2 className="text-xl font-bold text-white mb-2">İletişim</h2>
+            <p className="mb-4 text-sm">
+              Teknik sorularınız veya incelemeleriniz için geliştirici ile iletişime geçebilirsiniz.
+            </p>
+            <button 
+              onClick={() => navigate('/contact')}
+              className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
+                         hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
+                         transition-all duration-300 active:scale-95 cursor-pointer group"
+            >
+              Geliştirici: <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
+            </button>
+          </section>
         </div>
       </div>
       
-    <Footer />
-
+      <Footer />
     </div>
   );
 };

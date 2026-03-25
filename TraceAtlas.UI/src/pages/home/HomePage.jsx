@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import InfoPanel from './components/InfoPanel';
 import WelcomePanel from './components/WelcomePanel';
 import RegisterPanel from './components/RegisterPanel';
@@ -30,13 +31,18 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col w-full min-h-screen  bg-[#041a14] overflow-x-hidden font-sans relative">
+      <Helmet>
+        <title>Keşfet | TraceAtlas Deneyim Haritası</title>
+        <meta name="description" content="Çevrendeki gizli kalmış mekanları ve popüler rotaları harita üzerinden keşfet. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri incele." />
+        <meta property="og:title" content="Keşfet | TraceAtlas Deneyim Haritası" />
+        <meta property="og:description" content="En iyi kamp alanları, gizli mekanlar ve şehir rotaları. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri harita üzerinde incele." />
+        <meta property="og:url" content="https://www.traceatlas.com.tr/home" />
+        <link rel="canonical" href="https://www.traceatlas.com.tr/home" />
+      </Helmet>
       
-      {/* Arka Plan Dekoratif Işıklar (Yılbaşı yerine teknolojik derinlik) */}
       <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/5 rounded-full blur-[120px] pointer-events-none" />
 
-
-      {/* Panel Düzeni */}
       <div className="flex flex-col md:flex-row w-full flex-grow relative z-10">
         <div className="w-full md:w-1/3 h-[100dvh] md:h-auto border-b md:border-b-0 md:border-r border-white/5 shrink-0">
           <MemoizedInfo />
@@ -51,7 +57,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Mobil Kaydırma Oku */}
       {showArrow && (
         <div className="md:hidden fixed bottom-10 right-6 z-[100] flex flex-col items-center animate-bounce">
           <div className="bg-[#020617]/80 backdrop-blur-xl pl-4 pr-2 py-2 rounded-full border border-emerald-500/30 shadow-2xl flex items-center gap-3">
