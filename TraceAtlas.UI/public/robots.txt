@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /profile
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /confirm-email
+
+Sitemap: https://www.traceatlas.com.tr/sitemap.xml
