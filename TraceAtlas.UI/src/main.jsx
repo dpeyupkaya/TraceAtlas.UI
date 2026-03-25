@@ -23,3 +23,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </QueryClientProvider>
   </Provider>
 )
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(reg => console.log('TraceAtlas  Kaydı Başarılı!', reg))
+      .catch(err => console.log('TraceAtlas  Kaydı Hatası:', err));
+  });
+}
