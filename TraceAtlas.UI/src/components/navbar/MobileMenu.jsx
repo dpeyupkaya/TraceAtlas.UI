@@ -1,4 +1,3 @@
-// src/components/navbar/MobileMenu.jsx
 import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 

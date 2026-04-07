@@ -61,13 +61,11 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
-      {/* Modal Kutusu */}
+    
       <div className="relative w-full max-w-md bg-[#020617] border border-white/10 rounded-3xl shadow-2xl p-8 overflow-hidden">
         
-        {/* Üst Dekoratif Çizgi */}
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
         
-        {/* Kapatma Butonu */}
         <button 
           onClick={onClose}
           className="absolute top-5 right-5 text-emerald-100/20 hover:text-emerald-400 transition-colors duration-300"

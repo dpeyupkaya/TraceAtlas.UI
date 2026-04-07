@@ -4,13 +4,11 @@ import { Mail, Github, Instagram, Linkedin } from 'lucide-react';
 
 const Footer = () => {
   
-  // Sayfayı en başa kaydıran fonksiyon
   const scrollToTop = () => {
     window.scrollTo(0, 0);
   };
 
   return (
-    // Düzeltme: 'select-none' öncesine boşluk eklendi
     <footer className="w-full bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] select-none">
       
       <div className="container mx-auto px-6 py-6">
@@ -29,7 +27,6 @@ const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-white font-semibold text-lg mb-4">Bağlantılar</h3>
             <div className="space-y-2">
-              {/* Her Link bileşenine onClick={scrollToTop} eklendi */}
               <Link 
                 to="/about" 
                 onClick={scrollToTop}

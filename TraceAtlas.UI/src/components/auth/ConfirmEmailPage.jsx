@@ -11,7 +11,6 @@ const ConfirmEmailPage = () => {
   const [status, setStatus] = useState('loading'); // loading, success, error
 
   useEffect(() => {
-    // Token yoksa login'e at
     if (!token) {
       navigate('/map');
       return;
@@ -19,10 +18,8 @@ const ConfirmEmailPage = () => {
 
     const verifyEmail = async () => {
       try {
-        // Backend'e sor: Bu token geçerli mi?
         await authService.confirmEmail(token);
         
-        // İşlem çok hızlı olursa animasyon görünsün diye 1.5 sn bekletiyorum (isteğe bağlı)
         setTimeout(() => {
             setStatus('success');
         }, 1500);
@@ -40,7 +37,6 @@ const ConfirmEmailPage = () => {
     <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white/5 border border-white/10 rounded-2xl p-8 text-center animate-in zoom-in duration-300">
         
-        {/* YÜKLENİYOR DURUMU */}
         {status === 'loading' && (
           <div className="space-y-4">
             <div className="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 mx-auto">
@@ -51,7 +47,6 @@ const ConfirmEmailPage = () => {
           </div>
         )}
 
-        {/* BAŞARILI DURUMU */}
         {status === 'success' && (
           <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
             <div className="w-20 h-20 bg-[#10b981]/10 rounded-full flex items-center justify-center text-[#10b981] mx-auto">

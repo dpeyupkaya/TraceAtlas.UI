@@ -1,10 +1,7 @@
 import api from '../api/api.js';
-// jwt-decode kütüphanesini kurmuştuk (npm install jwt-decode), onu da import edelim
-// Eğer kurmadıysan terminale: npm install jwt-decode
 import { jwtDecode } from "jwt-decode"; 
 
 export const authService = {
-  // ✅ Login İşlemi (Güncellendi)
   login: async (email, password) => {
     const response = await api.post('/Auth/login', { email, password });
    
@@ -19,20 +16,16 @@ export const authService = {
     return response.data;
   },
 
-  // ✅ Register İşlemi
   register: async (userData) => {
-    // userData: { userName, email, password, firstName, lastName }
     const response = await api.post('/Auth/register', userData);
     return response.data;
   },
   
-  // ✅ Logout (Çıkış) - Tokenları temizlemek için bunu da ekle
   logout: () => {
     localStorage.removeItem('accessToken');
    
   },
 
-  // ... diğer forgotPassword, resetPassword, confirmEmail fonksiyonların aynı kalabilir
   forgotPassword: async (email) => {
     const response = await api.post('/Auth/forgot-password', { email });
     return response.data;

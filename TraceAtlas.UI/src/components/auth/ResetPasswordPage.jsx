@@ -50,15 +50,13 @@ const ResetPasswordPage = () => {
   return (
     <div className="min-h-[100dvh] bg-[#020617] flex items-center justify-center p-4 relative overflow-hidden select-none">
       
-      {/* Arka Plan Işımaları (Kırmızı yerine Cyan kullanıldı) */}
       <div className="absolute top-[-10%] left-[-10%] w-[400px] h-[400px] bg-emerald-600/10 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[400px] h-[400px] bg-cyan-600/5 blur-[120px] pointer-events-none" />
 
-      {/* Izgara Deseni */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none"></div>
 
       <div className="max-w-md w-full bg-emerald-950/10 border border-white/10 rounded-3xl p-8 shadow-2xl backdrop-blur-3xl relative z-10 overflow-hidden">
-        {/* Üst Dekoratif Çizgi */}
+      
         <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/30 to-transparent" />
 
         {status === 'success' ? (

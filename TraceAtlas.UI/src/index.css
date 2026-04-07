@@ -19,17 +19,14 @@
   animation: marquee 15s linear infinite;
 }
 
-/* Bunu CSS dosyana eklemeyi unutma */
 .trace-atlas-wrapper {
   display: flex;
   width: 100%;
   min-height: 100vh;
-  /* KUZEY ORMANLARI GEÇİŞİ BURADA */
   background: linear-gradient(90deg, #1A2F33 0%, #2C4A50 50%, #3E6B65 100%);
 }
 
 
-/* globals.css */
 @keyframes slideUpFromBottom {
   from {
     transform: translateY(100%);
@@ -60,20 +57,16 @@
 
 
 
-/* UserLocation.css */
-
-/* Marker'ın kapsayıcısı - Arkaplanı temizledik */
 .user-location-marker-container {
     background: transparent !important;
     border: none !important;
 }
 
-/* Ortadaki Mavi Nokta */
 .user-location-dot {
     width: 16px;
     height: 16px;
-    background-color: #3b82f6; /* Canlı Mavi */
-    border: 3px solid white;   /* Beyaz Çerçeve */
+    background-color: #3b82f6;
+    border: 3px solid white;   
     border-radius: 50%;
     position: absolute;
     top: 50%;
@@ -83,7 +76,6 @@
     box-shadow: 0 0 4px rgba(0,0,0,0.3);
 }
 
-/* Yayılan Dalga Animasyonu */
 .user-location-pulse {
     width: 40px;
     height: 40px;
@@ -139,12 +131,11 @@
 }
 
 
-/* Leaflet'in standart arka planını ve gölgesini kaldırır */
 .custom-popup-clean .leaflet-popup-content-wrapper {
-  background: transparent !important; /* Arka planı şeffaf yap */
-  box-shadow: none !important;        /* Gölgeyi kaldır */
-  padding: 0 !important;              /* İç boşluğu sıfırla */
-  border: none !important;            /* Kenarlığı kaldır */
+  background: transparent !important; 
+  box-shadow: none !important;       
+  padding: 0 !important;             
+  border: none !important;           
 }
 
 
@@ -158,7 +149,6 @@
   width: auto !important;
 }
 
-/* RegisterPanel Animasyonları */
 
 
 @keyframes lightSwing {
@@ -180,7 +170,6 @@
   animation: glowPulse var(--duration, 2s) ease-in-out infinite;
 }
 
-/* Yılbaşı Butonu Özel Animasyonları */
 
 @keyframes light-swing {
   0%, 100% { transform: rotate(-3deg); transform-origin: top; }

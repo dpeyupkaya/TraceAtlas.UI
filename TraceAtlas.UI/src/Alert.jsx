@@ -9,15 +9,13 @@ export default function TokenAlert() {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
-  // 1. OTOMATİK GİZLEME EFEKTİ
-  // showAlert 'true' olduğunda çalışır, 5 saniye sayar ve kapatır.
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
         setShowAlert(false);
-      }, 2000); // 5 saniye sonra gizle
+      }, 2000); 
 
-      return () => clearTimeout(timer); // Component unmount olursa timer'ı temizle
+      return () => clearTimeout(timer); 
     }
   }, [showAlert]);
 
@@ -32,7 +30,6 @@ export default function TokenAlert() {
         const now = Date.now();
         const remainingTime = expirationTime - now;
 
-        // 1. Durum: Süre bitti
         if (remainingTime <= 0) {
             handleLogout();
         } 

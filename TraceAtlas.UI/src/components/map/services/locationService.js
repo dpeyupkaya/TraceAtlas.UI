@@ -12,7 +12,6 @@ export const getLocations = async () => {
 
 export const createLocation = async (formData) => {
   try {
-    // FormData gönderirken header manipülasyonu şart:
     const response = await api.post('/Locations', formData, {
       headers: {
       
