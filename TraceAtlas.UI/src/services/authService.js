@@ -5,14 +5,23 @@ export const authService = {
   login: async (email, password) => {
     const response = await api.post('/Auth/login', { email, password });
    
-    const { accessToken, refreshToken } = response.data;
+    const { accessToken } = response.data;
 
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
     }
     
+    return response.data;
+  },
 
-
+  googleLogin: async (idToken) => {
+    const response = await api.post('/Auth/google-login', { idToken });
+    
+    const { accessToken } = response.data;
+    if (accessToken) {
+      localStorage.setItem('accessToken', accessToken);
+    }
+    
     return response.data;
   },
 
@@ -21,11 +30,6 @@ export const authService = {
     return response.data;
   },
   
-  logout: () => {
-    localStorage.removeItem('accessToken');
-   
-  },
-
   forgotPassword: async (email) => {
     const response = await api.post('/Auth/forgot-password', { email });
     return response.data;
@@ -44,13 +48,14 @@ export const authService = {
     return response.data;
   },
 
+  // Çift yazılan logout fonksiyonunu teke düşürdüm (en kapsamlı olanı bıraktım)
   logout: () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     window.location.href = '/login';
   },
 
- getCurrentUserId: () => {
+  getCurrentUserId: () => {
     const token = localStorage.getItem('accessToken');  
     if (!token) return null;
 
@@ -69,5 +74,5 @@ export const authService = {
         console.error("Token decode hatası:", error);
         return null;
     }
-}
+  }
 };
