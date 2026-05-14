@@ -1,89 +1,80 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Map, Mountain, Users } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import GradientBlinds from '../bits/GradientBlinds ';
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-black font-sans select-none">
+    <div className="min-h-screen bg-[#04150f] text-emerald-50 font-sans flex flex-col justify-center items-center relative selection:bg-emerald-500 selection:text-white overflow-hidden">
       <Helmet>
         <title>TraceAtlas - İzini Sonsuzluğa Bırak</title>
         <meta name="description" content="Doğanın ritmini yakala, izini sonsuzluğa bırak. TraceAtlas ile lokasyon bazlı yeni deneyimler keşfetmeye başla!" />
-        
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.traceatlas.com.tr/" />
-        <meta property="og:title" content="TraceAtlas | İzini Sonsuzluğa Bırak" />
-        <meta property="og:description" content="Doğanın ritmini yakala, izini sonsuzluğa bırak. Lokasyon bazlı deneyim paylaşım platformu." />
-        <meta property="og:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
-        <meta property="og:site_name" content="TraceAtlas" />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="TraceAtlas | İzini Sonsuzluğa Bırak" />
-        <meta name="twitter:description" content="Yeni rotalar keşfet ve anılarını haritada ölümsüzleştir." />
-        <meta name="twitter:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
-        
         <link rel="canonical" href="https://www.traceatlas.com.tr/" />
       </Helmet>
 
-      <div className="absolute inset-0 z-0 select-none">
-        <GradientBlinds
-          gradientColors={['#022c22', '#10b981']}
-          angle={0}
-          noise={0.3}
-          blindCount={12}
-          blindMinWidth={50}
-          spotlightRadius={0.5}
-          spotlightSoftness={1}
-          spotlightOpacity={1}
-          mouseDampening={0.15}
-          distortAmount={0}
-          shineDirection="left"
-          mixBlendMode="lighten"
-        />
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          className="w-full h-full object-cover scale-105"
+        >
+          <source src="/bg/bg.mp4" type="video/mp4" />
+        </video>
+        
+      <div className="absolute inset-0 bg-black/10"></div>
+        
+        <div className="absolute inset-0 bg-gradient-to-t from-[#04150f] via-[#04150f]/60 to-transparent"></div>
       </div>
 
-      <div className="absolute inset-0 pointer-events-none select-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/5 rounded-full blur-[120px] pointer-events-none select-none"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-cyan-400/3 rounded-full blur-[100px] pointer-events-none select-none"></div>
-        <div className="absolute top-0 left-0 w-32 h-32 bg-[#00eecaff]/10 rounded-full blur-[60px] pointer-events-none select-none"></div>
-        <div className="absolute bottom-0 right-0 w-48 h-48 bg-[#00eecaff]/8 rounded-full blur-[80px] pointer-events-none select-none"></div>
-      </div>
+      <div className="w-full max-w-5xl px-6 md:px-12 flex flex-col items-center text-center z-10 mt-10">
+        
+       
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 select-none">
-        <div className="mb-10 animate-fade-in-down select-none">
-          <h1 className="text-6xl md:text-9xl font-black text-black/95 tracking-tighter mix-blend-overlay opacity-90 select-none">
-            TraceAtlas
-          </h1>
-          <div className="h-1 w-24 bg-[#00eecaff] mx-auto mt-4 rounded-full shadow-[0_0_15px_#00eecaff] select-none"></div>
-        </div>
+        <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-6 text-white drop-shadow-2xl">
+          TRACE<span className="text-emerald-500">ATLAS</span>
+        </h1>
 
-        <p className="text-emerald-100/90 text-lg md:text-2xl font-light max-w-xl mb-16 tracking-wide backdrop-blur-sm select-none">
-          Doğanın ritmini yakala, izini sonsuzluğa bırak.
+        <p className="text-lg md:text-xl text-emerald-50/80 font-light max-w-2xl mb-14 leading-relaxed drop-shadow-md">
+          Dağlardan ormanlara, gizli rotalara kadar tüm doğa harikalarını keşfet. 
+          Haritada her anıyı bir hediye gibi sakla ve izini sonsuzluğa bırak.
         </p>
 
-        <div className="relative group/btn">
-          <div className="absolute inset-0 bg-[#00eecaff]/20 blur-[30px] rounded-full opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" />
+        <button
+          onClick={() => navigate('/home')}
+          className="group relative px-10 py-4 md:px-12 md:py-5 bg-[#10b981] text-[#04150f] rounded-xl font-bold tracking-widest transition-all duration-300 hover:bg-[#0fa472] hover:scale-[1.02] active:scale-95 flex items-center gap-4 mb-20 shadow-[0_0_40px_rgba(16,185,129,0.3)]"
+        >
+          <span className="text-sm md:text-base uppercase">Maceraya Başla</span>
+          <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" />
+        </button>
 
-          <button
-            onClick={() => navigate('/home')}
-            className="relative px-10 py-4 bg-transparent border border-[#00eecaff] text-black rounded-full font-semibold tracking-wider transition-all duration-300 hover:bg-[#00eecaff]/10 hover:scale-105 active:scale-95 flex items-center gap-3 group cursor-pointer"
-          >
-            <span className="text-sm uppercase">Yolculuğa Başla</span>
-            <ArrowRight className="w-4 h-4 text-black group-hover:translate-x-1 transition-transform" />
-          </button>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
+          <div className="flex flex-col items-center p-8 rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-black/40 hover:border-emerald-500/30 group">
+            <Mountain className="w-8 h-8 text-emerald-500 mb-4 group-hover:scale-110 transition-transform" />
+            <span className="text-white font-semibold mb-2 tracking-wide">Yeni Rotalar</span>
+            <span className="text-sm text-emerald-100/60 text-center font-light">Keşfedilmemiş yolları bul ve sınırları aş.</span>
+          </div>
+          
+          <div className="flex flex-col items-center p-8 rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-black/40 hover:border-emerald-500/30 group">
+            <Map className="w-8 h-8 text-emerald-500 mb-4 group-hover:scale-110 transition-transform" />
+            <span className="text-white font-semibold mb-2 tracking-wide">Özel Noktalar</span>
+            <span className="text-sm text-emerald-100/60 text-center font-light">Kendi anılarını ve gizli köşelerini işaretle.</span>
+          </div>
+          
+          <div className="flex flex-col items-center p-8 rounded-2xl bg-black/20 backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-black/40 hover:border-emerald-500/30 group">
+            <Users className="w-8 h-8 text-emerald-500 mb-4 group-hover:scale-110 transition-transform" />
+            <span className="text-white font-semibold mb-2 tracking-wide">Topluluk</span>
+            <span className="text-sm text-emerald-100/60 text-center font-light">Deneyimlerini doğa tutkunlarıyla paylaş.</span>
+          </div>
         </div>
 
-        <div className="absolute bottom-10 flex flex-col items-center gap-2 select-none">
-          <span className="text-white/60 text-[10px] tracking-[0.3em] uppercase select-none">
-            Keşfet • Favorilere Ekle • Paylaş
-          </span>
-          <span className="text-white/40 text-xs font-light select-none">
-            &copy; 2026 TRACEATLAS
-          </span>
-        </div>
+      </div>
+
+      <div className="absolute bottom-6 text-[10px] text-emerald-500/40 font-mono tracking-widest uppercase z-10">
+        © 2026 TRACEATLAS
       </div>
     </div>
   );
