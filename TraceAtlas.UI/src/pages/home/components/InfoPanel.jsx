@@ -1,30 +1,18 @@
 import React from 'react';
 import { Mountain, TreePine, Waves, Tent } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const categories = [
-  {
-    icon: Mountain,
-    title: "Zirveler ve Vadi Yolları",
-    desc: "Bulutların üzerine çıkan rotalar ve gizli kalmış kanyonlar."
-  },
-  {
-    icon: TreePine,
-    title: "Derin Ormanlar",
-    desc: "Güneş ışığının zor girdiği, sadece doğanın fısıltısını duyacağın patikalar."
-  },
-  {
-    icon: Waves,
-    title: "Saklı Sular",
-    desc: "Issız koylar, haritada olmayan şelaleler ve sessiz göl kenarları."
-  },
-  {
-    icon: Tent,
-    title: "İzole Kamp Alanları",
-    desc: "Ateşini yakıp geceyi sadece yıldızlarla paylaşabileceğin nadir noktalar."
-  }
+  { icon: Mountain },
+  { icon: TreePine },
+  { icon: Waves },
+  { icon: Tent }
 ];
 
 const InfoPanel = () => {
+  const { t } = useTranslation();
+  const translatedCategories = t('home.info.categories', { returnObjects: true });
+
   return (
     <div className="w-full h-full bg-[#041a14] flex flex-col justify-center items-center p-8 relative">
       
@@ -41,10 +29,10 @@ const InfoPanel = () => {
               </div>
               <div className="flex flex-col">
                 <h3 className="text-[15px] font-bold text-white mb-1.5 tracking-wide">
-                  {cat.title}
+                  {translatedCategories[index].title}
                 </h3>
                 <p className="text-[11.5px] text-emerald-100/40 leading-relaxed font-medium">
-                  {cat.desc}
+                  {translatedCategories[index].desc}
                 </p>
               </div>
             </div>
@@ -54,7 +42,7 @@ const InfoPanel = () => {
         <div className="w-full flex flex-col items-center mt-12">
           <div className="w-8 h-[1px] bg-white/10 mb-5"></div>
           <p className="text-[9px] text-white/20 tracking-[0.3em] font-bold text-center leading-relaxed">
-            "SADECE KAYBOLMAYI GÖZE ALANLAR<br/>YENİ YOLLAR BULABİLİR."
+            "{t('home.info.quoteLine1')}<br/>{t('home.info.quoteLine2')}"
           </p>
         </div>
 

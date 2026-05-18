@@ -2,10 +2,16 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft, FiPrinter, FiShield, FiAlertCircle, FiCheck } from 'react-icons/fi';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import Footer from '../components/footer/Footer';
 
 const TermsPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const scopeItems = t('terms.scopeItems', { returnObjects: true });
+  const scopeNotes = t('terms.scopeNotes', { returnObjects: true });
+  const userItems = t('terms.userItems', { returnObjects: true });
+  const contentItems = t('terms.contentItems', { returnObjects: true });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -14,11 +20,11 @@ const TermsPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-gray-700">
       <Helmet>
-        <title>Kullanıcı Sözleşmesi | TraceAtlas</title>
-        <meta name="description" content="TraceAtlas platform kullanım şartları ve kullanıcı sözleşmesi. Platform kullanım kuralları, sorumluluk reddi ve telif hakları hakkında detaylı bilgi edinin." />
+        <title>{t('terms.seoTitle')}</title>
+        <meta name="description" content={t('terms.seoDescription')} />
         <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="Kullanıcı Sözleşmesi | TraceAtlas" />
-        <meta property="og:description" content="TraceAtlas platformunun kullanım kurallarını ve şartlarını içeren kullanıcı sözleşmesi." />
+        <meta property="og:title" content={t('terms.seoTitle')} />
+        <meta property="og:description" content={t('terms.ogDescription')} />
         <meta property="og:url" content="https://www.traceatlas.com.tr/terms" />
         <link rel="canonical" href="https://www.traceatlas.com.tr/terms" />
       </Helmet>
@@ -34,22 +40,22 @@ const TermsPage = () => {
                   onClick={() => navigate(-1)} 
                   className="flex items-center gap-2 text-teal-200 hover:text-white transition mb-6 group"
                 >
-                  <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" /> Geri Dön
+                  <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" /> {t('terms.back')}
                 </button>
                 
                 <button 
                   onClick={() => window.print()} 
                   className="hidden sm:flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-sm transition backdrop-blur-sm"
                 >
-                  <FiPrinter /> Yazdır
+                  <FiPrinter /> {t('terms.print')}
                 </button>
             </div>
 
-            <h1 className="text-3xl md:text-4xl font-bold mb-3">Kullanıcı Sözleşmesi</h1>
+            <h1 className="text-3xl md:text-4xl font-bold mb-3">{t('terms.title')}</h1>
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-teal-100 text-sm">
-                <span>Son Güncelleme: 2026</span>
+                <span>{t('terms.lastUpdate')}</span>
                 <span className="hidden sm:inline">•</span>
-                <span>TraceAtlas Platform Kullanım Şartları</span>
+                <span>{t('terms.subtitle')}</span>
             </div>
          </div>
       </div>
@@ -59,32 +65,29 @@ const TermsPage = () => {
             <div className="bg-blue-50 p-6 border-b border-blue-100 flex gap-4">
                 <FiAlertCircle className="text-blue-600 flex-shrink-0 mt-1" size={24} />
                 <div className="text-sm text-blue-800">
-                    <strong>Önemli Bilgilendirme:</strong> Bu platform (TraceAtlas), bireysel bir proje olarak geliştirilmiştir. 
-                    Aşağıdaki sözleşme, platformun kullanımı sırasındaki kuralları belirler ancak hizmetin sürekliliği veya verilerin kalıcılığı konusunda ticari bir garanti verilmez.
+                    <strong>{t('terms.importantTitle')}</strong> {t('terms.importantText')}
                 </div>
             </div>
 
             <div className="p-8 md:p-12 space-y-10 leading-relaxed">
                 <section>
                     <p className="text-gray-600 mb-4">
-                        Bu Kullanıcı Sözleşmesi ("Sözleşme"), TraceAtlas ("Platform") ile Platforma üye olan veya ziyaret eden kullanıcı ("Kullanıcı") arasında akdedilmiştir.
-                        Platformu kullanarak bu şartları kabul etmiş sayılırsınız.
+                        {t('terms.intro')}
                     </p>
                 </section>
 
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">1</span> Hizmetin Kapsamı
+                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">1</span> {t('terms.scopeTitle')}
                     </h3>
-                    <p className="mb-3">TraceAtlas, kullanıcılara aşağıdaki imkanları sunar:</p>
+                    <p className="mb-3">{t('terms.scopeIntro')}</p>
                     <ul className="grid sm:grid-cols-2 gap-2 text-sm">
-                        {['Konum işaretleme ve paylaşma', 'Fotoğraf ve içerik yükleme', 'Favori listeleri oluşturma', 'Paylaşılabilir link üretimi'].map((item, i)=>(
+                        {scopeItems.map((item, i)=>(
                             <li key={i} className="flex items-center gap-2"><FiCheck className="text-teal-500"/> {item}</li>
                         ))}
                     </ul>
                     <ul className="mt-3 text-sm text-gray-600 list-disc list-inside">
-                        <li>Platform, kullanıcı verilerinin güvenliğini sağlamak için endüstri standartlarında önlemler alır ancak %100 güvenlik garanti edilemez.</li>
-                        <li>Platformun sürekli erişilebilirliği teknik sorunlar, bakım veya geliştirme çalışmaları nedeniyle zaman zaman kesintiye uğrayabilir.</li>
+                        {scopeNotes.map((item) => <li key={item}>{item}</li>)}
                     </ul>
                 </section>
 
@@ -92,15 +95,14 @@ const TermsPage = () => {
 
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">2</span> Kullanıcı Yükümlülükleri
+                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">2</span> {t('terms.userTitle')}
                     </h3>
                     <div className="bg-gray-50 p-5 rounded-lg border border-gray-100 text-sm space-y-3">
-                        <p>Kullanıcı, platformu kullanırken aşağıdakileri taahhüt eder:</p>
+                        <p>{t('terms.userIntro')}</p>
                         <ul className="list-disc list-inside space-y-2 marker:text-teal-600">
-                            <li><strong>Doğru Bilgi:</strong> Hesap oluştururken verilen bilgiler (e-posta, kullanıcı adı) doğru olmalıdır.</li>
-                            <li><strong>Yasal İçerik:</strong> Türkiye Cumhuriyeti yasalarına aykırı, tehditkar, müstehcen veya telif haklarını ihlal eden içerik yüklenemez.</li>
-                            <li><strong>Güvenlik:</strong> Kullanıcı, hesabının güvenliğinden (şifre vb.) kendisi sorumludur.</li>
-                            <li><strong>Sisteme Zarar Vermeme:</strong> API'leri manipüle etme, brute-force saldırıları veya sistemi yoracak bot işlemleri yasaktır.</li>
+                            {userItems.map((item) => (
+                              <li key={item.label}><strong>{item.label}</strong> {item.text}</li>
+                            ))}
                         </ul>
                     </div>
                 </section>
@@ -109,17 +111,17 @@ const TermsPage = () => {
 
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="bg-red-100 text-red-800 text-sm px-2 py-1 rounded">3</span> Sorumluluk Reddi (Disclaimer)
+                        <span className="bg-red-100 text-red-800 text-sm px-2 py-1 rounded">3</span> {t('terms.disclaimerTitle')}
                     </h3>
-                    <p className="mb-4">TraceAtlas, bir eğitim ve geliştirme projesi olup <strong>"OLDUĞU GİBİ" (AS-IS)</strong> sunulmaktadır.</p>
+                    <p className="mb-4">{t('terms.disclaimerIntro')}</p>
                     <div className="grid md:grid-cols-2 gap-6">
                         <div>
-                            <h4 className="font-bold text-gray-800 mb-2 text-sm">Veri Kaybı</h4>
-                            <p className="text-sm text-gray-600">Teknik güncellemeler veya sunucu değişiklikleri sırasında oluşabilecek veri kayıplarından Geliştirici sorumlu tutulamaz.</p>
+                            <h4 className="font-bold text-gray-800 mb-2 text-sm">{t('terms.lossTitle')}</h4>
+                            <p className="text-sm text-gray-600">{t('terms.lossText')}</p>
                         </div>
                         <div>
-                            <h4 className="font-bold text-gray-800 mb-2 text-sm">Hizmet Kesintisi</h4>
-                            <p className="text-sm text-gray-600">Platform, bakım veya geliştirme çalışmaları nedeniyle önceden haber verilmeksizin geçici olarak durdurulabilir.</p>
+                            <h4 className="font-bold text-gray-800 mb-2 text-sm">{t('terms.outageTitle')}</h4>
+                            <p className="text-sm text-gray-600">{t('terms.outageText')}</p>
                         </div>
                     </div>
                 </section>
@@ -128,12 +130,10 @@ const TermsPage = () => {
 
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">4</span> İçerik ve Telif Hakları
+                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">4</span> {t('terms.contentTitle')}
                     </h3>
                     <ul className="list-disc list-inside space-y-2 text-sm text-gray-600">
-                        <li>Kullanıcı, paylaştığı içeriğin telif hakkının kendisine ait olduğunu kabul eder.</li>
-                        <li>Platform, kullanıcı içeriğini sadece hizmet sunumu amacıyla (haritada gösterme vb.) kullanma hakkına sahiptir.</li>
-                        <li>Geliştirici, uygunsuz görülen içerikleri veya hesapları herhangi bir bildirim yapmaksızın silme hakkını saklı tutar.</li>
+                        {contentItems.map((item) => <li key={item}>{item}</li>)}
                     </ul>
                 </section>
 
@@ -141,11 +141,10 @@ const TermsPage = () => {
 
                 <section>
                     <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">5</span> Paylaşım ve Gizlilik
+                        <span className="bg-teal-100 text-teal-800 text-sm px-2 py-1 rounded">5</span> {t('terms.privacyTitle')}
                     </h3>
                     <p className="text-sm text-gray-600 mb-2">
-                        Oluşturulan "Paylaşılabilir Linkler" , linke sahip olan herkes tarafından görüntülenebilir. 
-                        Bu linklerin paylaşımından doğacak gizlilik ihlallerinden kullanıcı sorumludur.
+                        {t('terms.privacyText')}
                     </p>
                 </section>
             </div>

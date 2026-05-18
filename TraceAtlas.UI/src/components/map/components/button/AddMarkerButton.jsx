@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { toggleAddingMode } from "../../../../store/slices/mapSlice.js";
 
 // Bildirim Bileşeni - Tepeye ve Merkeze Taşındı
@@ -63,10 +64,10 @@ const ToastNotification = ({ show, message, type, onClose }) => {
 };
 
 const AddMarkerButton = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const isAddingMode = useSelector((state) => state.map.isAddingMode);
   const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
-  const [isPressed, setIsPressed] = useState(false);
 
   const triggerNotification = (message, type = 'success') => {
     setNotification({ show: true, message, type });
@@ -76,16 +77,14 @@ const AddMarkerButton = () => {
     const token = localStorage.getItem('accessToken');
     
     if (token) {
-      setIsPressed(true);
-      setTimeout(() => setIsPressed(false), 200);
       dispatch(toggleAddingMode());
       
       triggerNotification(
-        !isAddingMode ? 'Konum ekleme modu aktif' : 'Konum ekleme modu kapatıldı', 
+        !isAddingMode ? t('map.addButton.modeOn') : t('map.addButton.modeOff'), 
         'success'
       );
     } else {
-      triggerNotification('İşlem yapmak için giriş yapmalısınız!', 'error');
+      triggerNotification(t('map.addButton.loginRequired'), 'error');
     }
   };
 

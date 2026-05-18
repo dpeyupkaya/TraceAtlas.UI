@@ -1,6 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const AtlasCard = ({ item, isActive, onHover, onClick }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       onMouseEnter={onHover}
@@ -70,7 +73,7 @@ const AtlasCard = ({ item, isActive, onHover, onClick }) => {
               }
             `}
           >
-            Keşfet →
+            {t('home.welcome.explore')}
           </span>
         </div>
       </div>

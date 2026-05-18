@@ -2,9 +2,10 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { GoogleOAuthProvider } from '@react-oauth/google' // <-- GOOGLE IMPORTU EKLENDİ
+import { GoogleOAuthProvider } from '@react-oauth/google' 
 import App from './App.jsx'
 import { store } from './store/store.js'
+import './i18n'
 import './index.css'
 
 const queryClient = new QueryClient({

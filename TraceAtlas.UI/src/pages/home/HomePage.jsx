@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, memo } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import InfoPanel from './components/InfoPanel';
 import WelcomePanel from './components/WelcomePanel';
 import RegisterPanel from './components/RegisterPanel';
@@ -11,6 +12,7 @@ const MemoizedWelcome = memo(WelcomePanel);
 const MemoizedRegister = memo(RegisterPanel);
 
 const HomePage = () => {
+  const { t } = useTranslation();
   const [showArrow, setShowArrow] = useState(true);
   const registerRef = useRef(null); 
 
@@ -39,18 +41,18 @@ const HomePage = () => {
   return (
     <div className="flex flex-col w-full min-h-screen bg-[#041a14] overflow-x-hidden font-sans relative">
       <Helmet>
-        <title>Keşfet | TraceAtlas Deneyim Haritası</title>
-        <meta name="description" content="Çevrendeki gizli kalmış mekanları ve popüler rotaları harita üzerinden keşfet. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri incele." />
+        <title>{t('home.seoTitle')}</title>
+        <meta name="description" content={t('home.seoDescription')} />
         
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.traceatlas.com.tr/home" />
-        <meta property="og:title" content="Keşfet | TraceAtlas Deneyim Haritası" />
-        <meta property="og:description" content="En iyi kamp alanları, gizli mekanlar ve şehir rotaları. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri harita üzerinde incele." />
+        <meta property="og:title" content={t('home.seoTitle')} />
+        <meta property="og:description" content={t('home.seoSocialDescription')} />
         <meta property="og:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Keşfet | TraceAtlas Deneyim Haritası" />
-        <meta name="twitter:description" content="En iyi kamp alanları, gizli mekanlar ve şehir rotaları. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri harita üzerinde incele." />
+        <meta name="twitter:title" content={t('home.seoTitle')} />
+        <meta name="twitter:description" content={t('home.seoSocialDescription')} />
         <meta name="twitter:image" content="https://www.traceatlas.com.tr/og-image.jpg" />
 
         <link rel="canonical" href="https://www.traceatlas.com.tr/home" />
@@ -77,10 +79,10 @@ const HomePage = () => {
         <button 
           onClick={scrollToRegister}
           className="md:hidden fixed bottom-10 right-6 z-[100] flex flex-col items-center animate-bounce cursor-pointer group hover:scale-105 transition-transform"
-          aria-label="Kayıt alanına git"
+          aria-label={t('home.registerAria')}
         >
           <div className="bg-[#020617]/80 backdrop-blur-xl pl-4 pr-2 py-2 rounded-full border border-emerald-500/30 shadow-2xl flex items-center gap-3">
-            <span className="text-[10px] font-black text-emerald-50 tracking-[0.2em] uppercase">KEŞFET</span>
+            <span className="text-[10px] font-black text-emerald-50 tracking-[0.2em] uppercase">{t('home.explore')}</span>
             <div className="bg-emerald-500/20 p-1.5 rounded-full border border-emerald-500/40 group-active:bg-emerald-500/40 transition-colors">
               <ChevronDown size={18} className="text-emerald-400" />
             </div>

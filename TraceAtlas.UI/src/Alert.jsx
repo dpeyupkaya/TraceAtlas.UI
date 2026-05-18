@@ -1,13 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from 'react-router-dom'; 
+import { useTranslation } from 'react-i18next';
 
 export default function TokenAlert() {
+  const { t } = useTranslation();
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
+
+  const handleLogout = useCallback(() => {
+    if (message === t('common.messages.sessionExpired')) return;
+
+    setMessage(t('common.messages.sessionExpired'));
+    setShowAlert(true);
+    
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+
+    setTimeout(() => {
+      navigate('/auth'); 
+    }, 3000);
+  }, [message, navigate, t]);
 
   useEffect(() => {
     if (showAlert) {
@@ -36,7 +53,7 @@ export default function TokenAlert() {
      
         else if (remainingTime < 1 * 60 * 1000) {
             const minutesLeft = Math.ceil(remainingTime / 60000);
-            const newMessage = `Oturumunuz ${minutesLeft} dakika içinde sona erecek. Lütfen işlerinizi kaydedin.`;
+            const newMessage = t('common.messages.sessionWarning', { minutes: minutesLeft });
          
             if (message !== newMessage || !showAlert) {
                 setMessage(newMessage);
@@ -54,36 +71,19 @@ export default function TokenAlert() {
     const intervalId = setInterval(checkTokenStatus, 40000);
 
     return () => clearInterval(intervalId);
-  }, [navigate]); // message ve showAlert'ı bağımlılıklara eklemiyoruz, sonsuz döngü olmasın diye
-
-  const handleLogout = () => {
-    // Çıkış mesajı zaten varsa tekrar tekrar set etme
-    if (message === 'Oturumunuz sona erdi. Giriş sayfasına yönlendiriliyorsunuz...') return;
-
-    setMessage('Oturumunuz sona erdi. Giriş sayfasına yönlendiriliyorsunuz...');
-    setShowAlert(true);
-    
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-
-    // Kullanıcı mesajı okusun diye biraz bekletip yönlendiriyoruz
-    setTimeout(() => {
-      navigate('/auth'); 
-    }, 3000);
-  };
+  }, [handleLogout, message, showAlert, t]);
 
   if (!showAlert) return null;
 
   return (
     <Stack sx={{ 
         position: 'fixed', 
-        bottom: 50,        // Alt kısımdan 50px yukarıda
-        left: '50%',       // Soldan %50 it
-        transform: 'translateX(-50%)', // Kendi genişliğinin yarısı kadar geri çek (Tam ortalar)
+        bottom: 50,      
+        left: '50%',      
+        transform: 'translateX(-50%)',
         zIndex: 9999,
-        width: 'max-content', // Sadece içerik kadar genişlik kaplasın
-        maxWidth: '90%'       // Mobilde taşmasın
+        width: 'max-content',
+        maxWidth: '90%'     
     }}>
       <Alert 
         variant="filled" 

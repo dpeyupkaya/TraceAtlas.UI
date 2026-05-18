@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, X, CheckCircle, AlertCircle, Compass } from 'lucide-react'; 
+import { useTranslation } from 'react-i18next';
 import InputField from './InputField';
 import AuthButton from './AuthButton';
 import { authService } from '../../services/authService';
 
 const ForgotPasswordModal = ({ isOpen, onClose }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle');
   const [errorMessage, setErrorMessage] = useState('');
@@ -28,12 +30,12 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
     setErrorMessage('');
 
     if (!email) {
-      setErrorMessage('Lütfen e-posta adresinizi giriniz.');
+      setErrorMessage(t('auth.forgot.missingEmail'));
       return;
     }
 
     if (!validateEmail(email)) {
-      setErrorMessage('Geçerli bir e-posta adresi giriniz.');
+      setErrorMessage(t('auth.forgot.invalidEmail'));
       return;
     }
 
@@ -79,16 +81,16 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
               <CheckCircle size={40} />
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-black text-white tracking-tight uppercase">Bağlantı Gönderildi</h3>
+              <h3 className="text-xl font-black text-white tracking-tight uppercase">{t('auth.forgot.sentTitle')}</h3>
               <p className="text-emerald-100/40 text-xs font-medium leading-relaxed px-4 uppercase tracking-wider">
-                Şifre sıfırlama bağlantısı e-posta adresinize ulaştırıldı. Lütfen gelen kutunuzu kontrol edin.
+                {t('auth.forgot.sentText')}
               </p>
             </div>
             <button 
               onClick={onClose}
               className="px-8 py-3 bg-white/[0.03] hover:bg-white/[0.08] text-white rounded-xl border border-white/10 transition-all text-[10px] font-black tracking-[0.2em] uppercase active:scale-95"
             >
-              Kapat
+              {t('common.buttons.close')}
             </button>
           </div>
         ) : (
@@ -99,9 +101,9 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                   <Compass size={32} className="animate-spin-slow" />
                 </div>
               </div>
-              <h3 className="text-2xl font-black text-white tracking-tighter uppercase">Şifreni mi Unuttun?</h3>
+              <h3 className="text-2xl font-black text-white tracking-tighter uppercase">{t('auth.forgot.title')}</h3>
               <p className="text-emerald-100/40 text-[10px] font-black tracking-[0.2em] uppercase">
-                Yolculuğa devam etmek için sıfırlama bağlantısı iste
+                {t('auth.forgot.subtitle')}
               </p>
             </div>
 
@@ -109,7 +111,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
               <InputField 
                 icon={Mail}
                 type="email"
-                placeholder="E-posta Adresin"
+                placeholder={t('common.fields.email')}
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -132,7 +134,7 @@ const ForgotPasswordModal = ({ isOpen, onClose }) => {
                 disabled={status === 'loading'}
                 className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black tracking-[0.2em] transition-all shadow-lg shadow-emerald-900/20"
               >
-                {status === 'loading' ? 'İŞLENİYOR...' : 'BAĞLANTI GÖNDER'}
+                {status === 'loading' ? t('common.states.processing') : t('auth.forgot.sendLink')}
               </AuthButton>
             </div>
           </form>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
+import { useTranslation } from 'react-i18next';
 import InputField from './InputField';
 import AuthButton from './AuthButton';
 import ForgotPasswordModal from './ForgotPasswordModal';
@@ -9,6 +10,7 @@ import { authService } from '../../services/authService';
 import { useGlobalLoader } from '../../hooks/useGlobalLoader';
 
 const LoginForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { withLoader } = useGlobalLoader();
   
@@ -37,7 +39,7 @@ const LoginForm = () => {
         const message =
           err?.response?.data?.message ||
           err?.message ||
-          "Bir hata oluştu.";
+          t('common.messages.genericError');
 
         window.__showSnackbar(message);
       }
@@ -55,14 +57,14 @@ const LoginForm = () => {
         const message =
           err?.response?.data?.message ||
           err?.message ||
-          "Google ile giriş yaparken bir hata oluştu.";
+          t('auth.login.googleLoginError');
         window.__showSnackbar(message);
       }
     });
   };
 
   const handleGoogleError = () => {
-    window.__showSnackbar("Google Sign-In işlemi iptal edildi veya başarısız oldu.");
+    window.__showSnackbar(t('auth.login.googleError'));
   };
 
   return (
@@ -75,7 +77,7 @@ const LoginForm = () => {
               icon={Mail}
               type="text"
               name="email"
-              placeholder="E-posta Adresin"
+              placeholder={t('common.fields.email')}
               value={formData.email}
               onChange={handleChange}
               autoComplete="off"
@@ -88,7 +90,7 @@ const LoginForm = () => {
               icon={Lock}
               type={showPassword ? "text" : "password"}
               name="password"
-              placeholder="Şifren"
+              placeholder={t('common.fields.password')}
               value={formData.password}
               onChange={handleChange}
               autoComplete="new-password"
@@ -110,17 +112,17 @@ const LoginForm = () => {
               onClick={() => setIsForgotModalOpen(true)}
               className="text-xs font-medium text-emerald-500 hover:text-emerald-400 hover:underline transition-all duration-200 outline-none"
             >
-              Şifremi Unuttum?
+              {t('auth.login.forgotPassword')}
             </button>
           </div>
 
           <div className="pt-2">
-            <AuthButton type="submit">Giriş Yap</AuthButton> 
+            <AuthButton type="submit">{t('auth.login.submit')}</AuthButton> 
           </div>
         </form>
         <div className="relative flex items-center py-2">
           <div className="flex-grow border-t border-slate-700/50"></div>
-          <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-medium">veya</span>
+          <span className="flex-shrink-0 mx-4 text-slate-400 text-xs font-medium">{t('auth.login.or')}</span>
           <div className="flex-grow border-t border-slate-700/50"></div>
         </div>
 
@@ -148,7 +150,7 @@ const LoginForm = () => {
     </div>
 
     <span className="font-medium">
-      Google ile Devam Et
+      {t('auth.login.google')}
     </span>
 
     <div className="hidden">
@@ -164,7 +166,7 @@ const LoginForm = () => {
 
         <Link to="/home" className='block pt-2'>
           <div>
-            <AuthButton type="button">Ana Sayfa</AuthButton>
+            <AuthButton type="button">{t('common.buttons.home')}</AuthButton>
           </div>
         </Link>
 

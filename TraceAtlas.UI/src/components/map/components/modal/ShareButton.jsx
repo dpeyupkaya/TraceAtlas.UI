@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ShareIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -7,13 +8,15 @@ const ShareIcon = ({ className }) => (
 );
 
 const ShareButton = ({ onClick, className = "" }) => {
+  const { t } = useTranslation();
+
   return (
     <button 
       onClick={onClick}
       className={`flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-all duration-200 active:scale-95 ${className}`}
     >
       <ShareIcon className="w-5 h-5" />
-      <span>Paylaş</span>
+      <span>{t('common.buttons.share')}</span>
     </button>
   );
 };

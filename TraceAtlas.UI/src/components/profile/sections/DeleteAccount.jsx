@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../../../common/ConfirmationModal';
 import profileService from '../../../services/profileService';
 import { Snackbar, Alert } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const TrashIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -17,6 +18,7 @@ const WarningIcon = ({ className }) => (
 );
 
 const DeleteAccount = () => {
+  const { t } = useTranslation();
   const [confirmText, setConfirmText] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -38,7 +40,7 @@ const DeleteAccount = () => {
   };
 
   const handleInitialClick = () => {
-    if (confirmText === 'SİL') {
+    if (confirmText === t('profile.deleteAccount.confirmWord')) {
       setIsModalOpen(true);
     }
   };
@@ -54,7 +56,7 @@ const DeleteAccount = () => {
       
       setNotification({
         open: true,
-        message: 'Hesabınız başarıyla silindi. Giriş sayfasına yönlendiriliyorsunuz...',
+        message: t('profile.deleteAccount.deleted'),
         severity: 'success'
       });
       
@@ -70,7 +72,7 @@ const DeleteAccount = () => {
     
       setNotification({
         open: true,
-        message: 'Hesap silinirken bir hata oluştu. Lütfen tekrar deneyiniz.',
+        message: t('profile.deleteAccount.deleteError'),
         severity: 'error'
       });
       setIsModalOpen(false);
@@ -87,8 +89,8 @@ const DeleteAccount = () => {
               <WarningIcon className="w-6 h-6 text-red-600" />
           </div>
           <div>
-              <h2 className="text-2xl font-bold text-gray-900">Hesap İşlemleri</h2>
-              <p className="text-sm text-gray-500">Hesabınızı kalıcı olarak silebilirsiniz.</p>
+              <h2 className="text-2xl font-bold text-gray-900">{t('profile.deleteAccount.title')}</h2>
+              <p className="text-sm text-gray-500">{t('profile.deleteAccount.subtitle')}</p>
           </div>
         </div>
 
@@ -98,26 +100,26 @@ const DeleteAccount = () => {
           <div className="bg-white border border-gray-200 rounded-2xl p-6 md:p-8">
               <h3 className="text-xl font-bold text-red-600 mb-4 flex items-center gap-2">
                 <TrashIcon className="w-6 h-6" />
-                Hesabı Kalıcı Olarak Sil
+                {t('profile.deleteAccount.deleteTitle')}
               </h3>
               
               <div className="bg-red-50 border border-red-100 rounded-xl p-5 mb-8">
-                  <p className="text-red-900 font-medium mb-3">Bu işlem geri alınamaz. Devam ettiğinizde:</p>
+                  <p className="text-red-900 font-medium mb-3">{t('profile.deleteAccount.warning')}</p>
                   <div className="grid md:grid-cols-2 gap-4">
                       <ul className="space-y-2">
                           <li className="flex items-center gap-2 text-sm text-red-800">
-                              <span className="text-red-500">✕</span> Profil bilgileriniz ve giriş verileriniz silinir.
+                              <span className="text-red-500">✕</span> {t('profile.deleteAccount.profileDeleted')}
                           </li>
                           <li className="flex items-center gap-2 text-sm text-red-800">
-                              <span className="text-red-500">✕</span> Favori listeleriniz ve kişisel tercihleriniz silinir.
+                              <span className="text-red-500">✕</span> {t('profile.deleteAccount.favoritesDeleted')}
                           </li>
                       </ul>
                       <ul className="space-y-2">
                           <li className="flex items-center gap-2 text-sm text-gray-700">
-                              <span className="text-green-600">✓</span> <strong>Paylaşımlarınız silinmez.</strong>
+                              <span className="text-green-600">✓</span> <strong>{t('profile.deleteAccount.sharesKept')}</strong>
                           </li>
                           <li className="flex items-center gap-2 text-sm text-gray-600">
-                              (Eklediğiniz mekanlar ve fotoğraflar "Silinmiş Hesap" olarak platformda kalmaya devam eder.)
+                              {t('profile.deleteAccount.sharesKeptDetail')}
                           </li>
                       </ul>
                   </div>
@@ -125,7 +127,7 @@ const DeleteAccount = () => {
 
               <div className="max-w-md space-y-4">
                   <label className="block text-sm font-medium text-gray-700">
-                      Onaylamak için aşağıdaki kutucuğa <span className="font-bold select-none">SİL</span> yazın:
+                      {t('profile.deleteAccount.instruction', { word: t('profile.deleteAccount.confirmWord') })}
                   </label>
                   
                   <div className="relative">
@@ -139,10 +141,10 @@ const DeleteAccount = () => {
 
                   <button 
                       onClick={handleInitialClick}
-                      disabled={confirmText !== 'SİL'}
+                      disabled={confirmText !== t('profile.deleteAccount.confirmWord')}
                       className="w-full bg-red-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-red-700 transition-all duration-300 shadow-lg shadow-red-600/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none flex justify-center items-center gap-2"
                   >
-                      Hesabımı ve Verilerimi Sil
+                      {t('profile.deleteAccount.deleteButton')}
                   </button>
               </div>
           </div>
@@ -153,11 +155,11 @@ const DeleteAccount = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={handleFinalDelete}
-        title="Hesabı Sil"
-        message="Hesabınızı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?"
+        title={t('profile.deleteAccount.modalTitle')}
+        message={t('profile.deleteAccount.modalMessage')}
         type="danger"
-        confirmText="Evet, Hesabı Sil"
-        cancelText="Vazgeç"
+        confirmText={t('profile.deleteAccount.confirmDelete')}
+        cancelText={t('common.buttons.cancel')}
         isLoading={isDeleting}
       />
 

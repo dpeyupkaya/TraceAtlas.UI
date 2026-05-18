@@ -1,7 +1,9 @@
 import React, { useState, useRef } from "react";
 import { FiImage, FiX } from "react-icons/fi";
+import { useTranslation } from 'react-i18next';
 
-const MarkerForm = ({ onSubmit, loading }) => {
+const MarkerForm = ({ onSubmit }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -68,7 +70,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
   return (
     <form id="marker-form" onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Başlık(Zorunlu)</label>
+        <label className="block text-sm font-medium text-slate-400 mb-1">{t('map.markerForm.title')}</label>
         <input
           type="text"
           name="title"
@@ -76,24 +78,24 @@ const MarkerForm = ({ onSubmit, loading }) => {
           value={formData.title}
           onChange={handleChange}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 transition-colors"
-          placeholder="Konum başlığı..."
+          placeholder={t('map.markerForm.titlePlaceholder')}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Açıklama(Zorunlu)</label>
+        <label className="block text-sm font-medium text-slate-400 mb-1">{t('map.markerForm.description')}</label>
         <textarea
           name="description"
           rows="3"
           value={formData.description}
           onChange={handleChange}
           className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500 transition-colors resize-none"
-          placeholder="Bu yer hakkında bilgi..."
+          placeholder={t('map.markerForm.descriptionPlaceholder')}
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Etiketler</label>
+        <label className="block text-sm font-medium text-slate-400 mb-1">{t('map.markerForm.tags')}</label>
 
         <div className="bg-white/5 border border-white/10 rounded-lg p-2 focus-within:border-emerald-500 transition-colors">
           <div className="flex flex-wrap gap-2 mb-2">
@@ -117,13 +119,13 @@ const MarkerForm = ({ onSubmit, loading }) => {
             onChange={handleChange}
             onKeyDown={handleTagKeyDown}
             className="w-full bg-transparent text-white focus:outline-none text-sm"
-            placeholder="Etiket yazıp Enter'a basın(En fazla 3 etiket)..."
+            placeholder={t('map.markerForm.tagsPlaceholder')}
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-400 mb-1">Fotoğraf</label>
+        <label className="block text-sm font-medium text-slate-400 mb-1">{t('map.markerForm.photo')}</label>
 
         {!formData.imagePreview ? (
           <div
@@ -131,7 +133,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
             className="border-2 border-dashed border-white/10 rounded-lg p-6 flex flex-col items-center justify-center text-slate-500 hover:text-white hover:border-white/30 cursor-pointer transition-all"
           >
             <FiImage size={24} className="mb-2" />
-            <span className="text-sm">Fotoğraf Seç</span>
+            <span className="text-sm">{t('map.markerForm.selectPhoto')}</span>
             <input
               ref={fileRef}
               type="file"
@@ -144,7 +146,7 @@ const MarkerForm = ({ onSubmit, loading }) => {
           <div className="relative rounded-lg overflow-hidden border border-white/10 group">
             <img
               src={formData.imagePreview}
-              alt="Preview"
+              alt={t('map.markerForm.previewAlt')}
               className="w-full h-40 object-cover"
             />
 

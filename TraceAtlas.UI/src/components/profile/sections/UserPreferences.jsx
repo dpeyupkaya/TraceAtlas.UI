@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ConfirmationModal from '../../../common/ConfirmationModal';
 import profileService from '../../../services/profileService';
+import { useTranslation } from 'react-i18next';
 
 const EnvelopeIcon = ({ className }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -10,6 +11,7 @@ const EnvelopeIcon = ({ className }) => (
 );
 
 const UserPreferences = ({ user }) => { 
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,14 +24,14 @@ const UserPreferences = ({ user }) => {
   const preferenceConfig = [
     { 
       key: 'securityEmails', 
-      title: 'Güvenlik Uyarıları', 
-      desc: 'Şüpheli girişler, şifre değişiklikleri ve hesap güvenliği ile ilgili kritik bildirimler.',
+      title: t('profile.preferences.securityTitle'), 
+      desc: t('profile.preferences.securityDesc'),
       disabled: true 
     },
     { 
       key: 'marketingEmails', 
-      title: 'Yenilikler ve Duyurular', 
-      desc: 'TraceAtlas güncellemeleri, yeni özellikler ve topluluk duyuruları.' 
+      title: t('profile.preferences.marketingTitle'), 
+      desc: t('profile.preferences.marketingDesc') 
     }
   ];
 
@@ -93,11 +95,11 @@ const UserPreferences = ({ user }) => {
         marketingEmails: preferences.marketingEmails
       });
 
-      alert("Tercihleriniz başarıyla güncellendi!");
+      alert(t('profile.preferences.saved'));
       setIsModalOpen(false);
     } catch (error) {
       console.error("Hata", error);
-      alert("Bir hata oluştu.");
+      alert(t('profile.preferences.saveError'));
     } finally {
       setSaving(false);
     }
@@ -118,9 +120,9 @@ const UserPreferences = ({ user }) => {
             <EnvelopeIcon className="w-6 h-6 text-[#1E3A3A]" />
         </div>
         <div>
-            <h2 className="text-2xl font-bold text-[#1E3A3A]">E-posta Tercihleri</h2>
+            <h2 className="text-2xl font-bold text-[#1E3A3A]">{t('profile.preferences.title')}</h2>
             <p className="text-sm text-gray-500">
-                {user ? `${user.email} için bildirim ayarları.` : 'Bildirim ayarlarını yönetin.'}
+                {user ? t('profile.preferences.subtitleWithEmail', { email: user.email }) : t('profile.preferences.subtitle')}
             </p>
         </div>
       </div>
@@ -165,7 +167,7 @@ const UserPreferences = ({ user }) => {
             disabled={saving}
             className="flex items-center gap-2 bg-gradient-to-r from-[#1E3A3A] to-[#2D554F] text-white px-8 py-3 rounded-xl font-medium hover:shadow-lg hover:shadow-[#1E3A3A]/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
         >
-            <span>{saving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}</span>
+            <span>{saving ? t('profile.preferences.saving') : t('profile.preferences.saveChanges')}</span>
         </button>
       </div>
 
@@ -173,11 +175,11 @@ const UserPreferences = ({ user }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={confirmSave}
-        title="Tercihleri Kaydet"
-        message="Bildirim tercihlerinizi güncellemek üzeresiniz. Devam etmek istiyor musunuz?"
+        title={t('profile.preferences.confirmTitle')}
+        message={t('profile.preferences.confirmMessage')}
         type="primary"
-        confirmText="Evet, Kaydet"
-        cancelText="Vazgeç"
+        confirmText={t('profile.preferences.confirmSave')}
+        cancelText={t('common.buttons.cancel')}
         isLoading={saving}
       />
     </div>

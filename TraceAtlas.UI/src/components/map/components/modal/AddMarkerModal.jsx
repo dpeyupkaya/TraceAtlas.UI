@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiX, FiCheck, FiLoader, FiInfo } from "react-icons/fi"; // FiInfo ikonunu ekledik
+import { useTranslation } from 'react-i18next';
 import Alert from "@mui/material/Alert";
 import Collapse from "@mui/material/Collapse";
 
@@ -14,6 +15,7 @@ import { closeAddLocationModal } from "../../../../store/slices/mapSlice";
 import { useGlobalLoader } from "../../../../hooks/useGlobalLoader";
 
 const AddMarkerModal = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
@@ -37,13 +39,13 @@ const AddMarkerModal = () => {
     setWarning("");
 
     if (!formData.title?.trim()) {
-      setWarning("Başlık zorunludur.");
+      setWarning(t('map.addMarker.titleRequired'));
       return;
     }
 
   
     if (formData.tags && formData.tags.length > 3) {
-        setWarning("En fazla 3 adet etiket (tag) ekleyebilirsiniz.");
+        setWarning(t('map.addMarker.maxTags'));
         return;
     }
  
@@ -51,12 +53,12 @@ const AddMarkerModal = () => {
     if (formData.imageFile) {
       const okTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"];
       if (!okTypes.includes(formData.imageFile.type)) {
-        setWarning("Sadece JPG, PNG, WebP veya GIF yükleyebilirsiniz.");
+        setWarning(t('map.addMarker.invalidImage'));
         return;
       }
 
       if (formData.imageFile.size > 5 * 1024 * 1024) {
-        setWarning("Resim boyutu 5MB’tan küçük olmalıdır.");
+        setWarning(t('map.addMarker.imageTooLarge'));
         return;
       }
     }
@@ -66,7 +68,7 @@ const AddMarkerModal = () => {
       description: formData.description?.trim() || "",
       tags: formData.tags || [],
       imageFile: formData.imageFile || null,
-      region: formData.region || "Bilinmiyor"
+      region: formData.region || t('map.addMarker.unknownRegion')
     });
 
     setConfirmOpen(true);
@@ -79,7 +81,7 @@ const AddMarkerModal = () => {
     await withLoader(async () => {
       try {
         const userId = getCurrentUserId();
-        if (!userId) throw new Error("Oturum süresi dolmuş.");
+        if (!userId) throw new Error(t('map.addMarker.sessionExpired'));
 
         const fd = new FormData();
         fd.append("Title", cachedFormData.title);
@@ -102,7 +104,7 @@ const AddMarkerModal = () => {
         close();
         
       } catch (e) {
-        setWarning(e.message || "Kayıt sırasında hata oluştu.");
+        setWarning(e.message || t('map.addMarker.saveError'));
       }
     });
 
@@ -116,7 +118,7 @@ const AddMarkerModal = () => {
         <div className="w-full max-w-xl bg-zinc-900 text-zinc-100 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
 
           <header className="flex items-center justify-between px-6 py-4 border-b border-zinc-800">
-            <h2 className="text-lg font-semibold text-white">Yeni Konum</h2>
+            <h2 className="text-lg font-semibold text-white">{t('map.addMarker.newLocation')}</h2>
             <button 
               onClick={close}
               className="p-2 hover:bg-zinc-800 rounded-full transition-colors text-zinc-400 hover:text-white"
@@ -147,7 +149,7 @@ const AddMarkerModal = () => {
                 disabled={loading}
                 className="px-5 py-2 text-sm text-zinc-400 hover:text-white transition-colors"
               >
-                Vazgeç
+                {t('common.buttons.cancel')}
               </button>
 
               <button
@@ -157,7 +159,7 @@ const AddMarkerModal = () => {
                 className="px-6 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-emerald-900/20"
               >
                 {loading ? <FiLoader className="animate-spin" /> : <FiCheck />}
-                Kaydet
+                {t('common.buttons.save')}
               </button>
             </div>
           </div>
@@ -168,10 +170,10 @@ const AddMarkerModal = () => {
         isOpen={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         onConfirm={handleSave}
-        title="Onay"
-        message={`"${cachedFormData?.title}" konumu kaydedilecek.`}
-        confirmText="Kaydet"
-        cancelText="Düzenle"
+        title={t('map.addMarker.confirmTitle')}
+        message={t('map.addMarker.confirmMessage', { title: cachedFormData?.title })}
+        confirmText={t('common.buttons.save')}
+        cancelText={t('common.buttons.edit')}
         isLoading={loading}
       />
     </>

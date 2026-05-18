@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Lock, Repeat, CheckCircle, AlertCircle, ShieldCheck } from 'lucide-react'; // Snowflake/Star silindi, ShieldCheck eklendi
+import { useTranslation } from 'react-i18next';
 import InputField from './InputField';
 import { authService } from '../../services/authService';
 import AuthButton from './AuthButton';
 
 const ResetPasswordPage = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
@@ -27,12 +29,12 @@ const ResetPasswordPage = () => {
     setErrorMessage('');
     
     if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("Şifreler birbirini tutmuyor!");
+      setErrorMessage(t('auth.resetPassword.mismatch'));
       return;
     }
 
     if (!validatePassword(formData.password)) {
-      setErrorMessage("Şifre en az 6 karakter; 1 büyük, 1 küçük harf ve 1 rakam içermelidir.");
+      setErrorMessage(t('auth.resetPassword.weak'));
       return;
     }
 
@@ -43,7 +45,7 @@ const ResetPasswordPage = () => {
       setTimeout(() => navigate('/auth'), 3000);
     } catch (error) {
       setStatus('error');
-      setErrorMessage(error?.response?.data?.message || "Linkin süresi dolmuş olabilir.");
+      setErrorMessage(error?.response?.data?.message || t('auth.resetPassword.expired'));
     }
   };
 
@@ -65,8 +67,8 @@ const ResetPasswordPage = () => {
               <CheckCircle size={40} />
             </div>
             <div className="space-y-2">
-              <h2 className="text-2xl font-black text-white tracking-tight">İŞLEM BAŞARILI</h2>
-              <p className="text-emerald-100/40 text-sm font-medium uppercase tracking-widest">Şifreniz güncellendi. Yönlendiriliyorsunuz...</p>
+              <h2 className="text-2xl font-black text-white tracking-tight">{t('auth.resetPassword.successTitle')}</h2>
+              <p className="text-emerald-100/40 text-sm font-medium uppercase tracking-widest">{t('auth.resetPassword.successText')}</p>
             </div>
             <div className="flex justify-center gap-2">
               <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" />
@@ -85,8 +87,8 @@ const ResetPasswordPage = () => {
                   </div>
                 </div>
               </div>
-              <h2 className="text-2xl font-black text-white tracking-tighter uppercase">ŞİFREYİ GÜNCELLE</h2>
-              <p className="text-emerald-100/40 text-[10px] font-black tracking-[0.2em] uppercase">Güvenliğin İçin Güçlü Bir Şifre Belirle</p>
+              <h2 className="text-2xl font-black text-white tracking-tighter uppercase">{t('auth.resetPassword.title')}</h2>
+              <p className="text-emerald-100/40 text-[10px] font-black tracking-[0.2em] uppercase">{t('auth.resetPassword.subtitle')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -94,7 +96,7 @@ const ResetPasswordPage = () => {
                 <InputField 
                   icon={Lock} 
                   type="password" 
-                  placeholder="Yeni Şifre" 
+                  placeholder={t('common.fields.newPassword')} 
                   value={formData.password}
                   onChange={(e) => setFormData({...formData, password: e.target.value})}
                   className="bg-white/[0.03] border-white/5 focus:border-emerald-500/50"
@@ -103,7 +105,7 @@ const ResetPasswordPage = () => {
                 <InputField 
                   icon={Repeat} 
                   type="password" 
-                  placeholder="Şifreyi Onayla" 
+                  placeholder={t('common.fields.confirmPassword')} 
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                   className="bg-white/[0.03] border-white/5 focus:border-emerald-500/50"
@@ -123,7 +125,7 @@ const ResetPasswordPage = () => {
                   disabled={status === 'loading'}
                   className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black tracking-[0.2em] shadow-lg shadow-emerald-900/20 transition-all active:scale-[0.98]"
                 >
-                  {status === 'loading' ? 'İŞLENİYOR...' : 'ŞİFREYİ KAYDET'}
+                  {status === 'loading' ? t('common.states.processing') : t('auth.resetPassword.submit')}
                 </AuthButton>
               </div>
             </form>

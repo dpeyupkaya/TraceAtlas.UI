@@ -1,0 +1,491 @@
+{
+  "common": {
+    "brand": "TraceAtlas",
+    "language": "Dil",
+    "selectLanguage": "Dil seç",
+    "languages": {
+      "tr": "Türkçe",
+      "en": "English",
+      "it": "Italiano",
+      "es": "Español"
+    },
+    "buttons": {
+      "save": "Kaydet",
+      "edit": "Düzenle",
+      "cancel": "Vazgeç",
+      "delete": "Sil",
+      "confirm": "Evet",
+      "loading": "İşleniyor",
+      "home": "Ana Sayfa",
+      "close": "Kapat",
+      "send": "Gönder",
+      "inspect": "İncele",
+      "share": "Paylaş",
+      "back": "Geri Dön",
+      "print": "Yazdır"
+    },
+    "fields": {
+      "email": "E-posta Adresin",
+      "password": "Şifren",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Şifreyi Onayla",
+      "username": "Kullanıcı Adı",
+      "firstName": "Adın",
+      "lastName": "Soyadın"
+    },
+    "states": {
+      "loading": "Yükleniyor...",
+      "processing": "İŞLENİYOR..."
+    },
+    "messages": {
+      "genericError": "Bir hata oluştu.",
+      "deletedAccount": "Silinmiş Hesap",
+      "noDescription": "Açıklama bulunmuyor.",
+      "sessionWarning": "Oturumunuz {{minutes}} dakika içinde sona erecek. Lütfen işlerinizi kaydedin.",
+      "sessionExpired": "Oturumunuz sona erdi. Giriş sayfasına yönlendiriliyorsunuz..."
+    }
+  },
+  "landing": {
+    "seoTitle": "TraceAtlas - İzini Sonsuzluğa Bırak",
+    "seoDescription": "Doğanın ritmini yakala, izini sonsuzluğa bırak. TraceAtlas ile lokasyon bazlı yeni deneyimler keşfetmeye başla!",
+    "heroText": "Dağlardan ormanlara, gizli rotalara kadar tüm doğa harikalarını keşfet. Haritada her anıyı bir hediye gibi sakla ve izini sonsuzluğa bırak.",
+    "cta": "Maceraya Başla"
+  },
+  "footer": {
+    "description": "Doğanın ritmini yakala, izini sonsuzluğa bırak. TraceAtlas ile keşfettiğin her anı kaydet, rotalarını paylaş ve gezginler topluluğuna katıl. Maceranı dijital bir atlasa dönüştür.",
+    "quickLinks": "Hızlı Bağlantılar",
+    "corporateNavigation": "Kurumsal Navigasyon",
+    "about": "Hakkımızda",
+    "contact": "İletişim",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Şartları",
+    "reachUs": "Bize Ulaşın",
+    "rights": "© 2026 TraceAtlas. Tüm hakları saklıdır."
+  },
+  "home": {
+    "seoTitle": "Keşfet | TraceAtlas Deneyim Haritası",
+    "seoDescription": "Çevrendeki gizli kalmış mekanları ve popüler rotaları harita üzerinden keşfet. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri incele.",
+    "seoSocialDescription": "En iyi kamp alanları, gizli mekanlar ve şehir rotaları. TraceAtlas topluluğunun paylaştığı gerçek deneyimleri harita üzerinde incele.",
+    "registerAria": "Kayıt alanına git",
+    "explore": "KEŞFET",
+    "info": {
+      "categories": [
+        {
+          "title": "Zirveler ve Vadi Yolları",
+          "desc": "Bulutların üzerine çıkan rotalar ve gizli kalmış kanyonlar."
+        },
+        {
+          "title": "Derin Ormanlar",
+          "desc": "Güneş ışığının zor girdiği, sadece doğanın fısıltısını duyacağın patikalar."
+        },
+        {
+          "title": "Saklı Sular",
+          "desc": "Issız koylar, haritada olmayan şelaleler ve sessiz göl kenarları."
+        },
+        {
+          "title": "İzole Kamp Alanları",
+          "desc": "Ateşini yakıp geceyi sadece yıldızlarla paylaşabileceğin nadir noktalar."
+        }
+      ],
+      "quoteLine1": "SADECE KAYBOLMAYI GÖZE ALANLAR",
+      "quoteLine2": "YENİ YOLLAR BULABİLİR."
+    },
+    "welcome": {
+      "atlasItems": {
+        "peaks": "Zirveler",
+        "forests": "Ormanlar",
+        "seas": "Denizler",
+        "routes": "Rotalar"
+      },
+      "explore": "Keşfet →"
+    },
+    "register": {
+      "tagline": "Maceraya Hazır Mısın?",
+      "routes": "Rotalar",
+      "travelers": "Gezginler",
+      "continueExploring": "KEŞFE DEVAM ET",
+      "loginOrRegister": "GİRİŞ YAP / KAYIT OL",
+      "guest": "MİSAFİR OLARAK GÖZ AT"
+    }
+  },
+  "navbar": {
+    "searchPlaceholder": "Gizemli yerleri keşfet...",
+    "searching": "Harita taranıyor...",
+    "results": "Sonuçlar",
+    "empty": "Keşfedilecek yeni bir yer yok mu? Hemen ekle.",
+    "map": "Harita",
+    "login": "Giriş Yap"
+  },
+  "auth": {
+    "tabs": {
+      "login": "GİRİŞ",
+      "register": "KAYIT"
+    },
+    "panel": {
+      "welcome": "Hoşgeldin",
+      "welcomeSubtitle": "Maceraya devam et.",
+      "newRoute": "Yeni Rota",
+      "newRouteSubtitle": "TraceAtlas'a ilk adımı at."
+    },
+    "login": {
+      "forgotPassword": "Şifremi Unuttum?",
+      "submit": "Giriş Yap",
+      "or": "veya",
+      "google": "Google ile Devam Et",
+      "googleError": "Google Sign-In işlemi iptal edildi veya başarısız oldu.",
+      "googleLoginError": "Google ile giriş yaparken bir hata oluştu."
+    },
+    "register": {
+      "missingFields": "Lütfen tüm alanları doldurunuz.",
+      "invalidEmail": "Geçersiz e-posta formatı.",
+      "weakPassword": "Şifre en az 6 karakter olmalı; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.",
+      "passwordMismatch": "Şifreler uyuşmuyor!",
+      "success": "Kayıt başarılı! Doğrulama bağlantısı e-posta adresinize gönderildi. Yönlendiriliyorsunuz...",
+      "deletedAccount": "Bu hesap daha önce silinmiş. Lütfen destek ekibiyle iletişime geçin.",
+      "emailExists": "Bu e-posta adresi ile zaten bir hesap mevcut.",
+      "usernameExists": "Bu kullanıcı adı başkası tarafından alınmış, lütfen başka bir tane seçin.",
+      "terms": "Kullanım Şartları",
+      "termsAccepted": "nı okudum ve kabul ediyorum",
+      "submit": "Kayıt Ol"
+    },
+    "forgot": {
+      "missingEmail": "Lütfen e-posta adresinizi giriniz.",
+      "invalidEmail": "Geçerli bir e-posta adresi giriniz.",
+      "sentTitle": "Bağlantı Gönderildi",
+      "sentText": "Şifre sıfırlama bağlantısı e-posta adresinize ulaştırıldı. Lütfen gelen kutunuzu kontrol edin.",
+      "title": "Şifreni mi Unuttun?",
+      "subtitle": "Yolculuğa devam etmek için sıfırlama bağlantısı iste",
+      "sendLink": "BAĞLANTI GÖNDER"
+    },
+    "confirmEmail": {
+      "verifyingTitle": "Doğrulanıyor...",
+      "verifyingText": "E-posta adresiniz kontrol ediliyor, lütfen bekleyin.",
+      "successTitle": "Hesap Doğrulandı!",
+      "successText": "E-posta adresiniz başarıyla onaylandı. Artık giriş yapabilirsiniz.",
+      "errorTitle": "Doğrulama Başarısız",
+      "errorText": "Bağlantı geçersiz veya süresi dolmuş olabilir.",
+      "backToLogin": "Giriş Sayfasına Dön"
+    },
+    "resetPassword": {
+      "mismatch": "Şifreler birbirini tutmuyor!",
+      "weak": "Şifre en az 6 karakter; 1 büyük, 1 küçük harf ve 1 rakam içermelidir.",
+      "expired": "Linkin süresi dolmuş olabilir.",
+      "successTitle": "İŞLEM BAŞARILI",
+      "successText": "Şifreniz güncellendi. Yönlendiriliyorsunuz...",
+      "title": "ŞİFREYİ GÜNCELLE",
+      "subtitle": "Güvenliğin İçin Güçlü Bir Şifre Belirle",
+      "submit": "ŞİFREYİ KAYDET"
+    }
+  },
+  "map": {
+    "seoTitle": "Deneyim Haritası | TraceAtlas",
+    "seoDescription": "TraceAtlas interaktif haritası ile dünyayı keşfet. Kullanıcıların paylaştığı anıları, rotaları ve gizli kalmış mekanları canlı harita üzerinden incele.",
+    "seoSocialDescription": "İnteraktif harita üzerinde yeni yerler ve kullanıcı deneyimleri keşfet.",
+    "markerForm": {
+      "title": "Başlık(Zorunlu)",
+      "titlePlaceholder": "Konum başlığı...",
+      "description": "Açıklama(Zorunlu)",
+      "descriptionPlaceholder": "Bu yer hakkında bilgi...",
+      "tags": "Etiketler",
+      "tagsPlaceholder": "Etiket yazıp Enter'a basın(En fazla 3 etiket)...",
+      "photo": "Fotoğraf",
+      "selectPhoto": "Fotoğraf Seç",
+      "previewAlt": "Önizleme"
+    },
+    "addMarker": {
+      "newLocation": "Yeni Konum",
+      "titleRequired": "Başlık zorunludur.",
+      "maxTags": "En fazla 3 adet etiket (tag) ekleyebilirsiniz.",
+      "invalidImage": "Sadece JPG, PNG, WebP veya GIF yükleyebilirsiniz.",
+      "imageTooLarge": "Resim boyutu 5MB'tan küçük olmalıdır.",
+      "unknownRegion": "Bilinmiyor",
+      "sessionExpired": "Oturum süresi dolmuş.",
+      "saveError": "Kayıt sırasında hata oluştu.",
+      "confirmTitle": "Onay",
+      "confirmMessage": "\"{{title}}\" konumu kaydedilecek."
+    },
+    "addButton": {
+      "modeOn": "Konum ekleme modu aktif",
+      "modeOff": "Konum ekleme modu kapatıldı",
+      "loginRequired": "İşlem yapmak için giriş yapmalısınız!"
+    },
+    "location": {
+      "unsupported": "Tarayıcınız konum servisini desteklemiyor.",
+      "failed": "Konum alınamadı.",
+      "permissionDenied": "Konum izni reddedildi.",
+      "unavailable": "GPS sinyali alınamıyor.",
+      "timeout": "Konum bulma süresi doldu.",
+      "find": "Konumumu Bul"
+    },
+    "detail": {
+      "imageLoading": "Görsel Yükleniyor...",
+      "noImage": "Görsel Yok",
+      "directions": "Yol Tarifi",
+      "description": "Açıklama",
+      "tags": "Etiketler",
+      "favoriteLoginRequired": "Favorilere eklemek için giriş yapmalısınız!"
+    },
+    "popup": {
+      "clickToExplore": "Keşfetmek için tıklayın",
+      "inspect": "İncele"
+    }
+  },
+  "profile": {
+    "sidebar": {
+      "me": "Profilim",
+      "favorites": "Favori Mekanlar",
+      "shared": "Paylaşımlar",
+      "preferences": "Tercihler",
+      "security": "Güvenlik",
+      "account": "Hesap"
+    },
+    "me": {
+      "title": "Profil Bilgileri",
+      "subtitle": "Hesap detayların aşağıdadır.",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "username": "Kullanıcı Adı",
+      "email": "E-posta Adresi",
+      "joinedAt": "Katılma Tarihi",
+      "remainingRights": "Kalan Hakkınız",
+      "unit": "Adet",
+      "max": "MAX: 5",
+      "logout": "Çıkış Yap"
+    },
+    "favorites": {
+      "title": "Favori Mekanlarım",
+      "count": "{{count}} Mekan",
+      "removed": "Mekan favorilerden kaldırıldı.",
+      "removeError": "Silme işlemi sırasında bir hata oluştu.",
+      "empty": "Favori mekan bulunamadı.",
+      "confirmTitle": "Favorilerden Çıkar?",
+      "confirmMessage": "Bu mekanı favorilerinizden çıkarmak istediğinize emin misiniz? Bu işlem geri alınamaz."
+    },
+    "shared": {
+      "untitled": "İsimsiz Mekan",
+      "noDate": "Tarih Yok",
+      "me": "Ben",
+      "noDescription": "Açıklama girilmemiş.",
+      "deleteError": "Silme işlemi başarısız.",
+      "title": "Paylaşımlarım",
+      "count": "{{count}} Paylaşım",
+      "empty": "Henüz paylaşım yapmadınız.",
+      "confirmTitle": "Paylaşımı Sil",
+      "confirmMessage": "Bu paylaşımı silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+      "confirmDelete": "Evet, Sil"
+    },
+    "preferences": {
+      "securityTitle": "Güvenlik Uyarıları",
+      "securityDesc": "Şüpheli girişler, şifre değişiklikleri ve hesap güvenliği ile ilgili kritik bildirimler.",
+      "marketingTitle": "Yenilikler ve Duyurular",
+      "marketingDesc": "TraceAtlas güncellemeleri, yeni özellikler ve topluluk duyuruları.",
+      "saved": "Tercihleriniz başarıyla güncellendi!",
+      "saveError": "Bir hata oluştu.",
+      "title": "E-posta Tercihleri",
+      "subtitleWithEmail": "{{email}} için bildirim ayarları.",
+      "subtitle": "Bildirim ayarlarını yönetin.",
+      "saving": "Kaydediliyor...",
+      "saveChanges": "Değişiklikleri Kaydet",
+      "confirmTitle": "Tercihleri Kaydet",
+      "confirmMessage": "Bildirim tercihlerinizi güncellemek üzeresiniz. Devam etmek istiyor musunuz?",
+      "confirmSave": "Evet, Kaydet"
+    },
+    "security": {
+      "missingEmail": "Kullanıcı e-posta bilgisi yüklenemedi.",
+      "sendError": "Hata oluştu: {{message}}",
+      "fallbackError": "Bağlantı gönderilemedi.",
+      "title": "Şifre Değiştir",
+      "descriptionStart": "Hesap güvenliğiniz için şifre değiştirme işlemlerini e-posta doğrulama bağlantısı üzerinden gerçekleştiriyoruz.",
+      "descriptionEnd": "adresine bir sıfırlama bağlantısı gönderilecektir.",
+      "sending": "Gönderiliyor...",
+      "send": "Şifre Sıfırlama Bağlantısı Gönder",
+      "sentTitle": "E-posta Gönderildi!",
+      "sentText": "Lütfen e-posta kutunuzu kontrol edin. Gelen bağlantıya tıklayarak yeni şifrenizi belirleyebilirsiniz.",
+      "sendAgain": "Tekrar Gönder"
+    },
+    "deleteAccount": {
+      "confirmWord": "SİL",
+      "deleted": "Hesabınız başarıyla silindi. Giriş sayfasına yönlendiriliyorsunuz...",
+      "deleteError": "Hesap silinirken bir hata oluştu. Lütfen tekrar deneyiniz.",
+      "title": "Hesap İşlemleri",
+      "subtitle": "Hesabınızı kalıcı olarak silebilirsiniz.",
+      "deleteTitle": "Hesabı Kalıcı Olarak Sil",
+      "warning": "Bu işlem geri alınamaz. Devam ettiğinizde:",
+      "profileDeleted": "Profil bilgileriniz ve giriş verileriniz silinir.",
+      "favoritesDeleted": "Favori listeleriniz ve kişisel tercihleriniz silinir.",
+      "sharesKept": "Paylaşımlarınız silinmez.",
+      "sharesKeptDetail": "(Eklediğiniz mekanlar ve fotoğraflar \"Silinmiş Hesap\" olarak platformda kalmaya devam eder.)",
+      "instruction": "Onaylamak için aşağıdaki kutucuğa {{word}} yazın:",
+      "deleteButton": "Hesabımı ve Verilerimi Sil",
+      "modalTitle": "Hesabı Sil",
+      "modalMessage": "Hesabınızı kalıcı olarak silmek üzeresiniz. Bu işlem geri alınamaz. Devam etmek istiyor musunuz?",
+      "confirmDelete": "Evet, Hesabı Sil"
+    }
+  },
+  "notFound": {
+    "title": "Rotadan Çıktınız!",
+    "line1": "Aradığınız koordinatlar TraceAtlas haritalarında bulunamadı.",
+    "line2": "Sayfa silinmiş veya yanlış bir yol izlenmiş olabilir.",
+    "previous": "Bir Önceki Sayfa",
+    "map": "Ana Haritaya Dön",
+    "lost": "Kayıp mı oldunuz?",
+    "support": "Destek alın"
+  },
+  "sharedLocation": {
+    "seoTitleFallback": "Paylaşılan Konum | TraceAtlas",
+    "seoTitleShort": "Paylaşılan Konum",
+    "seoDescription": "TraceAtlas üzerinden paylaşılan özel bir konumu görüntüle.",
+    "seoOgDescription": "Seninle bir konum paylaşıldı. Detayları harita üzerinde gör.",
+    "twitterDescription": "Seninle bir konum paylaşıldı.",
+    "invalid": "Bağlantı geçersiz veya süresi dolmuş.",
+    "backToMap": "Haritaya Dön",
+    "redirecting": "{{title}} konumuna gidiliyor...",
+    "loading": "Konum verisi yükleniyor..."
+  },
+  "about": {
+    "seoTitle": "Hakkımızda | TraceAtlas - Hikayeni Haritaya İşle",
+    "seoDescription": "TraceAtlas'ın hikayesini keşfedin. Anılarınızı ölümsüzleştirmek ve kendi dijital atlasınızı oluşturmak için tasarlanmış modern bir platform.",
+    "ogDescription": "Anılarınızı ölümsüzleştirmek ve kendi dijital atlasınızı oluşturmak için tasarlanan TraceAtlas hakkında daha fazla bilgi edinin.",
+    "twitterDescription": "TraceAtlas ile anılarınızı haritalandırın ve kendi dijital atlasınızı oluşturun.",
+    "structuredDescription": "TraceAtlas, anılarınızı ölümsüzleştirmek ve kendi dijital atlasınızı oluşturmak için tasarlanmış bir platformdur.",
+    "heroStart": "Her Rota Bir",
+    "heroAccent": "Hikayedir.",
+    "heroText": "TraceAtlas, sadece gidilen yolları haritalamak için değil, o yollarda biriken anıları ölümsüzleştirmek için tasarlandı.",
+    "whyTitle": "Neden TraceAtlas?",
+    "whyParagraph1": "Modern dünyada keşfetme duygusunu canlı tutmak istiyoruz. İster şehrin bilinmeyen sokaklarında, ister doğanın kalbinde olun; önemli olan sadece \"nerede\" olduğunuz değil, orada \"ne hissettiğinizdir\".",
+    "whyParagraph2": "Bu platform, gezginlerin kendi dijital atlaslarını oluşturmalarına, favori mekanlarını not etmelerine ve keşif tutkularını düzenli bir arşiv haline getirmelerine olanak tanır.",
+    "developerTitle": "Geliştirici Hakkında",
+    "developerGreeting": "Selam, ben",
+    "developerParagraph1": "Kod yazmayı, modern teknolojileri keşfetmeyi ve yaratıcı fikirleri dijital dünyada hayata geçirmeyi seven bir yazılım tutkunuyum.",
+    "developerParagraph2": "TraceAtlas da hem kendimi geliştirmek hem de ortaya keyifli bir iş çıkarmak için hazırladığım kişisel bir proje. Umarım kullanırken eğlenirsiniz!",
+    "socialNav": "Geliştirici Sosyal Medya Bağlantıları",
+    "linkedinAria": "LinkedIn Profilimi Ziyaret Et",
+    "githubAria": "GitHub Profilimi Ziyaret Et",
+    "mailAria": "Bana E-posta Gönder",
+    "contactCta": "İletişime Geç"
+  },
+  "contact": {
+    "seoTitle": "İletişim | TraceAtlas - Bize Ulaşın",
+    "seoDescription": "TraceAtlas ile ilgili sorularınız, iş birliği teklifleriniz veya geri bildirimleriniz için bizimle iletişime geçin. Doğrudan mesaj gönderin veya sosyal medya üzerinden bağlantı kurun.",
+    "ogDescription": "Sorularınız veya iş birliği teklifleriniz için doğrudan bağlantı kurun. TraceAtlas ekibi size yardımcı olmaktan mutluluk duyacaktır.",
+    "title": "İletişime Geç",
+    "subtitle": "Sorularınız veya iş birliği teklifleriniz için doğrudan bağlantı kurun.",
+    "validation": {
+      "name": "Geçersiz isim",
+      "email": "Geçersiz e-posta",
+      "message": "Geçersiz mesaj"
+    },
+    "toast": {
+      "sent": "Mesajınız gönderildi",
+      "success": "Mesajınız başarıyla gönderildi.",
+      "error": "Mesaj gönderilemedi, lütfen daha sonra tekrar deneyin.",
+      "cooldown": "Lütfen tekrar göndermeden önce {{time}} bekleyin."
+    },
+    "time": {
+      "minutesShort": "dk",
+      "secondsShort": "sn"
+    },
+    "social": {
+      "mail": "Mail Gönderin",
+      "linkedin": "Bağlantı Kurun",
+      "github": "Github",
+      "instagram": "Takip Edin"
+    },
+    "fields": {
+      "name": "Adınız Soyadınız",
+      "email": "E-posta Adresiniz",
+      "message": "Mesajınız"
+    }
+  },
+  "privacy": {
+    "seoTitle": "Gizlilik Politikası | TraceAtlas",
+    "seoDescription": "TraceAtlas gizlilik politikası ve aydınlatma metni. Veri güvenliği, kullanıcı hakları ve proje kapsamı hakkında detaylı bilgi edinin.",
+    "ogDescription": "Kullanıcı verilerinin nasıl işlendiği ve korunduğu hakkında bilgilendirme.",
+    "back": "Geri Dön",
+    "title": "Gizlilik Politikası ve Aydınlatma Metni",
+    "badge": "ÖĞRENCİ PROJESİ",
+    "subtitle": "Bu metin, projenin teknik yetkinliğini göstermek amacıyla hazırlanmıştır.",
+    "developer": "Geliştirici:",
+    "contents": "İçindekiler",
+    "sections": [
+      { "id": "proje-hakkinda", "title": "Proje Hakkında" },
+      { "id": "toplanan-veriler", "title": "1. Toplanan Veriler" },
+      { "id": "kullanim-amaci", "title": "2. Kullanım Amacı" },
+      { "id": "veri-paylasimi", "title": "3. Veri Paylaşımı" },
+      { "id": "saklama-suresi", "title": "4. Saklama Süresi" },
+      { "id": "kullanici-haklari", "title": "5. Kullanıcı Hakları" },
+      { "id": "guvenlik", "title": "6. Güvenlik" },
+      { "id": "telif-haklari", "title": "7. Telif Hakları" }
+    ],
+    "projectTitle": "Yasal Uyarı & Proje Kapsamı",
+    "projectText": "Bu uygulama (TraceAtlas), Eyüp Kaya tarafından yazılım geliştirme yetkinliklerini sergilemek amacıyla hazırlanmış bir bireysel projedir. Herhangi bir ticari şirket veya tüzel kişilik (TraceAtlas Teknoloji vb.) mevcut değildir.",
+    "dataTitle": "1. Toplanan Veriler (Demo Kapsamında)",
+    "dataIntro": "Sistem, projenin çalışabilirliğini göstermek amacıyla aşağıdaki verileri veritabanında işler:",
+    "accountInfo": "Hesap Bilgileri",
+    "accountItems": ["Kullanıcı Adı ve E-posta", "Hash'lenmiş (Şifreli) Parola"],
+    "locationInfo": "Konum Verileri",
+    "locationItems": ["Haritada işaretlenen koordinatlar", "Eklenen başlık, açıklama ve görseller"],
+    "purposeTitle": "2. Kullanım Amacı",
+    "purposeIntro": "Toplanan veriler yalnızca eğitim ve portfolyo sunumu amaçlıdır:",
+    "purposeItems": [
+      { "label": "Teknik Gösterim:", "text": "Frontend (React) ve Backend (C# .NET) iletişimini sağlamak." },
+      { "label": "Harita Fonksiyonları:", "text": "Kullanıcının işaretlediği yerleri haritada tekrar gösterebilmek." },
+      { "label": "Güvenlik Testleri:", "text": "JWT Token ve yetkilendirme mekanizmalarını test etmek." }
+    ],
+    "sharingTitle": "3. Veri Paylaşımı",
+    "sharingText": "Bu proje ticari olmadığı için verileriniz kesinlikle reklam şirketleri veya üçüncü taraf veri simsarlarıyla paylaşılmaz.",
+    "note": "Not:",
+    "sharingNote": "Projenin sunucusu (Hosting/Cloud) üzerinde tutulan veriler, ilgili bulut sağlayıcısının altyapısında saklanmaktadır.",
+    "retentionTitle": "4. Saklama Süresi",
+    "tableHeaders": ["Veri Tipi", "Saklama Politikası"],
+    "retentionRows": [
+      ["Kullanıcı Hesabı", "Proje yayında olduğu sürece veya talep üzerine silinir."],
+      ["Log Kayıtları", "Hata ayıklama (Debugging) süresince saklanır."]
+    ],
+    "rightsTitle": "5. Kullanıcı Hakları (Simülasyon)",
+    "rightsIntro": "Gerçek bir KVKK/GDPR senaryosunda sahip olacağınız haklar şunlardır:",
+    "rightsItems": ["Hesabımı tamamen silme hakkı", "Verilerimin bir kopyasını isteme hakkı", "Paylaştığım konumları ve fotoğrafları kaldırma hakkı"],
+    "securityTitle": "6. Güvenlik Önlemleri",
+    "securityIntro": "Proje genelinde uygulanan güvenlik standartları:",
+    "copyrightTitle": "7. Fikri Mülkiyet ve Telif Hakları",
+    "copyrightText": "Bu projenin (TraceAtlas) kaynak kodları, arayüz tasarımı ve logo materyalleri Eyüp Kaya'ya aittir.",
+    "copyrightItems": ["Yazılı izin alınmaksızın kopyalanması veya dağıtılması yasaktır.", "Ticari amaçlarla kullanılamaz.", "Tüm hakları saklıdır."],
+    "contactTitle": "İletişim",
+    "contactText": "Teknik sorularınız veya incelemeleriniz için geliştirici ile iletişime geçebilirsiniz."
+  },
+  "terms": {
+    "seoTitle": "Kullanıcı Sözleşmesi | TraceAtlas",
+    "seoDescription": "TraceAtlas platform kullanım şartları ve kullanıcı sözleşmesi. Platform kullanım kuralları, sorumluluk reddi ve telif hakları hakkında detaylı bilgi edinin.",
+    "ogDescription": "TraceAtlas platformunun kullanım kurallarını ve şartlarını içeren kullanıcı sözleşmesi.",
+    "back": "Geri Dön",
+    "print": "Yazdır",
+    "title": "Kullanıcı Sözleşmesi",
+    "lastUpdate": "Son Güncelleme: 2026",
+    "subtitle": "TraceAtlas Platform Kullanım Şartları",
+    "importantTitle": "Önemli Bilgilendirme:",
+    "importantText": "Bu platform (TraceAtlas), bireysel bir proje olarak geliştirilmiştir. Aşağıdaki sözleşme, platformun kullanımı sırasındaki kuralları belirler ancak hizmetin sürekliliği veya verilerin kalıcılığı konusunda ticari bir garanti verilmez.",
+    "intro": "Bu Kullanıcı Sözleşmesi (\"Sözleşme\"), TraceAtlas (\"Platform\") ile Platforma üye olan veya ziyaret eden kullanıcı (\"Kullanıcı\") arasında akdedilmiştir. Platformu kullanarak bu şartları kabul etmiş sayılırsınız.",
+    "scopeTitle": "Hizmetin Kapsamı",
+    "scopeIntro": "TraceAtlas, kullanıcılara aşağıdaki imkanları sunar:",
+    "scopeItems": ["Konum işaretleme ve paylaşma", "Fotoğraf ve içerik yükleme", "Favori listeleri oluşturma", "Paylaşılabilir link üretimi"],
+    "scopeNotes": ["Platform, kullanıcı verilerinin güvenliğini sağlamak için endüstri standartlarında önlemler alır ancak %100 güvenlik garanti edilemez.", "Platformun sürekli erişilebilirliği teknik sorunlar, bakım veya geliştirme çalışmaları nedeniyle zaman zaman kesintiye uğrayabilir."],
+    "userTitle": "Kullanıcı Yükümlülükleri",
+    "userIntro": "Kullanıcı, platformu kullanırken aşağıdakileri taahhüt eder:",
+    "userItems": [
+      { "label": "Doğru Bilgi:", "text": "Hesap oluştururken verilen bilgiler (e-posta, kullanıcı adı) doğru olmalıdır." },
+      { "label": "Yasal İçerik:", "text": "Türkiye Cumhuriyeti yasalarına aykırı, tehditkar, müstehcen veya telif haklarını ihlal eden içerik yüklenemez." },
+      { "label": "Güvenlik:", "text": "Kullanıcı, hesabının güvenliğinden (şifre vb.) kendisi sorumludur." },
+      { "label": "Sisteme Zarar Vermeme:", "text": "API'leri manipüle etme, brute-force saldırıları veya sistemi yoracak bot işlemleri yasaktır." }
+    ],
+    "disclaimerTitle": "Sorumluluk Reddi (Disclaimer)",
+    "disclaimerIntro": "TraceAtlas, bir eğitim ve geliştirme projesi olup \"OLDUĞU GİBİ\" (AS-IS) sunulmaktadır.",
+    "lossTitle": "Veri Kaybı",
+    "lossText": "Teknik güncellemeler veya sunucu değişiklikleri sırasında oluşabilecek veri kayıplarından Geliştirici sorumlu tutulamaz.",
+    "outageTitle": "Hizmet Kesintisi",
+    "outageText": "Platform, bakım veya geliştirme çalışmaları nedeniyle önceden haber verilmeksizin geçici olarak durdurulabilir.",
+    "contentTitle": "İçerik ve Telif Hakları",
+    "contentItems": ["Kullanıcı, paylaştığı içeriğin telif hakkının kendisine ait olduğunu kabul eder.", "Platform, kullanıcı içeriğini sadece hizmet sunumu amacıyla (haritada gösterme vb.) kullanma hakkına sahiptir.", "Geliştirici, uygunsuz görülen içerikleri veya hesapları herhangi bir bildirim yapmaksızın silme hakkını saklı tutar."],
+    "privacyTitle": "Paylaşım ve Gizlilik",
+    "privacyText": "Oluşturulan \"Paylaşılabilir Linkler\", linke sahip olan herkes tarafından görüntülenebilir. Bu linklerin paylaşımından doğacak gizlilik ihlallerinden kullanıcı sorumludur."
+  }
+}

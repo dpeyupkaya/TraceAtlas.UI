@@ -1,7 +1,9 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Logout from './Logout'
 
 export const Me = ({ user }) => {
+  const { t, i18n } = useTranslation();
   
   if (!user) {
     return (
@@ -15,7 +17,7 @@ export const Me = ({ user }) => {
   // Tarih formatlama
   const formatDate = (dateString) => {
     if (!dateString) return "-";
-    return new Date(dateString).toLocaleDateString('tr-TR', {
+    return new Date(dateString).toLocaleDateString(i18n.resolvedLanguage || i18n.language, {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -30,8 +32,8 @@ export const Me = ({ user }) => {
       <div className="p-6 border-b border-gray-100 flex items-center gap-4">
        
         <div>
-          <h2 className="text-xl font-bold text-gray-800">Profil Bilgileri</h2>
-          <p className="text-sm text-gray-500">Hesap detayların aşağıdadır.</p>
+          <h2 className="text-xl font-bold text-gray-800">{t('profile.me.title')}</h2>
+          <p className="text-sm text-gray-500">{t('profile.me.subtitle')}</p>
         </div>
       </div>
 
@@ -40,7 +42,7 @@ export const Me = ({ user }) => {
         
         {/* Ad */}
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Ad</label>
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('profile.me.firstName')}</label>
           <div className="font-medium text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-100">
             {user.firstName}
           </div>
@@ -48,7 +50,7 @@ export const Me = ({ user }) => {
 
         {/* Soyad */}
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Soyad</label>
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('profile.me.lastName')}</label>
           <div className="font-medium text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-100">
             {user.lastName}
           </div>
@@ -56,7 +58,7 @@ export const Me = ({ user }) => {
 
         {/* Kullanıcı Adı (BURASI) */}
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Kullanıcı Adı</label>
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('profile.me.username')}</label>
           <div className="font-medium text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-100">
             @{user.userName}
           </div>
@@ -64,7 +66,7 @@ export const Me = ({ user }) => {
 
         {/* E-posta */}
         <div className="space-y-1">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">E-posta Adresi</label>
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('profile.me.email')}</label>
           <div className="font-medium text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-100 flex items-center gap-2">
             <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -77,7 +79,7 @@ export const Me = ({ user }) => {
 
         {/* Katılma Tarihi */}
         <div className="md:col-span-2 space-y-1">
-          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Katılma Tarihi</label>
+          <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t('profile.me.joinedAt')}</label>
           <div className="font-medium text-[#1E3A3A] bg-[#1E3A3A]/5 p-3 rounded-lg border border-[#1E3A3A]/10 flex items-center gap-2">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -87,7 +89,7 @@ export const Me = ({ user }) => {
         </div>
         <div className="md:col-span-2 space-y-1">
   <label className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-    Kalan Hakkınız
+    {t('profile.me.remainingRights')}
   </label>
   <div className="font-medium text-[#1E3A3A] bg-[#1E3A3A]/5 p-3 rounded-lg border border-[#1E3A3A]/10 flex items-center justify-between">
     
@@ -101,10 +103,10 @@ export const Me = ({ user }) => {
       <span className="text-xl font-bold tracking-tight">
         {user?.remainingRights ?? 0}
       </span>
-      <span className="text-sm opacity-70 font-normal">Adet</span>
+      <span className="text-sm opacity-70 font-normal">{t('profile.me.unit')}</span>
     </div>
 
-    <span className="text-xs text-gray-400 font-semibold">MAX: 5</span>
+    <span className="text-xs text-gray-400 font-semibold">{t('profile.me.max')}</span>
 
   </div>
 </div>

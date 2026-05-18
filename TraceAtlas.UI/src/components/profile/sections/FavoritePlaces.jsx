@@ -3,6 +3,7 @@ import MarkerDetailModal from '../../map/components/modal/MarkerDetailModal';
 import profileService from '../../../services/profileService';
 import { removeFavorite } from '../../map/services/locationService.js';
 import { FiEye, FiTrash2 } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 import { 
   Dialog, 
   DialogTitle, 
@@ -15,6 +16,7 @@ import {
 } from '@mui/material';
 
 const FavoritePlaces = () => {
+  const { t } = useTranslation();
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -66,13 +68,13 @@ const FavoritePlaces = () => {
       
       setSnackbar({
         open: true,
-        message: 'Mekan favorilerden kaldırıldı.',
+        message: t('profile.favorites.removed'),
         severity: 'success'
       });
-    } catch (error) {
+    } catch {
       setSnackbar({
         open: true,
-        message: 'Silme işlemi sırasında bir hata oluştu.',
+        message: t('profile.favorites.removeError'),
         severity: 'error'
       });
     } finally {
@@ -96,9 +98,9 @@ const FavoritePlaces = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-bold text-[#1E3A3A]">Favori Mekanlarım</h2>
+        <h2 className="text-2xl font-bold text-[#1E3A3A]">{t('profile.favorites.title')}</h2>
         <span className="px-3 py-1 rounded-full bg-[#1E3A3A]/5 text-[#1E3A3A] text-sm font-semibold border border-[#1E3A3A]/10">
-          {favorites.length} Mekan
+          {t('profile.favorites.count', { count: favorites.length })}
         </span>
       </div>
 
@@ -127,7 +129,7 @@ const FavoritePlaces = () => {
                     }}
                     className="flex-1 py-2 bg-gray-50 hover:bg-emerald-50 text-gray-600 hover:text-emerald-600 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                   >
-                    <FiEye /> İncele
+                    <FiEye /> {t('common.buttons.inspect')}
                   </button>
 
                   <button 
@@ -143,7 +145,7 @@ const FavoritePlaces = () => {
         </div>
       ) : (
         <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-xl border-dashed border-2 border-gray-200">
-          Favori mekan bulunamadı.
+          {t('profile.favorites.empty')}
         </div>
       )}
 
@@ -163,19 +165,19 @@ const FavoritePlaces = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Favorilerden Çıkar?"}
+          {t('profile.favorites.confirmTitle')}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Bu mekanı favorilerinizden çıkarmak istediğinize emin misiniz? Bu işlem geri alınamaz.
+            {t('profile.favorites.confirmMessage')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDeleteDialogOpen(false)} color="inherit">
-            İptal
+            {t('common.buttons.cancel')}
           </Button>
           <Button onClick={confirmDelete} color="error" autoFocus>
-            Sil
+            {t('common.buttons.delete')}
           </Button>
         </DialogActions>
       </Dialog>

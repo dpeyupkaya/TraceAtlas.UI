@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, AtSign, Repeat, Eye, EyeOff } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import InputField from './InputField';
@@ -9,6 +10,7 @@ import { authService } from '../../services/authService';
 import { useGlobalLoader } from '../../hooks/useGlobalLoader';
 
 const RegisterForm = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { withLoader } = useGlobalLoader();
 
@@ -45,25 +47,25 @@ const RegisterForm = () => {
     setNotification(null);
 
     if (!formData.userName || !formData.firstName || !formData.lastName) {
-      setNotification({ severity: 'error', message: 'Lütfen tüm alanları doldurunuz.' });
+      setNotification({ severity: 'error', message: t('auth.register.missingFields') });
       return;
     }
 
     if (!validateEmail(formData.email)) {
-      setNotification({ severity: 'error', message: 'Geçersiz e-posta formatı.' });
+      setNotification({ severity: 'error', message: t('auth.register.invalidEmail') });
       return;
     }
 
     if (!validatePassword(formData.password)) {
       setNotification({
         severity: 'error',
-        message: 'Şifre en az 6 karakter olmalı; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.'
+        message: t('auth.register.weakPassword')
       });
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setNotification({ severity: 'error', message: 'Şifreler uyuşmuyor!' });
+      setNotification({ severity: 'error', message: t('auth.register.passwordMismatch') });
       return;
     }
 
@@ -81,7 +83,7 @@ const RegisterForm = () => {
 
         setNotification({
           severity: 'success',
-          message: 'Kayıt başarılı! Doğrulama bağlantısı e-posta adresinize gönderildi. Yönlendiriliyorsunuz...'
+          message: t('auth.register.success')
         });
 
         setTimeout(() => {
@@ -104,7 +106,7 @@ const RegisterForm = () => {
         if (messageLower.includes("silinmiş")) {
           setNotification({
             severity: 'error',
-            message: 'Bu hesap daha önce silinmiş. Lütfen destek ekibiyle iletişime geçin.'
+            message: t('auth.register.deletedAccount')
           });
           return;
         }
@@ -112,7 +114,7 @@ const RegisterForm = () => {
         if (messageLower.includes("zaten kayıtlı") || messageLower.includes("e-posta")) {
           setNotification({
             severity: 'error',
-            message: 'Bu e-posta adresi ile zaten bir hesap mevcut.'
+            message: t('auth.register.emailExists')
           });
           return;
         }
@@ -120,7 +122,7 @@ const RegisterForm = () => {
         if (messageLower.includes("kullanılıyor") || messageLower.includes("kullanıcı adı")) {
           setNotification({
             severity: 'error',
-            message: 'Bu kullanıcı adı başkası tarafından alınmış, lütfen başka bir tane seçin.'
+            message: t('auth.register.usernameExists')
           });
           return;
         }
@@ -149,7 +151,7 @@ const RegisterForm = () => {
           icon={AtSign} 
           type="text" 
           name="userName"
-          placeholder="Kullanıcı Adı" 
+          placeholder={t('common.fields.username')} 
           value={formData.userName}
           onChange={handleChange}
           autoComplete="off"
@@ -162,7 +164,7 @@ const RegisterForm = () => {
           icon={User} 
           type="text" 
           name="firstName"
-          placeholder="Adın" 
+          placeholder={t('common.fields.firstName')} 
           value={formData.firstName}
           onChange={handleChange}
           autoComplete="off"
@@ -172,7 +174,7 @@ const RegisterForm = () => {
           icon={User} 
           type="text" 
           name="lastName"
-          placeholder="Soyadın" 
+          placeholder={t('common.fields.lastName')} 
           value={formData.lastName}
           onChange={handleChange}
           autoComplete="off"
@@ -185,7 +187,7 @@ const RegisterForm = () => {
           icon={Mail} 
           type="text" 
           name="email"
-          placeholder="E-posta Adresin" 
+          placeholder={t('common.fields.email')} 
           value={formData.email}
           onChange={handleChange}
           autoComplete="off"
@@ -198,7 +200,7 @@ const RegisterForm = () => {
           icon={Lock} 
           type={showPassword ? "text" : "password"}
           name="password"
-          placeholder="Şifren" 
+          placeholder={t('common.fields.password')} 
           value={formData.password}
           onChange={handleChange}
           autoComplete="new-password"
@@ -218,7 +220,7 @@ const RegisterForm = () => {
           icon={Repeat} 
           type={showConfirmPassword ? "text" : "password"}
           name="confirmPassword"
-          placeholder="Şifreni Onayla" 
+          placeholder={t('common.fields.confirmPassword')} 
           value={formData.confirmPassword}
           onChange={handleChange}
           autoComplete="new-password"
@@ -252,15 +254,15 @@ const RegisterForm = () => {
             }}
             className="text-emerald-500 hover:text-emerald-400 font-medium hover:underline cursor-pointer transition-colors"
           >
-            Kullanım Şartları
-          </span>'nı okudum ve kabul ediyorum
+            {t('auth.register.terms')}
+          </span>{t('auth.register.termsAccepted')}
         </span>
       </div>
 
       <div className="pt-2">
         <AuthButton 
           type="submit"
-        > Kayıt Ol </AuthButton>
+        > {t('auth.register.submit')} </AuthButton>
       </div>
 
      

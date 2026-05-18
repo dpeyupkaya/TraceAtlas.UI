@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiX, FiUser, FiShare2, FiMap, FiHeart, FiNavigation, FiCalendar, FiLoader } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 import { addFavorite, getLocationById, createShareLink } from '../../services/locationService';
 import { clearSelection } from '../../../../store/slices/mapSlice';
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 
 const MarkerDetailModal = ({ isOpen, location, onClose }) => {
+  const { t, i18n } = useTranslation();
   const dispatch = useDispatch();
   const { selectedLocation, isSidebarOpen } = useSelector((state) => state.map);
 
@@ -131,7 +133,7 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
             {loading && !finalImageSrc ? (
                 <div className="w-full h-full flex flex-col items-center justify-center text-gray-400 gap-2 animate-pulse">
                 <FiLoader className="animate-spin" size={24}/>
-                <span className="text-xs">Görsel Yükleniyor...</span>
+                <span className="text-xs">{t('map.detail.imageLoading')}</span>
                 </div>
             ) : finalImageSrc ? (
                 <img 
@@ -143,7 +145,7 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
             ) : (
                 <div className="w-full h-full bg-gradient-to-br from-teal-50 to-emerald-100 flex flex-col items-center justify-center text-teal-700/50 gap-2">
                 <FiMap size={48} />
-                <span className="text-sm font-medium">Görsel Yok</span>
+                <span className="text-sm font-medium">{t('map.detail.noImage')}</span>
                 </div>
             )}
             
@@ -163,13 +165,13 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
                     <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">
                     <FiUser className="text-teal-600" size={14} />
                     <span className="font-medium text-gray-700 truncate max-w-[120px]">
-                        {displayData.creatorUsername || "Silinmiş Hesap"}
+                        {displayData.creatorUsername || t('common.messages.deletedAccount')}
                     </span>
                     </div>
                     {fullDetails?.createdAt && (
                         <div className="flex items-center gap-1.5">
                         <FiCalendar className="text-gray-400" size={14} />
-                        <span>{new Date(fullDetails.createdAt).toLocaleDateString('tr-TR')}</span>
+                        <span>{new Date(fullDetails.createdAt).toLocaleDateString(i18n.resolvedLanguage || i18n.language)}</span>
                         </div>
                     )}
                 </div>
@@ -180,7 +182,7 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
                     onClick={handleDirections} 
                     className="flex-1 bg-gray-900 hover:bg-black text-white py-3 rounded-xl font-semibold transition-all active:scale-95 flex items-center justify-center gap-2 shadow-lg shadow-gray-200"
                 >
-                    <FiNavigation className="stroke-[2.5]" /> Yol Tarifi
+                    <FiNavigation className="stroke-[2.5]" /> {t('map.detail.directions')}
                 </button>
                 
                 <button 
@@ -200,7 +202,7 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
                 </div>
 
                 <div className="space-y-3">
-                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Açıklama</h3>
+                <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('map.detail.description')}</h3>
                 {loading && !fullDetails ? (
                     <div className="space-y-2 animate-pulse">
                         <div className="h-4 bg-gray-100 rounded w-full"></div>
@@ -208,14 +210,14 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
                     </div>
                 ) : (
                     <p className="text-gray-600 text-[15px] leading-relaxed whitespace-pre-line">
-                        {displayData.description || "Açıklama bulunmuyor."}
+                        {displayData.description || t('common.messages.noDescription')}
                     </p>
                 )}
                 </div>
 
                 {fullDetails?.tags?.length > 0 && (
                 <div className="space-y-3 pt-2 border-t border-gray-100">
-                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Etiketler</h3>
+                    <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('map.detail.tags')}</h3>
                     <div className="flex flex-wrap gap-2">
                     {fullDetails.tags.map((tag, i) => (
                         <span key={i} className="px-3 py-1.5 bg-teal-50 text-teal-700 border border-teal-100 text-xs rounded-full font-semibold">
@@ -243,7 +245,7 @@ const MarkerDetailModal = ({ isOpen, location, onClose }) => {
                 variant="filled"
                 sx={{ width: '100%', boxShadow: 3, fontWeight: 'medium' }}
             >
-                Favorilere eklemek için giriş yapmalısınız!
+                {t('map.detail.favoriteLoginRequired')}
             </Alert>
         </Snackbar>
     </>

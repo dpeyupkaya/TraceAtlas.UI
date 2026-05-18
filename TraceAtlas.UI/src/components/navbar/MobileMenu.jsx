@@ -51,20 +51,17 @@ const MobileMenu = ({ isOpen, items, onClose }) => {
 
   return (
     <>
-      {/* Overlay - Daha hafif ve minimal */}
       <div 
         className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[9998] animate-in fade-in duration-200"
         onClick={handleOverlayClick}
       />
 
-      {/* Menu Container - Üstten açılır */}
       <div className="fixed top-16 left-0 right-0 z-[9999] px-3 animate-in slide-in-from-top-2 duration-200 pointer-events-none">
         <div className="max-w-md mx-auto pointer-events-auto">
           
-          {/* Menu Card - Daha minimal ve ince */}
           <div className="bg-white/92 backdrop-blur-lg border border-white/30 shadow-lg rounded-2xl overflow-hidden">
             
-            {/* Menu Items */}
+          
             <div className="p-1.5 space-y-0.5">
               {items.map((item, index) => {
                 const isActive = location.pathname === item.href;
@@ -89,12 +86,9 @@ const MobileMenu = ({ isOpen, items, onClose }) => {
                       {icons[item.label] || icons.Default}
                     </div>
                     
-                    {/* Label */}
                     <span className="font-medium text-sm flex-1">
                       {item.label}
                     </span>
-
-                    {/* Arrow - Sadece aktif olmayanlarda hover'da görünür */}
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 20 20" 

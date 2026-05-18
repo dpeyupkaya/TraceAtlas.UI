@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FiEdit2, FiTrash2, FiCalendar } from 'react-icons/fi';
+import { useTranslation } from 'react-i18next';
 import AddMarkerModal from '../../map/components/modal/AddMarkerModal';
 import ConfirmationModal from '../../../common/ConfirmationModal';
 import profileService from '../../../services/profileService'; // Servis importu
 
 const SharedPlaces = () => {
+  const { t, i18n } = useTranslation();
   const [editingPlace, setEditingPlace] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -18,14 +20,14 @@ const SharedPlaces = () => {
         const data = await profileService.getMyPlaces();
         const mappedData = data.map(item => ({
             id: item.id || item.locationId,
-            title: item.name || item.title || 'İsimsiz Mekan',
-            date: item.createdAt ? new Date(item.createdAt).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Tarih Yok',
+            title: item.name || item.title || t('profile.shared.untitled'),
+            date: item.createdAt ? new Date(item.createdAt).toLocaleDateString(i18n.resolvedLanguage || i18n.language, { year: 'numeric', month: 'long', day: 'numeric' }) : t('profile.shared.noDate'),
             latitude: item.latitude || 0,
             longitude: item.longitude || 0,
             imageBase64: item.imageBase64 || 'https://placehold.co/600x400/1E3A3A/ffffff?text=TraceAtlas',
-            creatorUsername: item.creatorUsername || 'Ben',
+            creatorUsername: item.creatorUsername || t('profile.shared.me'),
             createdAt: item.createdAt,
-            description: item.description || 'Açıklama girilmemiş.',
+            description: item.description || t('profile.shared.noDescription'),
             tags: item.tags || []
         }));
         setSharedPosts(mappedData);
@@ -37,7 +39,7 @@ const SharedPlaces = () => {
     };
 
     fetchMyPlaces();
-  }, []);
+  }, [i18n.language, i18n.resolvedLanguage, t]);
 
   // Düzenlemeyi kaydet
   const handleSaveEdit = (updatedData) => {
@@ -63,8 +65,8 @@ const SharedPlaces = () => {
         setSharedPosts(prev => prev.filter(post => post.id !== deleteId));
         setIsDeleteModalOpen(false);
         setDeleteId(null);
-    } catch (error) {
-        alert("Silme işlemi başarısız.");
+    } catch {
+        alert(t('profile.shared.deleteError'));
     }
   };
 
@@ -80,9 +82,9 @@ const SharedPlaces = () => {
     <>
       <div>
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-[#1E3A3A]">Paylaşımlarım</h2>
+          <h2 className="text-2xl font-bold text-[#1E3A3A]">{t('profile.shared.title')}</h2>
           <span className="px-3 py-1 rounded-full bg-[#1E3A3A]/5 text-[#1E3A3A] text-sm font-semibold border border-[#1E3A3A]/10">
-            {sharedPosts.length} Paylaşım
+            {t('profile.shared.count', { count: sharedPosts.length })}
           </span>
         </div>
 
@@ -116,7 +118,7 @@ const SharedPlaces = () => {
                     className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-red-600 bg-red-50 hover:bg-red-600 hover:text-white transition-all duration-300"
                   >
                     <FiTrash2 className="w-4 h-4" />
-                    <span>Sil</span>
+                    <span>{t('common.buttons.delete')}</span>
                   </button>
                 </div>
 
@@ -125,7 +127,7 @@ const SharedPlaces = () => {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-16 px-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-center">
-              <p className="text-gray-500">Henüz paylaşım yapmadınız.</p>
+              <p className="text-gray-500">{t('profile.shared.empty')}</p>
           </div>
         )}
       </div>
@@ -143,11 +145,11 @@ const SharedPlaces = () => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={confirmDelete}
-        title="Paylaşımı Sil"
-        message="Bu paylaşımı silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+        title={t('profile.shared.confirmTitle')}
+        message={t('profile.shared.confirmMessage')}
         type="danger"
-        confirmText="Evet, Sil"
-        cancelText="Vazgeç"
+        confirmText={t('profile.shared.confirmDelete')}
+        cancelText={t('common.buttons.cancel')}
       />
     </>
   );

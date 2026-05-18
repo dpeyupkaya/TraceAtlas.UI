@@ -1,5 +1,6 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
 
 const WarningIcon = memo(({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -32,16 +33,16 @@ const ConfirmationModal = memo(({
   cancelText = 'Vazgeç',
   isLoading = false
 }) => {
+  const { t } = useTranslation();
   if (!isOpen) return null;
 
   const isDanger = type === 'danger';
-
-  const handleBackdrop = useCallback(onClose, [onClose]);
-  const handleConfirm = useCallback(onConfirm, [onConfirm]);
+  const resolvedConfirmText = confirmText === 'Evet' ? t('common.buttons.confirm') : confirmText;
+  const resolvedCancelText = cancelText === 'Vazgeç' ? t('common.buttons.cancel') : cancelText;
 
   return createPortal(
     <div
-      onClick={handleBackdrop}
+      onClick={onClose}
       className="
         fixed inset-0 z-[9999] flex items-center justify-center p-4
         bg-black/40 md:backdrop-blur-sm
@@ -78,15 +79,15 @@ const ConfirmationModal = memo(({
           <div className="mt-6 flex gap-3">
             <button
               disabled={isLoading}
-              onClick={handleBackdrop}
+              onClick={onClose}
               className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700"
             >
-              {cancelText}
+              {resolvedCancelText}
             </button>
 
             <button
               disabled={isLoading}
-              onClick={handleConfirm}
+              onClick={onConfirm}
               className={`flex-1 py-2.5 rounded-xl text-white flex items-center justify-center gap-2
                 ${isDanger ? 'bg-red-600' : 'bg-teal-800'}
                 ${isLoading ? 'opacity-70' : ''}
@@ -95,7 +96,7 @@ const ConfirmationModal = memo(({
               {isLoading && (
                 <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
               )}
-              {isLoading ? 'İşleniyor' : confirmText}
+              {isLoading ? t('common.buttons.loading') : resolvedConfirmText}
             </button>
           </div>
         </div>

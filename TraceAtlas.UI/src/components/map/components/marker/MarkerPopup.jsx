@@ -1,7 +1,10 @@
 import React from 'react';
 import { Eye, Camera, MapPin } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const MarkerPopup = ({ location, onOpenDetail }) => {
+  const { t } = useTranslation();
+
   const handleDetailClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -11,7 +14,7 @@ const MarkerPopup = ({ location, onOpenDetail }) => {
   // Saçma duran başlıkları daha profesyonel hale getirdik
   const displayTitle = location.title 
     ? location.title 
-    : (location.hasImage ? "Keşfetmek için tıklayın"  : "Keşfetmek için tıklayın");
+    : t('map.popup.clickToExplore');
 
   return (
     <div className="w-52 bg-zinc-950 rounded-2xl shadow-2xl overflow-hidden border border-white/10">
@@ -42,7 +45,7 @@ const MarkerPopup = ({ location, onOpenDetail }) => {
             `}
           >
             <Eye size={14} />
-            İncele
+            {t('map.popup.inspect')}
           </button>
         </div>
       </div>

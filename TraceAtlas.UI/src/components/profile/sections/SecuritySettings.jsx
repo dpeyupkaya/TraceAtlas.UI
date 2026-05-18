@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import profileService from '../../../services/profileService'; 
+import { useTranslation } from 'react-i18next';
 
 // Icon componentleri (LockIcon, EnvelopeIcon) aynı kalacak, buraya tekrar yazmıyorum...
 const LockIcon = ({ className }) => (
@@ -17,12 +18,13 @@ const EnvelopeIcon = ({ className }) => (
 
 // BURASI DEĞİŞTİ: userEmail'i prop olarak alıyoruz
 const SecuritySettings = ({ userEmail }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [mailSent, setMailSent] = useState(false);
 
   const handleResetPassword = async () => {
     if (!userEmail) {
-      alert("Kullanıcı e-posta bilgisi yüklenemedi.");
+      alert(t('profile.security.missingEmail'));
       return;
     }
 
@@ -34,7 +36,7 @@ const SecuritySettings = ({ userEmail }) => {
       setMailSent(true);
     } catch (error) {
       console.error("Mail gönderim hatası:", error);
-      alert("Hata oluştu: " + (error.response?.data?.message || "Bağlantı gönderilemedi."));
+      alert(t('profile.security.sendError', { message: error.response?.data?.message || t('profile.security.fallbackError') }));
     } finally {
       setLoading(false);
     }
@@ -49,15 +51,15 @@ const SecuritySettings = ({ userEmail }) => {
             <div className="p-2 bg-[#1E3A3A]/10 rounded-lg">
                 <LockIcon className="w-5 h-5" />
             </div>
-            <h3 className="text-lg font-bold">Şifre Değiştir</h3>
+            <h3 className="text-lg font-bold">{t('profile.security.title')}</h3>
           </div>
 
           <div className="max-w-xl">
             <p className="text-gray-600 mb-6 leading-relaxed">
-              Hesap güvenliğiniz için şifre değiştirme işlemlerini e-posta doğrulama bağlantısı üzerinden gerçekleştiriyoruz. 
+              {t('profile.security.descriptionStart')} 
               {/* İstersen kullanıcının mailini de burada gösterebilirsin */}
               <span className="block mt-2 font-medium text-[#1E3A3A]">{userEmail}</span> 
-              adresine bir sıfırlama bağlantısı gönderilecektir.
+              {t('profile.security.descriptionEnd')}
             </p>
 
             {!mailSent ? (
@@ -72,12 +74,12 @@ const SecuritySettings = ({ userEmail }) => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    <span>Gönderiliyor...</span>
+                    <span>{t('profile.security.sending')}</span>
                   </>
                 ) : (
                   <>
                     <EnvelopeIcon className="w-5 h-5" />
-                    <span>Şifre Sıfırlama Bağlantısı Gönder</span>
+                    <span>{t('profile.security.send')}</span>
                   </>
                 )}
               </button>
@@ -89,15 +91,15 @@ const SecuritySettings = ({ userEmail }) => {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-bold text-green-800">E-posta Gönderildi!</h4>
+                  <h4 className="font-bold text-green-800">{t('profile.security.sentTitle')}</h4>
                   <p className="text-sm text-green-700 mt-1">
-                    Lütfen e-posta kutunuzu kontrol edin. Gelen bağlantıya tıklayarak yeni şifrenizi belirleyebilirsiniz.
+                    {t('profile.security.sentText')}
                   </p>
                   <button 
                     onClick={() => setMailSent(false)} 
                     className="text-sm font-semibold text-green-800 underline mt-3 hover:text-green-900"
                   >
-                    Tekrar Gönder
+                    {t('profile.security.sendAgain')}
                   </button>
                 </div>
               </div>

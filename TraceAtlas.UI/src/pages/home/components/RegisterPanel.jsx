@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import profileService from '../../../services/profileService';
 import { LogIn, Map, Users, ArrowRight } from 'lucide-react';
 
@@ -35,6 +36,7 @@ const Counter = ({ value }) => {
 };
 
 const RegisterPanel = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -81,7 +83,7 @@ const RegisterPanel = () => {
             TRACEATLAS <span className="text-emerald-500 block text-4xl mt-1">2026</span>
           </h1>
           <p className="text-emerald-100/30 text-[10px] tracking-[0.3em] uppercase mt-4 font-bold">
-            Maceraya Hazır Mısın?
+            {t('home.register.tagline')}
           </p>
         </div>
 
@@ -93,7 +95,7 @@ const RegisterPanel = () => {
               {stats ? <Counter key={stats.routeCount} value={stats.routeCount} /> : '--'}
             </div>
             <div className="text-[9px] text-emerald-200/20 uppercase tracking-widest font-bold">
-              Rotalar
+              {t('home.register.routes')}
             </div>
           </div>
 
@@ -103,7 +105,7 @@ const RegisterPanel = () => {
               {stats ? <Counter key={stats.userCount} value={stats.userCount} /> : '--'}
             </div>
             <div className="text-[9px] text-emerald-200/20 uppercase tracking-widest font-bold">
-              Gezginler
+              {t('home.register.travelers')}
             </div>
           </div>
         </div>
@@ -112,7 +114,7 @@ const RegisterPanel = () => {
         <div className="w-full space-y-6">
           <Link to={isLoggedIn ? '/map' : '/auth'} className="block w-full">
             <button className="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-black tracking-widest transition-all shadow-lg active:scale-95 flex items-center justify-center gap-2">
-              {isLoggedIn ? 'KEŞFE DEVAM ET' : 'GİRİŞ YAP / KAYIT OL'}
+              {isLoggedIn ? t('home.register.continueExploring') : t('home.register.loginOrRegister')}
               <ArrowRight size={18} />
             </button>
           </Link>
@@ -123,7 +125,7 @@ const RegisterPanel = () => {
               className="w-full group flex flex-col items-center"
             >
               <span className="text-[10px] text-white/20 group-hover:text-emerald-500 transition-colors tracking-[0.3em] font-bold">
-                MİSAFİR OLARAK GÖZ AT
+                {t('home.register.guest')}
               </span>
               <div className="w-8 h-[1px] bg-white/10 group-hover:w-12 group-hover:bg-emerald-500/50 transition-all mt-2"></div>
             </button>

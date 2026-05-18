@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Mail, Send, Linkedin, Github, AlertCircle, Loader2, Instagram } from 'lucide-react'
 import { Snackbar, Alert } from '@mui/material'
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 import contactService from '../../services/contactService'
 import Footer from '../footer/Footer'
 
 const COOLDOWN_DURATION = 5 * 60 * 1000
 
 const Contact = () => {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({ name: '', email: '', message: '' })
   const [honeypot, setHoneypot] = useState('')
   const [errors, setErrors] = useState({})
@@ -53,15 +55,15 @@ const Contact = () => {
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60)
     const s = seconds % 60
-    if (m === 0) return `${s} sn`
-    return `${m} dk ${s} sn`
+    if (m === 0) return `${s} ${t('contact.time.secondsShort')}`
+    return `${m} ${t('contact.time.minutesShort')} ${s} ${t('contact.time.secondsShort')}`
   }
 
   const validate = () => {
     const newErrors = {}
-    if (!formData.name.trim() || formData.name.length > 50) newErrors.name = 'Geçersiz isim'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = 'Geçersiz e-posta'
-    if (formData.message.length < 10 || formData.message.length > 500) newErrors.message = 'Geçersiz mesaj'
+    if (!formData.name.trim() || formData.name.length > 50) newErrors.name = t('contact.validation.name')
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = t('contact.validation.email')
+    if (formData.message.length < 10 || formData.message.length > 500) newErrors.message = t('contact.validation.message')
     
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -73,7 +75,7 @@ const Contact = () => {
     e.preventDefault()
 
     if (honeypot) {
-      setToast({ open: true, severity: 'success', message: 'Mesajınız gönderildi' })
+      setToast({ open: true, severity: 'success', message: t('contact.toast.sent') })
       setFormData({ name: '', email: '', message: '' })
       return
     }
@@ -82,7 +84,7 @@ const Contact = () => {
       setToast({ 
         open: true, 
         severity: 'warning', 
-        message: `Lütfen tekrar göndermeden önce ${formatTime(cooldown)} bekleyin.` 
+        message: t('contact.toast.cooldown', { time: formatTime(cooldown) }) 
       })
       return
     }
@@ -102,35 +104,35 @@ const Contact = () => {
       setCooldown(COOLDOWN_DURATION / 1000)
       
       setFormData({ name: '', email: '', message: '' })
-      setToast({ open: true, severity: 'success', message: 'Mesajınız başarıyla gönderildi.' })
+      setToast({ open: true, severity: 'success', message: t('contact.toast.success') })
       
-    } catch (error) {
-      setToast({ open: true, severity: 'error', message: 'Mesaj gönderilemedi, lütfen daha sonra tekrar deneyin.' })
+    } catch {
+      setToast({ open: true, severity: 'error', message: t('contact.toast.error') })
     } finally {
       setLoading(false)
     }
   }
 
   const socialLinks = [
-    { icon: Mail, text: 'Mail Gönderin', link: 'mailto:dpeyupkaya@gmail.com' },
-    { icon: Linkedin, text: 'Bağlantı Kurun', link: 'https://www.linkedin.com/in/dp-eyup-kaya/' },
-    { icon: Github, text: 'Github', link: 'https://github.com/dpeyupkaya' },
-    { icon: Instagram, text: 'Takip Edin', link: 'https://www.instagram.com/kaya_eyuup/' }
+    { icon: Mail, text: t('contact.social.mail'), link: 'mailto:dpeyupkaya@gmail.com' },
+    { icon: Linkedin, text: t('contact.social.linkedin'), link: 'https://www.linkedin.com/in/dp-eyup-kaya/' },
+    { icon: Github, text: t('contact.social.github'), link: 'https://github.com/dpeyupkaya' },
+    { icon: Instagram, text: t('contact.social.instagram'), link: 'https://www.instagram.com/kaya_eyuup/' }
   ]
 
   const inputFields = [
-    { key: "name", label: "Adınız Soyadınız", type: "input" },
-    { key: "email", label: "E-posta Adresiniz", type: "input" },
-    { key: "message", label: "Mesajınız", type: "textarea" }
+    { key: "name", label: t('contact.fields.name'), type: "input" },
+    { key: "email", label: t('contact.fields.email'), type: "input" },
+    { key: "message", label: t('contact.fields.message'), type: "textarea" }
   ]
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#0a1f1a] via-[#0c2b22] to-[#0e382a] text-slate-200 select-none">
       <Helmet>
-        <title>İletişim | TraceAtlas - Bize Ulaşın</title>
-        <meta name="description" content="TraceAtlas ile ilgili sorularınız, iş birliği teklifleriniz veya geri bildirimleriniz için bizimle iletişime geçin. Doğrudan mesaj gönderin veya sosyal medya üzerinden bağlantı kurun." />
-        <meta property="og:title" content="İletişim | TraceAtlas - Bize Ulaşın" />
-        <meta property="og:description" content="Sorularınız veya iş birliği teklifleriniz için doğrudan bağlantı kurun. TraceAtlas ekibi size yardımcı olmaktan mutluluk duyacaktır." />
+        <title>{t('contact.seoTitle')}</title>
+        <meta name="description" content={t('contact.seoDescription')} />
+        <meta property="og:title" content={t('contact.seoTitle')} />
+        <meta property="og:description" content={t('contact.ogDescription')} />
         <meta property="og:url" content="https://www.traceatlas.com.tr/contact" />
         <link rel="canonical" href="https://www.traceatlas.com.tr/contact" />
       </Helmet>
@@ -139,10 +141,10 @@ const Contact = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-emerald-100 to-emerald-400 bg-clip-text text-transparent tracking-tight">
-              İletişime Geç
+              {t('contact.title')}
             </h1>
             <p className="mt-4 text-emerald-100/60 max-w-xl mx-auto text-lg">
-              Sorularınız veya iş birliği teklifleriniz için doğrudan bağlantı kurun.
+              {t('contact.subtitle')}
             </p>
           </div>
 
@@ -200,7 +202,7 @@ const Contact = () => {
                 }`}
               >
                 {loading ? <Loader2 className="animate-spin" /> : 
-                  cooldown > 0 ? formatTime(cooldown) : <>Gönder <Send size={16} /></>
+                  cooldown > 0 ? formatTime(cooldown) : <>{t('common.buttons.send')} <Send size={16} /></>
                 }
               </button>
             </form>

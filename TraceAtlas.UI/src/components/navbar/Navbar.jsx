@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { searchByTag } from ".././map/services/locationService.js"; 
 import { Search, X, MapPin, User, Menu, Compass, ChevronRight } from 'lucide-react';
 
 const Navbar = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const searchRef = useRef(null);
@@ -31,7 +33,7 @@ const Navbar = () => {
         const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
         const decoded = JSON.parse(jsonPayload);
         setUser(decoded.unique_name || decoded.sub);
-      } catch (e) { setUser(null); }
+      } catch { setUser(null); }
     }
   }, []);
 
@@ -45,7 +47,7 @@ const Navbar = () => {
             const results = await searchByTag(searchQuery);
             setSuggestions(Array.isArray(results) ? results : []);
             setShowSuggestions(true);
-        } catch (e) { setSuggestions([]); } 
+        } catch { setSuggestions([]); } 
         finally { setLoading(false); }
     }, 400);
     return () => clearTimeout(timer); 
@@ -88,7 +90,7 @@ const Navbar = () => {
             
             <input 
               className="bg-transparent border-none outline-none w-full ml-3 text-sm font-medium text-zinc-700 placeholder:text-zinc-400 placeholder:font-normal"
-              placeholder="Gizemli yerleri keşfet..."
+              placeholder={t('navbar.searchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
@@ -111,11 +113,11 @@ const Navbar = () => {
             {loading ? (
               <div className="p-8 text-center">
                  <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"/>
-                 <span className="text-xs text-zinc-400 font-medium">Harita taranıyor...</span>
+                 <span className="text-xs text-zinc-400 font-medium">{t('navbar.searching')}</span>
               </div>
             ) : suggestions.length > 0 ? (
               <div className="py-2">
-                 <div className="px-5 py-2 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Sonuçlar</div>
+                 <div className="px-5 py-2 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">{t('navbar.results')}</div>
                  {suggestions.map((loc, idx) => (
                     <div key={loc.Id || idx} onClick={() => handleResultClick(loc)} className="group px-5 py-3 hover:bg-zinc-50 cursor-pointer flex items-center justify-between transition-colors">
                         <div className="flex items-center gap-4">
@@ -137,7 +139,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="p-6 text-center text-sm text-zinc-500">
-                Keşfedilecek yeni bir yer yok mu? Hemen ekle.
+                {t('navbar.empty')}
               </div>
             )}
           </div>
@@ -148,7 +150,7 @@ const Navbar = () => {
              onClick={() => navigate('/map')} 
              className="px-5 py-2.5 rounded-full text-sm font-semibold text-zinc-600 hover:bg-zinc-100 transition-all hover:scale-105 active:scale-95"
           >
-            Harita
+            {t('navbar.map')}
           </button>
           
           {user ? (
@@ -164,7 +166,7 @@ const Navbar = () => {
                 onClick={() => navigate('/auth')} 
                 className="px-6 py-2.5 rounded-full bg-black text-white text-sm font-semibold hover:bg-zinc-800 shadow-lg shadow-zinc-200 transition-all hover:-translate-y-0.5 hover:shadow-xl"
              >
-                Giriş Yap
+                {t('navbar.login')}
              </button>
           )}
         </div>
@@ -180,7 +182,7 @@ const Navbar = () => {
       `}>
           <div className="flex flex-col gap-1 p-1">
             <button onClick={() => navigate('/map')} className="w-full text-left px-4 py-3.5 rounded-2xl hover:bg-zinc-100 text-zinc-700 font-medium transition-colors flex items-center gap-3">
-                <Compass size={18} /> Harita
+                <Compass size={18} /> {t('navbar.map')}
             </button>
             
             {user ? (
@@ -189,7 +191,7 @@ const Navbar = () => {
                </button>
             ) : (
                <button onClick={() => navigate('/auth')} className="w-full text-left px-4 py-3.5 rounded-2xl bg-black text-white font-medium mt-1">
-                 Giriş Yap
+                 {t('navbar.login')}
                </button>
             )}
           </div>

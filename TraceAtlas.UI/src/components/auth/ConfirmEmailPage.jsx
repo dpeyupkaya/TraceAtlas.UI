@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AuthButton from './AuthButton';
 import { authService } from '../../services/authService';
 
 const ConfirmEmailPage = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
@@ -42,8 +44,8 @@ const ConfirmEmailPage = () => {
             <div className="w-20 h-20 bg-indigo-500/10 rounded-full flex items-center justify-center text-indigo-400 mx-auto">
               <Loader2 size={40} className="animate-spin" />
             </div>
-            <h2 className="text-2xl font-bold text-white">Doğrulanıyor...</h2>
-            <p className="text-slate-400">E-posta adresiniz kontrol ediliyor, lütfen bekleyin.</p>
+            <h2 className="text-2xl font-bold text-white">{t('auth.confirmEmail.verifyingTitle')}</h2>
+            <p className="text-slate-400">{t('auth.confirmEmail.verifyingText')}</p>
           </div>
         )}
 
@@ -52,14 +54,15 @@ const ConfirmEmailPage = () => {
             <div className="w-20 h-20 bg-[#10b981]/10 rounded-full flex items-center justify-center text-[#10b981] mx-auto">
               <CheckCircle size={40} />
             </div>
-            <h2 className="text-2xl font-bold text-white">Hesap Doğrulandı!</h2>
-            <p className="text-slate-400">E-posta adresiniz başarıyla onaylandı. Artık giriş yapabilirsiniz.</p>
+            <h2 className="text-2xl font-bold text-white">{t('auth.confirmEmail.successTitle')}</h2>
+            <p className="text-slate-400">{t('auth.confirmEmail.successText')}</p>
             
             <div className="pt-4">
                 <AuthButton 
-                    text="Giriş Yap" 
                     onClick={() => navigate('/auth')}
-                />
+                >
+                    {t('auth.login.submit')}
+                </AuthButton>
             </div>
           </div>
         )}
@@ -70,14 +73,15 @@ const ConfirmEmailPage = () => {
             <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center text-red-500 mx-auto">
               <XCircle size={40} />
             </div>
-            <h2 className="text-2xl font-bold text-white">Doğrulama Başarısız</h2>
-            <p className="text-slate-400">Bağlantı geçersiz veya süresi dolmuş olabilir.</p>
+            <h2 className="text-2xl font-bold text-white">{t('auth.confirmEmail.errorTitle')}</h2>
+            <p className="text-slate-400">{t('auth.confirmEmail.errorText')}</p>
             
             <div className="pt-4">
                 <AuthButton 
-                    text="Giriş Sayfasına Dön" 
                     onClick={() => navigate('/auth')}
-                />
+                >
+                    {t('auth.confirmEmail.backToLogin')}
+                </AuthButton>
             </div>
           </div>
         )}
