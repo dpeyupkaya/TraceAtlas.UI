@@ -1,21 +1,24 @@
 import React from 'react';
 
-const InputField = ({ icon: Icon, ...props }) => {
+const InputField = ({ icon, ...props }) => {
+  const IconComponent = icon;
   return (
     <div className="relative group w-full">
       
-      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-        <Icon 
-          className="h-5 w-5 text-slate-500 transition-all duration-300 ease-out group-focus-within:text-emerald-400 group-focus-within:drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] group-focus-within:scale-110" 
-        />
-      </div>
+      {IconComponent && (
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+          <IconComponent 
+            className="h-[18px] w-[18px] text-emerald-100/25 transition-all duration-300 ease-out group-focus-within:text-emerald-400 group-focus-within:drop-shadow-[0_0_8px_rgba(16,185,129,0.4)] group-focus-within:scale-110" 
+          />
+        </div>
+      )}
 
       <input 
         {...props}
-        className="peer w-full pl-11 pr-4 py-4 rounded-xl outline-none transition-all duration-300 bg-slate-900/60 border border-white/10 text-slate-200 placeholder:text-slate-600 hover:bg-slate-900/80 hover:border-white/20 focus:bg-slate-900/90 focus:border-emerald-500/30 focus:shadow-[0_0_20px_rgba(16,185,129,0.05)]"
+        className="peer w-full pl-11 pr-4 py-4 rounded-xl outline-none transition-all duration-300 bg-white/[0.03] border border-white/8 text-emerald-50 placeholder:text-emerald-100/20 hover:bg-white/[0.05] hover:border-white/15 focus:bg-white/[0.06] focus:border-emerald-500/40 focus:shadow-[0_0_25px_rgba(16,185,129,0.06)] text-sm font-medium tracking-wide"
       />
 
-      <div className="absolute bottom-0 left-0 h-[1px] w-full bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 scale-x-0 transition-all duration-500 ease-out origin-center peer-focus:opacity-100 peer-focus:scale-x-100"></div>
+      <div className="absolute bottom-0 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-emerald-500 to-transparent opacity-0 scale-x-0 transition-all duration-500 ease-out origin-center peer-focus:opacity-60 peer-focus:scale-x-100"></div>
 
     </div>
   );

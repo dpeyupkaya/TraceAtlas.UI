@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock, AtSign, Repeat, Eye, EyeOff } from 'lucide-react';
+import { User, Mail, Lock, AtSign, Repeat, Eye, EyeOff, AlertCircle, CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
 import InputField from './InputField';
 import AuthButton from './AuthButton';
 import { authService } from '../../services/authService';
@@ -138,12 +136,19 @@ const RegisterForm = () => {
       className="space-y-4 select-none relative"
       autoComplete="off"
     >
+      {/* Bildirim alanı */}
       {notification && (
-        <Stack sx={{ width: '100%', mb: 2 }} spacing={2}>
-          <Alert severity={notification.severity} variant="filled" className="rounded-xl shadow-lg">
-            {notification.message}
-          </Alert>
-        </Stack>
+        <div className={`flex items-start gap-3 text-[11px] font-bold p-4 rounded-xl border tracking-wide ${
+          notification.severity === 'success'
+            ? 'text-emerald-400 bg-emerald-500/5 border-emerald-500/15'
+            : 'text-red-400 bg-red-500/5 border-red-500/15'
+        }`}>
+          {notification.severity === 'success' 
+            ? <CheckCircle size={16} className="shrink-0 mt-0.5" /> 
+            : <AlertCircle size={16} className="shrink-0 mt-0.5" />
+          }
+          <span className="leading-relaxed">{notification.message}</span>
+        </div>
       )}
 
       <div className="relative group">
@@ -159,7 +164,7 @@ const RegisterForm = () => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <InputField 
           icon={User} 
           type="text" 
@@ -208,7 +213,7 @@ const RegisterForm = () => {
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-emerald-400 transition-colors outline-none"
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-emerald-100/25 hover:text-emerald-400 transition-colors outline-none"
           tabIndex="-1"
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -228,47 +233,44 @@ const RegisterForm = () => {
         <button
           type="button"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-emerald-400 transition-colors outline-none"
+          className="absolute right-3.5 top-1/2 -translate-y-1/2 text-emerald-100/25 hover:text-emerald-400 transition-colors outline-none"
           tabIndex="-1"
         >
           {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
       </div>
       
-      <div className="flex items-start gap-3 px-1 py-2 group cursor-pointer">
+      {/* Kullanım Şartları */}
+      <div className="flex items-start gap-3 px-1 py-1 group cursor-pointer">
         <div className="relative flex items-center pt-0.5">
           <input 
             type="checkbox" 
             required
-            className="peer appearance-none w-4 h-4 border border-slate-600 rounded bg-slate-800/50 checked:bg-emerald-500 checked:border-emerald-500 transition-all cursor-pointer focus:ring-0 focus:ring-offset-0"
+            className="peer appearance-none w-4 h-4 border border-white/10 rounded bg-white/[0.03] checked:bg-emerald-500 checked:border-emerald-500 transition-all cursor-pointer focus:ring-0 focus:ring-offset-0"
           />
           <svg className="absolute w-3 h-3 text-white hidden peer-checked:block pointer-events-none left-0.5 top-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
         </div>
-        <span className="text-xs text-slate-400 leading-tight select-none">
+        <span className="text-[11px] text-emerald-100/40 leading-tight select-none">
           <span 
             onClick={(e) => {
               e.preventDefault();
               navigate('/terms');
             }}
-            className="text-emerald-500 hover:text-emerald-400 font-medium hover:underline cursor-pointer transition-colors"
+            className="text-emerald-500 hover:text-emerald-400 font-bold hover:underline cursor-pointer transition-colors"
           >
             {t('auth.register.terms')}
           </span>{t('auth.register.termsAccepted')}
         </span>
       </div>
 
-      <div className="pt-2">
+      <div className="pt-1">
         <AuthButton 
           type="submit"
         > {t('auth.register.submit')} </AuthButton>
       </div>
 
-     
-
-      <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
-      <div className="absolute -top-10 -left-10 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl pointer-events-none mix-blend-screen"></div>
     </form>
   );
 };

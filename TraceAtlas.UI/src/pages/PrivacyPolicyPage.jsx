@@ -1,7 +1,23 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { FiArrowLeft, FiX, FiMenu, FiInfo, FiUser, FiGlobe, FiLock, FiShield, FiDatabase } from 'react-icons/fi';
+import { 
+  ArrowLeft, 
+  X, 
+  Menu, 
+  Info, 
+  User, 
+  Globe, 
+  Lock, 
+  Shield, 
+  Database, 
+  ArrowRight,
+  FileText,
+  KeyRound,
+  Server,
+  Layers,
+  ChevronRight
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Footer from '../components/footer/Footer';
 
@@ -9,31 +25,32 @@ const PrivacyPolicyPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
-
-    useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const sections = t('privacy.sections', { returnObjects: true });
-  const accountItems = t('privacy.accountItems', { returnObjects: true });
-  const locationItems = t('privacy.locationItems', { returnObjects: true });
-  const purposeItems = t('privacy.purposeItems', { returnObjects: true });
-  const tableHeaders = t('privacy.tableHeaders', { returnObjects: true });
-  const retentionRows = t('privacy.retentionRows', { returnObjects: true });
-  const rightsItems = t('privacy.rightsItems', { returnObjects: true });
-  const copyrightItems = t('privacy.copyrightItems', { returnObjects: true });
+  const sections = t('privacy.sections', { returnObjects: true }) || [];
+  const accountItems = t('privacy.accountItems', { returnObjects: true }) || [];
+  const locationItems = t('privacy.locationItems', { returnObjects: true }) || [];
+  const purposeItems = t('privacy.purposeItems', { returnObjects: true }) || [];
+  const tableHeaders = t('privacy.tableHeaders', { returnObjects: true }) || [];
+  const retentionRows = t('privacy.retentionRows', { returnObjects: true }) || [];
+  const rightsItems = t('privacy.rightsItems', { returnObjects: true }) || [];
+  const copyrightItems = t('privacy.copyrightItems', { returnObjects: true }) || [];
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+      setActiveSection(id);
       setMobileMenuOpen(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans text-gray-700">
+    <div className="min-h-screen bg-[#041a14] text-emerald-50 font-sans selection:bg-emerald-500 selection:text-white flex flex-col relative overflow-x-hidden">
       <Helmet>
         <title>{t('privacy.seoTitle')}</title>
         <meta name="description" content={t('privacy.seoDescription')} />
@@ -44,209 +61,404 @@ const PrivacyPolicyPage = () => {
         <link rel="canonical" href="https://www.traceatlas.com.tr/privacy-policy" />
       </Helmet>
 
-      <div className="bg-gradient-to-r from-teal-800 to-teal-900 text-white py-10 px-4 sm:px-6 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto relative z-10">
-          <button 
-            onClick={() => navigate(-1)} 
-            className="flex items-center gap-2 text-teal-200 hover:text-white transition mb-6 group"
-          >
-            <FiArrowLeft className="group-hover:-translate-x-1 transition-transform"/> {t('privacy.back')}
-          </button>
+      {/* Ambient background glows */}
+      <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-600/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-cyan-600/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:28px_28px]" />
+
+      {/* Header Section */}
+      <header className="relative z-10 pt-10 pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-gradient-to-b from-[#06241c] to-transparent">
+        <div className="max-w-7xl mx-auto">
           
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div>
-              <h1 className="text-2xl md:text-4xl font-bold mb-2">{t('privacy.title')}</h1>
-              <p className="text-teal-100 text-sm md:text-base max-w-2xl flex items-center gap-2">
-                <span className="bg-yellow-500 text-black text-xs font-bold px-2 py-0.5 rounded">{t('privacy.badge')}</span>
+          {/* Back Action */}
+          <div className="flex justify-between items-center mb-8">
+            <button 
+              onClick={() => navigate(-1)} 
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 hover:border-emerald-500/30 text-emerald-100/70 hover:text-white text-xs font-bold tracking-wider uppercase transition-all duration-300 group"
+            >
+              <ArrowLeft size={16} className="text-emerald-400 group-hover:-translate-x-1 transition-transform" /> 
+              <span>{t('privacy.back')}</span>
+            </button>
+
+            <span className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[10px] font-mono font-bold text-emerald-400 tracking-wider uppercase">
+              <Shield size={12} />
+              DATA TRANSPARENCY
+            </span>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div className="space-y-4 max-w-3xl">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-[10px] font-mono font-bold tracking-widest uppercase">
+                <span>{t('privacy.badge')}</span>
+              </div>
+
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight">
+                {t('privacy.title')}
+              </h1>
+
+              <p className="text-sm md:text-base text-emerald-100/60 font-light leading-relaxed">
                 {t('privacy.subtitle')}
               </p>
             </div>
-            <div className="text-xs md:text-sm font-mono text-teal-300 opacity-80">
-               <button 
-                onClick={() => navigate('/contact')}
-                className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
-                           hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
-                           transition-all duration-300 active:scale-95 cursor-pointer group"
-              >
-                {t('privacy.developer')} <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div className="lg:hidden sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 shadow-sm flex justify-between items-center">
-        <span className="font-bold text-gray-800 text-sm">{t('privacy.contents')}</span>
-        <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="text-teal-700 p-1 border border-teal-100 rounded">
-          {mobileMenuOpen ? <FiX size={24}/> : <FiMenu size={24}/>}
+            <button 
+              onClick={() => navigate('/contact')}
+              className="self-start md:self-end px-5 py-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 hover:border-emerald-500/30 text-emerald-100/80 hover:text-white text-xs font-mono transition-all duration-300 active:scale-95 group shadow-lg flex items-center gap-2"
+            >
+              <span>{t('privacy.developer')}</span>
+              <span className="font-bold text-emerald-400 group-hover:underline underline-offset-4">Eyüp Kaya</span>
+              <ChevronRight size={14} className="text-emerald-500 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </div>
+
+        </div>
+      </header>
+
+      {/* Mobile Sticky Contents Navigator */}
+      <div className="lg:hidden sticky top-0 z-40 bg-[#041a14]/90 backdrop-blur-xl border-b border-white/5 px-4 py-3 flex justify-between items-center shadow-lg">
+        <span className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+          <Layers size={14} />
+          {t('privacy.contents')}
+        </span>
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
+          className="p-2 rounded-xl bg-white/5 border border-white/10 text-emerald-300 hover:text-white transition-colors"
+          aria-label="Toggle navigation"
+        >
+          {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
       </div>
 
+      {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-30 bg-black/50" onClick={() => setMobileMenuOpen(false)}>
-           <div className="bg-white absolute top-[110px] left-0 right-0 p-4 border-b border-gray-200 shadow-xl" onClick={e => e.stopPropagation()}>
-              <ul className="space-y-3">
-                {sections.map((section) => (
-                  <li key={section.id}>
-                    <button 
-                      onClick={() => scrollToSection(section.id)}
-                      className="block w-full text-left text-gray-700 hover:text-teal-600 font-medium py-2 border-b border-gray-50 last:border-0"
-                    >
-                      {section.title}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-           </div>
+        <div className="fixed inset-0 z-30 bg-black/70 backdrop-blur-sm lg:hidden" onClick={() => setMobileMenuOpen(false)}>
+          <div className="bg-[#03150f] border-b border-white/10 p-5 pt-20 shadow-2xl space-y-1.5" onClick={e => e.stopPropagation()}>
+            {sections.map((section, idx) => (
+              <button 
+                key={section.id}
+                onClick={() => scrollToSection(section.id)}
+                className="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium text-emerald-100/70 hover:text-white hover:bg-white/5 flex items-center justify-between transition-colors"
+              >
+                <span>{section.title}</span>
+                <span className="font-mono text-[10px] text-emerald-500/60">0{idx + 1}</span>
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 md:py-12 flex flex-col lg:flex-row gap-8 lg:gap-12">
-        <aside className="hidden lg:block w-64 flex-shrink-0">
-          <div className="sticky top-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            <h3 className="font-bold text-gray-900 mb-4 border-b pb-2 text-sm uppercase tracking-wide">{t('privacy.contents')}</h3>
-            <ul className="space-y-1 text-sm">
-              {sections.map((section) => (
-                <li key={section.id}>
+      {/* Main Content Layout with Sidebar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 flex flex-col lg:flex-row gap-8 lg:gap-12 relative z-10">
+        
+        {/* Desktop Sidebar Navigator */}
+        <aside className="hidden lg:block w-72 shrink-0">
+          <div className="sticky top-8 rounded-3xl bg-white/[0.02] border border-white/5 p-6 shadow-2xl backdrop-blur-md space-y-4">
+            <div className="flex items-center gap-2 pb-3 border-b border-white/5">
+              <Layers size={15} className="text-emerald-400" />
+              <h3 className="font-mono text-xs font-bold text-emerald-400 uppercase tracking-widest">
+                {t('privacy.contents')}
+              </h3>
+            </div>
+
+            <nav className="space-y-1">
+              {sections.map((section, idx) => {
+                const isActive = activeSection === section.id;
+                return (
                   <button 
+                    key={section.id}
                     onClick={() => scrollToSection(section.id)}
-                    className="text-gray-500 hover:text-teal-700 hover:bg-teal-50 hover:pl-2 transition-all duration-200 w-full text-left py-1.5 rounded"
+                    className={`w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-200 flex items-center justify-between group ${
+                      isActive 
+                        ? 'bg-emerald-500/10 text-emerald-300 font-bold border border-emerald-500/20' 
+                        : 'text-emerald-100/60 hover:text-white hover:bg-white/[0.03]'
+                    }`}
                   >
-                    {section.title}
+                    <span className="truncate pr-2">{section.title}</span>
+                    <span className="font-mono text-[10px] text-emerald-500/40 group-hover:text-emerald-400">
+                      0{idx + 1}
+                    </span>
                   </button>
-                </li>
-              ))}
-            </ul>
+                );
+              })}
+            </nav>
           </div>
         </aside>
 
-        <div className="flex-1 bg-white p-6 md:p-10 rounded-2xl shadow-lg border border-gray-100 space-y-10 md:space-y-12">
-          <section id="proje-hakkinda" className="bg-blue-50 p-6 rounded-xl border border-blue-100 flex gap-4 items-start">
-            <FiInfo className="text-blue-600 flex-shrink-0 mt-1" size={24} />
-            <div>
-               <h2 className="font-bold text-blue-900 text-lg mb-1">{t('privacy.projectTitle')}</h2>
-               <p className="text-sm text-blue-800 leading-relaxed">
-                 {t('privacy.projectText')}
-               </p>
+        {/* Article Body */}
+        <div className="flex-1 rounded-3xl bg-white/[0.02] border border-white/5 p-6 sm:p-10 md:p-12 shadow-2xl backdrop-blur-md space-y-12">
+          
+          {/* Section: Project Scope & Legal Notice */}
+          <section id="proje-hakkinda" className="p-6 rounded-2xl bg-gradient-to-r from-emerald-950/40 via-cyan-950/20 to-transparent border border-emerald-500/20 flex gap-4 items-start shadow-inner">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center shrink-0 text-emerald-400 mt-0.5">
+              <Info size={20} />
+            </div>
+            <div className="space-y-1.5 text-xs sm:text-sm">
+              <h2 className="font-bold text-white tracking-wide text-base">
+                {t('privacy.projectTitle')}
+              </h2>
+              <p className="text-emerald-100/70 leading-relaxed font-light">
+                {t('privacy.projectText')}
+              </p>
             </div>
           </section>
 
-          <section id="toplanan-veriler">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">{t('privacy.dataTitle')}</h2>
-            <p className="mb-4 text-sm text-gray-600">{t('privacy.dataIntro')}</p>
+          {/* Section 1: Collected Data */}
+          <section id="toplanan-veriler" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                01
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.dataTitle')}
+              </h2>
+            </div>
+
+            <p className="text-xs sm:text-sm text-emerald-100/60 leading-relaxed">
+              {t('privacy.dataIntro')}
+            </p>
             
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2 text-sm"><FiUser className="text-teal-600"/> {t('privacy.accountInfo')}</h3>
-                <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
-                  {accountItems.map((item) => <li key={item}>{item}</li>)}
+            <div className="grid md:grid-cols-2 gap-4 pt-1">
+              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
+                <div className="flex items-center gap-2.5 text-sm font-bold text-white">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                    <User size={15} />
+                  </div>
+                  <span>{t('privacy.accountInfo')}</span>
+                </div>
+                <ul className="space-y-2 text-xs text-emerald-100/60">
+                  {accountItems.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-lg border border-gray-100">
-                <h3 className="font-bold text-gray-800 mb-2 flex items-center gap-2 text-sm"><FiGlobe className="text-teal-600"/> {t('privacy.locationInfo')}</h3>
-                <ul className="list-disc list-inside text-xs text-gray-600 space-y-1">
-                  {locationItems.map((item) => <li key={item}>{item}</li>)}
+              <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
+                <div className="flex items-center gap-2.5 text-sm font-bold text-white">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                    <Globe size={15} />
+                  </div>
+                  <span>{t('privacy.locationInfo')}</span>
+                </div>
+                <ul className="space-y-2 text-xs text-emerald-100/60">
+                  {locationItems.map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
                 </ul>
               </div>
             </div>
           </section>
 
-          <section id="kullanim-amaci">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">{t('privacy.purposeTitle')}</h2>
-            <p className="mb-4 text-gray-600">{t('privacy.purposeIntro')}</p>
-            <ul className="list-disc list-inside space-y-2 text-gray-600 ml-2">
-                {purposeItems.map((item) => (
-                  <li key={item.label}><span className="font-medium text-gray-800">{item.label}</span> {item.text}</li>
-                ))}
-            </ul>
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Section 2: Purpose */}
+          <section id="kullanim-amaci" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                02
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.purposeTitle')}
+              </h2>
+            </div>
+
+            <p className="text-xs sm:text-sm text-emerald-100/60 leading-relaxed">
+              {t('privacy.purposeIntro')}
+            </p>
+
+            <div className="space-y-2.5">
+              {purposeItems.map((item, idx) => (
+                <div key={idx} className="flex items-start gap-3 p-4 rounded-xl bg-white/[0.02] border border-white/5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                  <div className="text-xs sm:text-sm text-emerald-100/70 leading-relaxed">
+                    <strong className="text-white font-semibold mr-1.5">{item.label}</strong>
+                    <span>{item.text}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
 
-          <section id="veri-paylasimi">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">{t('privacy.sharingTitle')}</h2>
-            <p className="mb-4 text-gray-600">
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Section 3: Data Sharing */}
+          <section id="veri-paylasimi" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                03
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.sharingTitle')}
+              </h2>
+            </div>
+
+            <p className="text-xs sm:text-sm text-emerald-100/70 leading-relaxed">
               {t('privacy.sharingText')}
             </p>
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 text-sm text-yellow-800">
-               <strong>{t('privacy.note')}</strong> {t('privacy.sharingNote')}
+
+            <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 text-xs sm:text-sm text-amber-200/90 leading-relaxed">
+              <strong className="text-amber-300 font-bold mr-2 uppercase tracking-wider text-xs">
+                {t('privacy.note')}
+              </strong>
+              <span>{t('privacy.sharingNote')}</span>
             </div>
           </section>
 
-          <section id="saklama-suresi">
-             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">{t('privacy.retentionTitle')}</h2>
-             <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left text-gray-600 border border-gray-200 rounded-lg">
-                  <thead className="bg-gray-100 text-gray-700 uppercase">
-                    <tr>
-                      {tableHeaders.map((header) => <th key={header} className="px-4 py-3">{header}</th>)}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {retentionRows.map((row) => (
-                      <tr key={row[0]} className="border-b last:border-b-0">
-                        <td className="px-4 py-3 font-medium">{row[0]}</td>
-                        <td className="px-4 py-3">{row[1]}</td>
-                      </tr>
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Section 4: Retention Period */}
+          <section id="saklama-suresi" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                04
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.retentionTitle')}
+              </h2>
+            </div>
+
+            <div className="overflow-x-auto rounded-2xl border border-white/5 bg-[#03150f]">
+              <table className="w-full text-xs sm:text-sm text-left">
+                <thead className="bg-white/[0.04] text-emerald-300 font-mono text-[11px] uppercase tracking-wider border-b border-white/5">
+                  <tr>
+                    {tableHeaders.map((header, idx) => (
+                      <th key={idx} className="px-5 py-3.5 font-bold">{header}</th>
                     ))}
-                  </tbody>
-                </table>
-             </div>
-          </section>
-
-          <section id="kullanici-haklari">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">{t('privacy.rightsTitle')}</h2>
-            <p className="mb-4 text-gray-600">{t('privacy.rightsIntro')}</p>
-            <div className="grid sm:grid-cols-2 gap-3">
-                {rightsItems.map((hak, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-white border border-gray-200 rounded-lg">
-                     <FiArrowLeft className="text-teal-500 rotate-180" />
-                     <span className="text-sm font-medium text-gray-700">{hak}</span>
-                  </div>
-                ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5 text-emerald-100/70">
+                  {retentionRows.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                      <td className="px-5 py-3.5 font-semibold text-white">{row[0]}</td>
+                      <td className="px-5 py-3.5">{row[1]}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
 
-          <section id="guvenlik">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">{t('privacy.securityTitle')}</h2>
-            <p className="mb-4 text-gray-600">{t('privacy.securityIntro')}</p>
-            <div className="flex flex-wrap gap-3">
-               <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold flex items-center gap-2"><FiLock/> Password Hashing</span>
-               <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold flex items-center gap-2"><FiShield/> JWT Authentication</span>
-               <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-bold flex items-center gap-2"><FiDatabase/> Secure API Endpoints</span>
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Section 5: User Rights */}
+          <section id="kullanici-haklari" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                05
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.rightsTitle')}
+              </h2>
+            </div>
+
+            <p className="text-xs sm:text-sm text-emerald-100/60 leading-relaxed">
+              {t('privacy.rightsIntro')}
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-3 pt-1">
+              {rightsItems.map((hak, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center gap-3 p-3.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-emerald-500/20 transition-colors"
+                >
+                  <ArrowRight size={14} className="text-emerald-400 shrink-0" />
+                  <span className="text-xs sm:text-sm text-emerald-100/80 font-medium">{hak}</span>
+                </div>
+              ))}
             </div>
           </section>
 
-          <section id="telif-haklari">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 pb-2 border-b">
-              {t('privacy.copyrightTitle')}
-            </h2>
-            <div className="bg-red-50 border-l-4 border-red-500 p-5 rounded-r-lg">
-              <p className="text-gray-800 leading-relaxed">
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Section 6: Security Standards */}
+          <section id="guvenlik" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                06
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.securityTitle')}
+              </h2>
+            </div>
+
+            <p className="text-xs sm:text-sm text-emerald-100/60 leading-relaxed">
+              {t('privacy.securityIntro')}
+            </p>
+
+            <div className="grid sm:grid-cols-3 gap-3 pt-1">
+              <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center gap-3 text-emerald-300">
+                <Lock size={18} className="text-emerald-400 shrink-0" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider">Password Hashing</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center gap-3 text-cyan-300">
+                <Shield size={18} className="text-cyan-400 shrink-0" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider">JWT Authentication</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center gap-3 text-teal-300">
+                <Database size={18} className="text-teal-400 shrink-0" />
+                <span className="text-xs font-mono font-bold uppercase tracking-wider">Secure API Endpoints</span>
+              </div>
+            </div>
+          </section>
+
+          <div className="w-full h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          {/* Section 7: Copyright */}
+          <section id="telif-haklari" className="space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-xs font-mono font-bold text-emerald-400">
+                07
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-wide">
+                {t('privacy.copyrightTitle')}
+              </h2>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-3">
+              <p className="text-xs sm:text-sm text-emerald-100/70 leading-relaxed">
                 {t('privacy.copyrightText')}
               </p>
-              <ul className="mt-3 list-disc list-inside text-sm text-red-900 space-y-1">
-                {copyrightItems.map((item) => <li key={item}>{item}</li>)}
+              <ul className="space-y-2 text-xs text-emerald-100/60 pt-2 border-t border-white/5">
+                {copyrightItems.map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </section>
-            
-          <section className="bg-gray-800 text-gray-300 p-6 md:p-8 rounded-2xl text-center">
-            <h2 className="text-xl font-bold text-white mb-2">{t('privacy.contactTitle')}</h2>
-            <p className="mb-4 text-sm">
+
+          {/* Contact Box */}
+          <section className="p-8 rounded-3xl bg-gradient-to-r from-emerald-950/50 via-[#041f18] to-emerald-950/50 border border-emerald-500/30 text-center space-y-4 shadow-xl">
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              {t('privacy.contactTitle')}
+            </h2>
+            <p className="text-xs sm:text-sm text-emerald-100/70 max-w-xl mx-auto leading-relaxed">
               {t('privacy.contactText')}
             </p>
-            <button 
-              onClick={() => navigate('/contact')}
-              className="inline-block bg-gray-700 px-6 py-3 rounded-lg text-teal-400 font-mono text-sm border border-gray-600 
-                         hover:bg-gray-600 hover:text-teal-300 hover:border-teal-500/50 
-                         transition-all duration-300 active:scale-95 cursor-pointer group"
-            >
-              {t('privacy.developer')} <span className="underline decoration-teal-800 underline-offset-4 group-hover:decoration-teal-400">Eyüp Kaya</span>
-            </button>
+            <div className="pt-2">
+              <button 
+                onClick={() => navigate('/contact')}
+                className="px-8 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black tracking-widest text-xs uppercase transition-all shadow-[0_0_25px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-95 inline-flex items-center gap-2"
+              >
+                <span>{t('privacy.developer')}: Eyüp Kaya</span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
           </section>
+
         </div>
+
       </div>
-      
+
       <Footer />
     </div>
   );

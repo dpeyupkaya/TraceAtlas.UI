@@ -5,24 +5,23 @@ import profileService from '../../../services/profileService';
 import { LogIn, Map, Users, ArrowRight } from 'lucide-react';
 
 const Counter = ({ value }) => {
+  const target = Number(value) || 0;
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    let start = 0;
-    const end = Number(value);
-    if (!end || end <= 0) {
-      setDisplayValue(0);
+    if (target <= 0) {
       return;
     }
 
-    const duration = Math.min(1500, Math.max(600, end / 50));
+    let start = 0;
+    const duration = Math.min(1500, Math.max(600, target / 50));
     const stepTime = 16;
-    const increment = end / (duration / stepTime);
+    const increment = target / (duration / stepTime);
 
     const timer = setInterval(() => {
       start += increment;
-      if (start >= end) {
-        setDisplayValue(end);
+      if (start >= target) {
+        setDisplayValue(target);
         clearInterval(timer);
       } else {
         setDisplayValue(Math.floor(start));
@@ -30,7 +29,7 @@ const Counter = ({ value }) => {
     }, stepTime);
 
     return () => clearInterval(timer);
-  }, [value]);
+  }, [target]);
 
   return <span>{displayValue}</span>;
 };
