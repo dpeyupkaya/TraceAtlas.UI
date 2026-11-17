@@ -87,11 +87,11 @@ const About = () => {
           </Link>
 
           <Link
-            to="/map"
+            to="/"
             className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider transition-all"
           >
             <Map size={14} />
-            <span>HARİTA</span>
+            <span>ANA SAYFA</span>
           </Link>
         </div>
       </header>
@@ -194,16 +194,17 @@ const About = () => {
                 >
                   <Github size={16} />
                   <span>GitHub</span>
-                </a>
-
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600 hover:text-white border border-emerald-500/30 text-xs font-mono font-bold transition-all shadow-md shadow-emerald-950/40"
-                  aria-label={t('about.mailAria')}
+                 </a>
+                  <a
+                  href="https://ekaya.com.tr"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] hover:text-white border border-white/10 text-xs font-mono font-bold transition-all"
+                  aria-label={t('about.personalWebsiteAria')}
                 >
-                  <Mail size={16} />
-                  <span>{t('about.contactCta')}</span>
-                </Link>
+                  <Globe2 size={16} />
+                  <span>ekaya.com.tr</span>
+                </a>
               </nav>
             </div>
           </div>
@@ -215,25 +216,18 @@ const About = () => {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
           
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight relative z-10">
-            Kendi Atlasını Oluşturmaya Başla
+            Keşfe kısa bir mola
           </h2>
           <p className="text-xs sm:text-sm text-emerald-100/70 max-w-xl mx-auto leading-relaxed font-light relative z-10">
-            TraceAtlas ile gezdiğin patikaları, unutamadığın kamp yerlerini ve gizli koyları tek bir interaktif haritada kaydet.
+            TraceAtlas geçici olarak hizmete ara veriyor. Bu süreçte hakkımızda, gizlilik politikası ve kullanım koşulları sayfalarımız açık kalmaya devam ediyor.
           </p>
           <div className="pt-2 relative z-10 flex flex-wrap justify-center gap-3">
             <Link
-              to="/map"
+              to="/"
               className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black tracking-widest text-xs uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-[1.02] active:scale-95 inline-flex items-center gap-2"
             >
               <Map size={15} />
-              <span>Haritayı Aç</span>
-            </Link>
-            <Link
-              to="/contact"
-              className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-emerald-100 border border-white/10 hover:border-emerald-500/30 font-bold tracking-widest text-xs uppercase transition-all inline-flex items-center gap-2"
-            >
-              <Send size={15} />
-              <span>İletişime Geç</span>
+              <span>Ana Sayfaya Dön</span>
             </Link>
           </div>
         </section>

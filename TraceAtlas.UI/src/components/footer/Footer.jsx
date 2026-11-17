@@ -49,7 +49,7 @@ const Footer = () => {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <span className="text-[10px] font-mono font-bold text-emerald-400/80 tracking-widest uppercase">
-                CANLI VE TOPLULUK KATKILI ATLAS
+                KEŞFE KISA BİR MOLA
               </span>
             </div>
           </div>
@@ -74,12 +74,12 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/contact" 
+                  to="/"
                   onClick={scrollToTop}
                   className="text-emerald-100/60 hover:text-white transition-all flex items-center gap-2 group py-1"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500/40 group-hover:bg-emerald-400 transition-colors"></span>
-                  <span className="group-hover:translate-x-1 transition-transform">{t('footer.contact')}</span>
+                  <span className="group-hover:translate-x-1 transition-transform">TraceAtlas</span>
                 </Link>
               </li>
               <li>

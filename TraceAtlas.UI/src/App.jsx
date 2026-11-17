@@ -1,30 +1,34 @@
 import 'leaflet/dist/leaflet.css';
 import React, { useState, useEffect, lazy, Suspense } from "react"; 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Snackbar, Alert } from "@mui/material";
 import ReactGA from "react-ga4";
 
 import GlobalLoader from './common/GlobalLoader';
-import TokenAlert from './Alert';
-import LandingPage from './pages/LandingPage';
+// import TokenAlert from './Alert';
+// import LandingPage from './pages/LandingPage';
 import { HelmetProvider } from 'react-helmet-async';
 
-const SharedLocationPage = lazy(() => import("./pages/SharedLocationPage"));
-const HomePage = lazy(() => import("./pages/home/HomePage"));
-const AuthPanel = lazy(() => import("./components/auth/AuthPanel"));
-const MapPage = lazy(() => import("./pages/MapPage"));
-const BaseProfil = lazy(() => import("./components/profile/BaseProfil"));
-const ResetPasswordPage = lazy(() => import("./components/auth/ResetPasswordPage"));
-const ConfirmEmailPage = lazy(() => import("./components/auth/ConfirmEmailPage"));
-const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
+// Aktif Sayfalar
+const Waiting = lazy(() => import("./pages/Waiting"));
+const About = lazy(() => import("./components/about/About"));
 const TermsPage = lazy(() => import("./pages/TermsPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
-const About = lazy(() => import("./components/about/About"));
-const Contact = lazy(() => import("./components/about/Contact"));
-const Footer = lazy(() => import("./components/footer/Footer"));
+
+// Kapatılan / Yorum satırına alınan sayfalar
+// const SharedLocationPage = lazy(() => import("./pages/SharedLocationPage"));
+// const HomePage = lazy(() => import("./pages/home/HomePage"));
+// const AuthPanel = lazy(() => import("./components/auth/AuthPanel"));
+// const MapPage = lazy(() => import("./pages/MapPage"));
+// const BaseProfil = lazy(() => import("./components/profile/BaseProfil"));
+// const ResetPasswordPage = lazy(() => import("./components/auth/ResetPasswordPage"));
+// const ConfirmEmailPage = lazy(() => import("./components/auth/ConfirmEmailPage"));
+// const Contact = lazy(() => import("./components/about/Contact"));
+// const Footer = lazy(() => import("./components/footer/Footer"));
 
 ReactGA.initialize("G-Q1EE4FZ4BB");
 
+/*
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("accessToken"); 
 
@@ -33,6 +37,7 @@ const ProtectedRoute = ({ children }) => {
   }
   return children;
 };
+*/
 
 function App() {
 
@@ -75,6 +80,15 @@ function App() {
       <Router>
         <Suspense fallback={<GlobalLoader />}>
           <Routes>
+            {/* Aktif Rotalar */}
+            <Route path="/" element={<Waiting />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/privacy" element={<Navigate to="/privacy-policy" replace />} />
+            <Route path="/*" element={<Navigate to="/" replace />} />
+
+            {/* Yorum Satırına Alınan Eski Rotalar
             <Route path="/" element={<LandingPage />} />
             <Route path="home" element={<HomePage />} />
             <Route path="/auth" element={<AuthPanel />} />
@@ -92,11 +106,8 @@ function App() {
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/confirm-email" element={<ConfirmEmailPage />} />
             <Route path="/shared/:token" element={<SharedLocationPage />} />
-            <Route path='/terms' element={<TermsPage />} />
-            <Route path='/privacy-policy' element={<PrivacyPolicyPage />} />
-            <Route path='/about' element={<About />} />
             <Route path='/contact' element={<Contact />} />
-            <Route path='/*' element={<NotFoundPage />} />
+            */}
           </Routes>
         </Suspense>
 
